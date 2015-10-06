@@ -1,0 +1,38 @@
+package co.paystack.android.model;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
+/**
+ * The class for Token model.
+ *
+ * @author Segun Famisa {segunfamisa@gmail.com} on 8/10/15.
+ */
+public class Token implements Serializable{
+
+    public String token;
+
+    public String last4;
+
+
+
+//    private Token(Parcel in){
+//        String[] data = new String[2];
+//
+//        in.readStringArray(data);
+//        token = data[0];
+//        last4 = data[1];
+//    }
+//
+//    @Override
+//    public int describeContents() {
+//        return 0;
+//    }
+//
+//    @Override
+//    public void writeToParcel(Parcel parcel, int i) {
+//
+//    }
+}

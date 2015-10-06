@@ -1,0 +1,119 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:id="@+id/layout_custom_form"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:gravity="center_vertical"
+            android:minHeight="150dp">
+
+            <LinearLayout
+                android:id="@+id/layout_card_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal">
+                <EditText
+                    android:id="@+id/edit_card_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:minEms="8"
+                    android:hint="Card number"
+                    android:inputType="number"
+                    />
+
+                <EditText
+                    android:id="@+id/edit_cvc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="CVV"
+                    android:inputType="number"
+                    android:layout_toRightOf="@id/edit_card_number"
+                    android:gravity="center"
+                    android:minEms="4"
+                    android:maxLength="4"/>
+            </LinearLayout>
+
+            <View
+                android:id="@+id/divider_horizontal"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_centerHorizontal="true"/>
+
+            <EditText
+                android:id="@+id/edit_expiry_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/layout_card_num"
+                android:hint="MM"
+                android:maxEms="3"
+                android:maxLength="2"
+                android:layout_toLeftOf="@id/divider_horizontal"
+                android:gravity="right"
+                android:inputType="number"/>
+
+            <EditText
+                android:id="@+id/edit_expiry_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/layout_card_num"
+                android:hint="YYYY"
+                android:maxEms="4"
+                android:maxLength="4"
+                android:layout_toRightOf="@id/divider_horizontal"
+                android:gravity="left"
+                android:inputType="number"/>
+
+            <Button
+                android:id="@+id/button_create_token"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edit_expiry_month"
+                android:layout_centerHorizontal="true"
+                android:padding="8dp"
+                android:text="Create token"/>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/layout_token_response"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_custom_form"
+            android:gravity="center_vertical"
+            android:background="#1C3A4B"
+            android:minHeight="150dp"
+            >
+
+            <TextView
+                android:id="@+id/textview_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:padding="8dp"
+                android:textColor="#ffffff"
+                android:text="No card yet"/>
+
+            <TextView
+                android:id="@+id/textview_token"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textview_card"
+                android:padding="8dp"
+                android:textColor="#ffffff"
+                style="@style/TextAppearance.AppCompat.Subhead"
+                android:text="No token"/>
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+</ScrollView>
