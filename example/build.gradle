@@ -33,5 +33,17 @@ dependencies {
     testCompile 'org.robolectric:robolectric:3.0'
     testCompile 'org.mockito:mockito-core:1.9.5'
 
-    compile project(':paystack')
+    //compile 'co.paystack.android:paystack:1.0.2'
+    //compile 'co.paystack:paystack:1.0.1'
+    //compile project(':paystack')
+}
+
+repositories {
+    maven {
+        url 'https://dl.bintray.com/paystack/maven/'
+    }
+}
+
+dependencies {
+    compile 'co.paystack.android:paystack:1.0.0'
 }

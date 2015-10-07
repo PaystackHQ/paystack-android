@@ -1,28 +1,52 @@
 ## paystack-android
 
+This is a library for easy integration of Paystack with your Android application
+
 ## Installation
 
 ### Android Studio (using Gradle)
-You do not need to clone this repository or download the files. Just add this line to your `build.gradle` file within the `dependecy` section:
+You do not need to clone this repository or download the files. Just add the following lines to your app's `build.gradle`:
 
-    compile 'co.paystack:paystack-android:+'
+    repositories {
+      maven {
+          url 'https://dl.bintray.com/paystack/maven/'
+      }
+    }
+    dependencies {
+      compile 'co.paystack.android:paystack:1.0.0'
+    }
 
 ### Eclipse
 To use this library with Eclipse, you need to:
 
 1. Clone the repository.
-2. Import the *Paystack* folder into your [Eclipse](http://help.eclipse.org/juno/topic/org.eclipse.platform.doc.user/tasks/tasks-importproject.htm) project
-3. In your project settings, add the *Paystack* project under the Libraries section of the Android category.
+2. Import the **Paystack** folder into your [Eclipse](http://help.eclipse.org/juno/topic/org.eclipse.platform.doc.user/tasks/tasks-importproject.htm) project
+3. In your project settings, add the **Paystack** project under the Libraries section of the Android category.
 
 ## Usage
 
-### initializeSdk
+### 1. initializeSdk
 
 To use the Paysack android sdk, you need to first initialize the sdk using the PaystackSdk class.
 
     PaystackSdk.initialize(getApplicationContext());
 
-### createToken
+Make sure to call this method in the onCreate method of your Fragment or Activity.
+
+### 2. setPublishableKey
+
+Before you can create a token with the PaystackSdk, you need to set your publishable key. The library provides two approaches,
+
+#### a. Add the following lines to the `<application></application>` tag of your AndroidManifest.xml
+    <meta-data
+        android:name="co.paystack.android.PublishableKey"
+        android:value="your publishable key"/>
+
+#### b. Set the publishable key by code
+    PaystackSdk.setPublishableKey(publishableKey);
+
+
+### 3. createToken
 Creating a token with the PaystackSdk is quite straightforward.
 
     //build a card
@@ -48,7 +72,7 @@ The first argument to the PaystackSdk.createToken is the card object. A basic Ca
 + expiryYear: the expiry year as an integer e.g 2015
 + cvc: the card security code as a String e.g 123
 
-### Library aided card validation & utility methods
+### 4. Library aided card validation & utility methods
 The library provides validation methods to validate the fields of the card.
 
 #### card.validNumber
