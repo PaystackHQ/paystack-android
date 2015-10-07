@@ -14,7 +14,7 @@
         <!-- metadata for paystack -->
         <meta-data
             android:name="co.paystack.android.PublishableKey"
-            android:value="MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANIsL+RHqfkBiKGn/D1y1QnNrMkKzxWP2wkeSokw2OJrCI+d6YGJPrHHx+nmb/Qn885/R01Gw6d7M824qofmCvkCAwEAAQ=="/>
+            android:value="your publishable key"/>
 
         <activity
             android:name=".MainActivity"

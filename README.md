@@ -94,4 +94,5 @@ This method returns an estimate of the string representation of the card type.
 
 1. Clone the repository.
 2. Import the project either using Android Studio or Eclipse
-3. Build and run the project on your device or emulator
+3. Add your publishable key to your AndroidManifest.xml file
+4. Build and run the project on your device or emulator

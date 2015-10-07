@@ -18,7 +18,7 @@ import co.paystack.android.model.Token;
 
 public class MainActivity extends AppCompatActivity {
 
-    //private static final String PUBLISHABLE_KEY = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANIsL+RHqfkBiKGn/D1y1QnNrMkKzxWP2wkeSokw2OJrCI+d6YGJPrHHx+nmb/Qn885/R01Gw6d7M824qofmCvkCAwEAAQ==";
+    //private static final String PUBLISHABLE_KEY = "your publishable key";
 
 
     EditText mEditCardNum;
