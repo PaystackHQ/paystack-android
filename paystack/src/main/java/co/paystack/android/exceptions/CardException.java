@@ -1,7 +1,7 @@
 package co.paystack.android.exceptions;
 
 /**
- * @author Segun Famisa {segunfamisa@gmail.com} on 9/13/15.
+ * @author   {androidsupport@paystack.co} on 9/13/15.
  */
 public class CardException extends PaystackException {
 

@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 /**
- * Created by Segun Famisa {segunfamisa@gmail.com} on 9/18/15.
+ * Created by   {androidsupport@paystack.co} on 9/18/15.
  */
 public class TokenRequestBody {
 

@@ -3,7 +3,7 @@ package co.paystack.android;
 /**
  * Config files for Paystack
  *
- * @author Segun Famisa {segunfamisa@gmail.com} on 9/17/15.
+ * @author   {androidsupport@paystack.co} on 9/17/15.
  */
 public class Config {
 

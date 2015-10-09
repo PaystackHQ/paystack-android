@@ -25,6 +25,10 @@ To use this library with Eclipse, you need to:
 
 ## Usage
 
+### 1. Prepare for use
+
+To prepare for use, you must ensure to add the internet permissions to the AndroidManifest.xml
+
 ### 1. initializeSdk
 
 To use the Paysack android sdk, you need to first initialize the sdk using the PaystackSdk class.
@@ -96,3 +100,7 @@ This method returns an estimate of the string representation of the card type.
 2. Import the project either using Android Studio or Eclipse
 3. Add your publishable key to your AndroidManifest.xml file
 4. Build and run the project on your device or emulator
+
+## Contact
+
+For more enquiries and technical questions regarding the Android PaystackSdk, please send an email to androidsupport@paystack.co

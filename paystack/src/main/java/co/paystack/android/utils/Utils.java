@@ -10,7 +10,7 @@ import co.paystack.android.exceptions.PaystackSdkNotInitializedException;
 /**
  * General utils class
  *
- * @author Segun Famisa {segunfamisa@gmail.com} on 9/22/15.
+ * @author   {androidsupport@paystack.co} on 9/22/15.
  */
 public class Utils {
 

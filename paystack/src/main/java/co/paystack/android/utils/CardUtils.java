@@ -6,7 +6,7 @@ import java.util.Locale;
 /**
  * Utils used with the Card model.
  *
- * @author Segun Famisa {segunfamisa@gmail.com} on 9/13/15.
+ * @author   {androidsupport@paystack.co} on 9/13/15.
  */
 public class CardUtils {
 

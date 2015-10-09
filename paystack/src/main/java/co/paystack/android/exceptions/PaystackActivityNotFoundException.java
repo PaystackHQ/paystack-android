@@ -1,7 +1,7 @@
 package co.paystack.android.exceptions;
 
 /**
- * @author Segun Famisa {segunfamisa@gmail.com} on 9/22/15.
+ * @author   {androidsupport@paystack.co} on 9/22/15.
  */
 public class PaystackActivityNotFoundException extends PaystackException {
     public PaystackActivityNotFoundException(String message) {

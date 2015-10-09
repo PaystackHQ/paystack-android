@@ -11,7 +11,7 @@ import co.paystack.android.utils.StringUtils;
  * The class for the card model. Has utility methods for validating the card.\n
  * Best initialized with the Card.Builder class
  *
- * @author Segun Famisa {segunfamisa@gmail.com} on 8/10/15.
+ * @author   {androidsupport@paystack.co} on 8/10/15.
  */
 public class Card extends PaystackModel implements Serializable{
 

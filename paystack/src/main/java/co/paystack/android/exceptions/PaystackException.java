@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * Base class for exceptions
- * @author Segun Famisa {segunfamisa@gmail.com} on 9/13/15.
+ * @author   {androidsupport@paystack.co} on 9/13/15.
  */
 public class PaystackException extends RuntimeException implements Serializable {
 

@@ -3,7 +3,7 @@ package co.paystack.android.api.request;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by Segun Famisa {segunfamisa@gmail.com} on 9/25/15.
+ * Created by   {androidsupport@paystack.co} on 9/25/15.
  */
 public class TransactionRequestBody {
 

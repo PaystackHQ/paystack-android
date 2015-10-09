@@ -21,7 +21,7 @@ import retrofit.client.Response;
 /**
  * TokenManager class, to perform action token creation. You don't have to use this class.
  *
- * @author Segun Famisa {segunfamisa@gmail.com} on 9/17/15.
+ * @author   {androidsupport@paystack.co} on 9/17/15.
  */
 public class TokenManager implements Paystack.TokenCreator {
     private static final String CARD_CONCATENATOR = "*";

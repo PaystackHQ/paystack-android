@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * The class for Token model.
  *
- * @author Segun Famisa {segunfamisa@gmail.com} on 8/10/15.
+ * @author   {androidsupport@paystack.co} on 8/10/15.
  */
 public class Token implements Serializable{
 

@@ -13,7 +13,7 @@ import co.paystack.android.utils.Utils;
  * Must be used to initialize the Sdk.
  *
  *
- * @author Segun Famisa {segunfamisa@gmail.com} on 9/20/15.
+ * @author   {androidsupport@paystack.co} on 9/20/15.
  */
 public final class PaystackSdk {
 

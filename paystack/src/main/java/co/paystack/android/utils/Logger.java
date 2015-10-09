@@ -5,7 +5,7 @@ import android.util.Log;
 /**
  * Logger util class
  *
- * @author Segun Famisa {segunfamisa@gmail.com} on 9/18/15.
+ * @author   {androidsupport@paystack.co} on 9/18/15.
  */
 public class Logger {
 

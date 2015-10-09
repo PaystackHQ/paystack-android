@@ -7,7 +7,7 @@ import org.parceler.guava.primitives.Chars;
 /**
  * String utility methods
  *
- * @author Segun Famisa {segunfamisa@gmail.com} on 9/13/15.
+ * @author   {androidsupport@paystack.co} on 9/13/15.
  */
 public class StringUtils {
 

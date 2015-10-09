@@ -16,7 +16,7 @@ import co.paystack.android.utils.Utils;
  * Try not to use this class directly.
  * Instead, access the functionalities of this class via the {@link PaystackSdk}
  *
- * @author Segun Famisa {segunfamisa@gmail.com} on 9/16/15.
+ * @author   {androidsupport@paystack.co} on 9/16/15.
  */
 public class Paystack extends PaystackModel {
 

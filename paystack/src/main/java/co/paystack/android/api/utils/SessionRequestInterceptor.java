@@ -4,7 +4,7 @@ import co.paystack.android.Config;
 import retrofit.RequestInterceptor;
 
 /**
- * Created by Segun Famisa {segunfamisa@gmail.com} on 9/18/15.
+ * Created by   {androidsupport@paystack.co} on 9/18/15.
  */
 public class SessionRequestInterceptor implements RequestInterceptor {
 
