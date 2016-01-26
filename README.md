@@ -79,7 +79,7 @@ The first argument to the PaystackSdk.createToken is the card object. A basic Ca
 ### 4. Charging the tokens. 
 Send the token to your server and create a charge by calling our REST API.  You can learn more about our API [here](https://developers.paystack.co/docs/getting-started).
  
- **Endpoint:** https://standard.paystack.co/transaction/charge_token
+ **Endpoint:** https://api.paystack.co/transaction/charge_token
 
  **Parameters:**
  
@@ -90,7 +90,7 @@ Send the token to your server and create a charge by calling our REST API.  You 
 
 **Example**
 
-    curl https://api.paystack.co/transaction/charge_authorization \
+    curl https://api.paystack.co/transaction/charge_token \
     -H "Authorization: Bearer SECRET_KEY" \
     -H "Content-Type: application/json" \
     -d '{"token": "PSTK_r4ec2m75mrgsd8n9", "email": "customer@email.com", "amount": 10000, "reference": "amutaJHSYGWakinlade256"}' \
