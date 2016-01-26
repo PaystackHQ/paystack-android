@@ -3,12 +3,12 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.0"
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         applicationId "co.paystack.example"
         minSdkVersion 9
-        targetSdkVersion 21
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -30,17 +30,18 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
     testCompile "org.assertj:assertj-core:1.7.0"
-    testCompile 'org.robolectric:robolectric:3.0'
+    testCompile 'org.robolectric:robolectric:3.1-SNAPSHOT'
     testCompile 'org.mockito:mockito-core:1.9.5'
 
-    //compile 'co.paystack.android:paystack:1.0.2'
-    //compile 'co.paystack:paystack:1.0.1'
-    //compile project(':paystack')
+    compile project(':paystack')
 }
 
 repositories {
     maven {
         url 'https://dl.bintray.com/paystack/maven/'
+    }
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots"
     }
 }
 

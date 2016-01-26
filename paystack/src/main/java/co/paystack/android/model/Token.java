@@ -1,21 +1,17 @@
 package co.paystack.android.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.io.Serializable;
 
 /**
  * The class for Token model.
  *
- * @author   {androidsupport@paystack.co} on 8/10/15.
+ * @author {androidsupport@paystack.co} on 8/10/15.
  */
-public class Token implements Serializable{
+public class Token implements Serializable {
 
-    public String token;
+  public String token;
 
-    public String last4;
-
+  public String last4;
 
 
 //    private Token(Parcel in){

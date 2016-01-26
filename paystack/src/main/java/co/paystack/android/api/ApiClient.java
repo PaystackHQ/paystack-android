@@ -8,33 +8,32 @@ import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
 
 /**
- * Created by   {androidsupport@paystack.co} on 9/17/15.
+ * API Client Class
+ *
+ * Provides a service by which we can make API calls
  */
 public class ApiClient {
 
-    private static String BASE_URL = "https://paystack.ng/";
-    public static String API_URL = BASE_URL;
+  private static final String BASE_URL = "https://standard.paystack.co/";
+  public static String API_URL = BASE_URL;
 
+  private ApiService apiService;
 
-    private ApiService apiService;
+  public ApiClient() {
+    Gson gson = new GsonBuilder()
+        .setDateFormat("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'")
+        .create();
 
-    public ApiClient()
-    {
-        Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'")
-                .create();
+    RestAdapter restAdapter = new RestAdapter.Builder()
+        .setLogLevel(RestAdapter.LogLevel.FULL)
+        .setEndpoint(API_URL)
+        .setConverter(new GsonConverter(gson))
+        .build();
 
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setEndpoint(API_URL)
-                .setConverter(new GsonConverter(gson))
-                .build();
+    apiService = restAdapter.create(ApiService.class);
+  }
 
-        apiService = restAdapter.create(ApiService.class);
-    }
-
-    public ApiService getApiService()
-    {
-        return apiService;
-    }
+  public ApiService getApiService() {
+    return apiService;
+  }
 }

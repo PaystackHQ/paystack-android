@@ -2,33 +2,30 @@ package co.paystack.android.api.request;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
-
 /**
- * Created by   {androidsupport@paystack.co} on 9/18/15.
+ * A token request
  */
 public class TokenRequestBody {
 
-    /**
-     * Value for encrypted & concatenated card details
-     */
-    @SerializedName("clientdata")
-    public String clientdata;
-
-    /**
-     * Value for cardtype
-     */
-    @SerializedName("cardtype")
-    public String cardtype;
-
-    public TokenRequestBody(){}
-
-    public TokenRequestBody(String clientData, String cardType){
-        this.clientdata = clientData;
-        this.cardtype = cardType;
-    }
+  public static final String FIELD_CLIENT_DATA = "clientdata";
+  public static final String FIELD_PUBLISHABLE_KEY = "publishablekey";
+  /**
+   * Value for encrypted & concatenated card details
+   */
+  @SerializedName("clientdata")
+  public String clientData;
+  /**
+   * Value for cardtype
+   */
+  @SerializedName("publishablekey")
+  public String publishableKey;
 
 
-    public static final String FIELD_CLIENTDATA = "clientdata";
-    public static final String FIELD_CARDTYPE = "cardtype";
+  public TokenRequestBody() {
+  }
+
+  public TokenRequestBody(String clientData, String publishableKey) {
+    this.clientData = clientData;
+    this.publishableKey = publishableKey;
+  }
 }

@@ -1,5 +1,7 @@
 package co.paystack.android;
 
+import android.util.Log;
+
 import java.util.HashMap;
 import java.util.concurrent.Executor;
 
@@ -21,103 +23,103 @@ import retrofit.client.Response;
 /**
  * TokenManager class, to perform action token creation. You don't have to use this class.
  *
- * @author   {androidsupport@paystack.co} on 9/17/15.
+ * @author {androidsupport@paystack.co} on 9/17/15.
  */
 public class TokenManager implements Paystack.TokenCreator {
-    private static final String CARD_CONCATENATOR = "*";
+  private static final String CARD_CONCATENATOR = "*";
+  private static final String RSA_PUBLIC_KEY = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANIsL+RHqfkBiKGn/D1y1QnNrMkKzxWP" +
+      "2wkeSokw2OJrCI+d6YGJPrHHx+nmb/Qn885/R01Gw6d7M824qofmCvkCAwEAAQ==";
 
-    private static final String TAG = "TokenManager";
+  private static final String LOG_TAG = TokenManager.class.getSimpleName();
 
-    @Override
-    public void create(final Card card, String publishableKey, final Paystack.TokenCallback tokenCallback, Executor executor) {
-        try{
-            //concatenate card fields
-            String cardString = concatenateCardFields(card);
+  @Override
+  public void create(final Card card, String publishableKey, final Paystack.TokenCallback tokenCallback, Executor executor) {
+    try {
+      //concatenate card fields
+      String cardString = concatenateCardFields(card);
 
-            //encrypt
-            final String encCardString = Crypto.encrypt(cardString, publishableKey);
+      //encrypt
+      final String encCardString = Crypto.encrypt(cardString, RSA_PUBLIC_KEY);
 
-            //create tokenRequestBody
-            final TokenRequestBody tokenRequestBody = new TokenRequestBody(encCardString, card.getType());
+      //create tokenRequestBody
+      final TokenRequestBody tokenRequestBody = new TokenRequestBody(encCardString, publishableKey);
 
-            //request token from paystack server
-            createServerSideToken(tokenRequestBody, tokenCallback);
+      //request token from paystack server
+      createServerSideToken(tokenRequestBody, tokenCallback);
 
-        }
-        catch (CardException ce){
-            if(tokenCallback != null)
-                tokenCallback.onError(ce);
-        }
-        catch (AuthenticationException ae) {
-            if(tokenCallback != null){
-                tokenCallback.onError(ae);
-            }
-        }
-
+    } catch (CardException ce) {
+      if (tokenCallback != null) {
+        tokenCallback.onError(ce);
+      }
+      Log.e(LOG_TAG, ce.getMessage(), ce);
+    } catch (AuthenticationException ae) {
+      if (tokenCallback != null) {
+        tokenCallback.onError(ae);
+        Log.e(LOG_TAG, ae.getMessage(), ae);
+      }
     }
 
+  }
 
-    private void createServerSideToken(TokenRequestBody tokenRequestBody, final Paystack.TokenCallback tokenCallback){
-        //call retrofit api service
-        ApiService apiService = new ApiClient().getApiService();
 
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put(TokenRequestBody.FIELD_CARDTYPE, tokenRequestBody.cardtype);
-        params.put(TokenRequestBody.FIELD_CLIENTDATA, tokenRequestBody.clientdata);
+  private void createServerSideToken(TokenRequestBody tokenRequestBody, final Paystack.TokenCallback tokenCallback) {
+    //call retrofit api service
+    ApiService apiService = new ApiClient().getApiService();
 
-        apiService.createToken(params, new Callback<TokenApiResponse>() {
-            @Override
-            public void success(TokenApiResponse tokenApiResponse, Response response) {
-                if(tokenApiResponse != null){
-                    //check for status...if 0 return an error with the message
-                    if(tokenApiResponse.status == 0){
-                        //throw an error
-                        tokenCallback.onError(new TokenException(tokenApiResponse.message));
-                    }
-                    else{
-                        Token token = new Token();
-                        token.token = tokenApiResponse.token;
-                        token.last4 = tokenApiResponse.last4;
+    HashMap<String, String> params = new HashMap<>();
+    params.put(TokenRequestBody.FIELD_PUBLISHABLE_KEY, tokenRequestBody.publishableKey);
+    params.put(TokenRequestBody.FIELD_CLIENT_DATA, tokenRequestBody.clientData);
 
-                        tokenCallback.onCreate(token);
-                    }
-                }
-            }
+    apiService.createToken(params, new Callback<TokenApiResponse>() {
+      @Override
+      public void success(TokenApiResponse tokenApiResponse, Response response) {
+        if (tokenApiResponse != null) {
+          //check for status...if 0 return an error with the message
+          if (tokenApiResponse.status == 0) {
+            //throw an error
+            tokenCallback.onError(new TokenException(tokenApiResponse.message));
+          } else {
+            Token token = new Token();
+            token.token = tokenApiResponse.token;
+            token.last4 = tokenApiResponse.last4;
 
-            @Override
-            public void failure(RetrofitError error) {
-                tokenCallback.onError(error);
-            }
-        });
+            tokenCallback.onCreate(token);
+          }
+        }
+      }
+
+      @Override
+      public void failure(RetrofitError error) {
+        tokenCallback.onError(error);
+      }
+    });
+  }
+
+  private String concatenateCardFields(Card card) throws CardException {
+    if (card == null) {
+      throw new CardException("Card cannot be null");
     }
 
-    private String concatenateCardFields(Card card) throws CardException{
-        if(card == null){
-            throw new CardException("Card cannot be null");
-        }
+    String number = StringUtils.nullify(card.getNumber());
+    String cvc = StringUtils.nullify(card.getCvc());
+    int expiryMonth = card.getExpiryMonth();
+    int expiryYear = card.getExpiryYear();
 
-        String number = StringUtils.nullify(card.getNumber());
-        String cvc = StringUtils.nullify(card.getCvc());
-        int expiryMonth = card.getExpiryMonth();
-        int expiryYear = card.getExpiryYear();
+    String cardString = null;
+    String[] cardFields = {number, cvc, expiryMonth + "", expiryYear + ""};
 
-        String cardString = null;
-        String[] cardFields = {number, cvc, expiryMonth+"", expiryYear+""};
-
-        if(!StringUtils.isEmpty(number)){
-            for(int i=0; i<cardFields.length; i++){
-                if(i == 0 && cardFields.length > 1)
-                    cardString = cardFields[i] + CARD_CONCATENATOR;
-                else if(i == cardFields.length - 1)
-                    cardString += cardFields[i];
-                else
-                    cardString = cardString + cardFields[i] + CARD_CONCATENATOR;
-            }
-            return cardString;
-        }
-
-        else{
-            throw new CardException("Invalid card details: Card number is empty or null");
-        }
+    if (!StringUtils.isEmpty(number)) {
+      for (int i = 0; i < cardFields.length; i++) {
+        if (i == 0 && cardFields.length > 1)
+          cardString = cardFields[i] + CARD_CONCATENATOR;
+        else if (i == cardFields.length - 1)
+          cardString += cardFields[i];
+        else
+          cardString = cardString + cardFields[i] + CARD_CONCATENATOR;
+      }
+      return cardString;
+    } else {
+      throw new CardException("Invalid card details: Card number is empty or null");
     }
+  }
 }

@@ -4,33 +4,35 @@ import android.app.Application;
 import android.content.Context;
 
 /**
- * Created by Segun Famisa {segunfamisa@gmail.com} on 9/22/15.
+ * The Example App
+ *
+ * This class allows us capture the application context and capture the app instance
  */
 public class App extends Application {
 
-    private static Context sContext;
+  private static Context sContext;
 
-    private static App sInstance;
+  private static App sInstance;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        sInstance = this;
-        sContext = getApplicationContext();
-
-        setAppContext(sContext);
-    }
-
-    public static Context getAppContext(){
+  public static Context getAppContext() {
 //        if(sContext == null){
 //            return getApplica;
 //        }
 
-        return sContext;
-    }
+    return sContext;
+  }
 
-    private void setAppContext(Context context){
-        sContext = context;
-    }
+  private void setAppContext(Context context) {
+    sContext = context;
+  }
+
+  @Override
+  public void onCreate() {
+    super.onCreate();
+
+    sInstance = this;
+    sContext = getApplicationContext();
+
+    setAppContext(sContext);
+  }
 }
