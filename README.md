@@ -25,7 +25,7 @@ To use this library with Eclipse, you need to:
 
 ## Usage
 
-### 1. Prepare for use
+### 0. Prepare for use
 
 To prepare for use, you must ensure to add the internet permissions to the AndroidManifest.xml
 
@@ -51,7 +51,7 @@ Before you can create a token with the PaystackSdk, you need to set your publish
 
 
 ### 3. createToken
-Creating a token with the PaystackSdk is quite straightforward.
+Creating a single-use token with the PaystackSdk is quite straightforward.
 
     //build a card
     Card card = new Card.Builder(cardNumber, expiryMonth, expiryYear, cvc).build();
@@ -76,7 +76,57 @@ The first argument to the PaystackSdk.createToken is the card object. A basic Ca
 + expiryYear: the expiry year as an integer e.g 2015
 + cvc: the card security code as a String e.g 123
 
-### 4. Library aided card validation & utility methods
+### 4. Charging the tokens. 
+Send the token to your server and create a charge by calling our REST API.  You can learn more about our API [here](https://developers.paystack.co/docs/getting-started).
+ 
+ **Endpoint:** https://standard.paystack.co/transaction/charge_token
+
+ **Parameters:**
+ 
+
+ - email  - customer's email address (required)
+ - reference - unique reference  (required)
+ - amount - Amount in Kobo (required) 
+
+**Example**
+
+    curl https://api.paystack.co/transaction/charge_authorization \
+    -H "Authorization: Bearer SECRET_KEY" \
+    -H "Content-Type: application/json" \
+    -d '{"token": "PSTK_r4ec2m75mrgsd8n9", "email": "customer@email.com", "amount": 10000, "reference": "amutaJHSYGWakinlade256"}' \
+    -X POST
+
+
+
+
+**Result**
+
+    {  "status": true,
+       "message": "Charge successful",
+       "data": {
+                "amount": 10000,
+                "transaction_date": "2016-01-26T15:34:02.000Z",
+    "status": "success",
+    "reference": "amutaJHSYGWakinlade256",
+    "domain": "test",
+    "authorization": {
+      "authorization_code": "AUTH_d47nbp3x",
+      "card_type": "visa",
+      "last4": "1111",
+      "bank": null
+    },
+    "customer": {
+      "first_name": "John",
+      "last_name": "Doe",
+      "email": "customer@email.com"
+    },
+    "plan": 0}}
+
+
+
+
+
+### 5. Library aided card validation & utility methods
 The library provides validation methods to validate the fields of the card.
 
 #### card.validNumber
