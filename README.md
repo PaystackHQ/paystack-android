@@ -77,7 +77,7 @@ The first argument to the PaystackSdk.createToken is the card object. A basic Ca
 + cvc: the card security code as a String e.g 123
 
 ### 4. Charging the tokens. 
-Send the token to your server and create a charge by calling our REST API.  You can learn more about our API [here](https://developers.paystack.co/docs/getting-started).
+Send the token to your server and create a charge by calling our REST API. An authorization_code will be returned once the single-use token has been charged successfully. You can learn more about our API [here](https://developers.paystack.co/docs/getting-started).
  
  **Endpoint:** https://api.paystack.co/transaction/charge_token
 
@@ -125,8 +125,12 @@ Send the token to your server and create a charge by calling our REST API.  You 
 
 
 
+### 5. Charging Returning Customers
+See details for charging returning customers [here](https://developers.paystack.co/docs/charging-returning-customers). 
 
-### 5. Library aided card validation & utility methods
+ 
+
+### 6. Library aided card validation & utility methods
 The library provides validation methods to validate the fields of the card.
 
 #### card.validNumber
