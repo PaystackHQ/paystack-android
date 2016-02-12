@@ -90,13 +90,36 @@ Send the token to your server and create a charge by calling our REST API. An au
 
 **Example**
 
+```bash
     curl https://api.paystack.co/transaction/charge_token \
     -H "Authorization: Bearer SECRET_KEY" \
     -H "Content-Type: application/json" \
     -d '{"token": "PSTK_r4ec2m75mrgsd8n9", "email": "customer@email.com", "amount": 10000, "reference": "amutaJHSYGWakinlade256"}' \
     -X POST
 
+```
+###Using the [Paystack-PHP library](https://github.com/yabacon/paystack-php) or [Paystack PHP class](https://github.com/yabacon/paystack-class)
+```php
+list($headers, $body, $code) = $paystack->transaction->chargeToken([
+                'reference'=>'amutaJHSYGWakinlade256',
+                'token'=>'PSTK_r4ec2m75mrgsd8n9',
+                'email'=>'customer@email.com',
+                'amount'=>10000 // in kobo
+              ]);
+              
+// check if authorization code was generated
+if ((intval($code) === 200) && array_key_exists('status', $body) && $body['status']) {
+    // body contains Array with data similar to result below
+    $authorization_code = $body['authorization']['authorization_code']; 
+    // save the authorization_code so you may charge in future
+    
+} else {
+// invalid body was returned
+// handle this or troubleshoot
+    throw new \Exception('Transaction Initialise returned non-true status');
+}
 
+```
 
 
 **Result**
