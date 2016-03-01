@@ -12,7 +12,7 @@ android {
         minSdkVersion 9
         targetSdkVersion 23
         versionCode 2
-        versionName "1.1.0"
+        versionName "1.1.1"
     }
     buildTypes {
         release {
@@ -24,8 +24,10 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.squareup.retrofit:retrofit:1.6.1'
-    compile 'com.google.code.gson:gson:2.4'
+    compile 'com.google.code.gson:gson:2.6.1'
+    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
+    compile 'com.squareup.okhttp3:okhttp:3.1.2'
     compile 'org.parceler:parceler:0.2.13'
 }
 
@@ -43,7 +45,7 @@ ext {
     artifact = 'paystack'
 
     libraryDescription = 'An android sdk for working with paystack'
-    libraryVersion = '1.1.0'
+    libraryVersion = '1.1.1'
 
     developerId = 'paystack'
     developerName = 'Paystack'

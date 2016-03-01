@@ -16,9 +16,9 @@ import co.paystack.android.model.Card;
 import co.paystack.android.model.Token;
 import co.paystack.android.utils.Crypto;
 import co.paystack.android.utils.StringUtils;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * TokenManager class, to perform action token creation. You don't have to use this class.
@@ -70,9 +70,21 @@ public class TokenManager implements Paystack.TokenCreator {
     params.put(TokenRequestBody.FIELD_PUBLISHABLE_KEY, tokenRequestBody.publishableKey);
     params.put(TokenRequestBody.FIELD_CLIENT_DATA, tokenRequestBody.clientData);
 
-    apiService.createToken(params, new Callback<TokenApiResponse>() {
+    Call<TokenApiResponse> call = apiService.createToken(params);
+    call.enqueue(new Callback<TokenApiResponse>() {
+      /**
+       * Invoked for a received HTTP response.
+       * <p/>
+       * Note: An HTTP response may still indicate an application-level failure such as a 404 or 500.
+       * Call {@link Response#isSuccess()} to determine if the response indicates success.
+       *
+       * @param call     - the call enqueueing this callback
+       * @param response - response from the server after call is made
+       */
       @Override
-      public void success(TokenApiResponse tokenApiResponse, Response response) {
+      public void onResponse(Call<TokenApiResponse> call, Response<TokenApiResponse> response) {
+        int statuscode = response.code();
+        TokenApiResponse tokenApiResponse = response.body();
         if (tokenApiResponse != null) {
           //check for status...if 0 return an error with the message
           if (tokenApiResponse.status == 0) {
@@ -88,10 +100,28 @@ public class TokenManager implements Paystack.TokenCreator {
         }
       }
 
+      /**
+       * Invoked when a network exception occurred talking to the server or when an unexpected
+       * exception occurred creating the request or processing the response.
+       *
+       * @param call - call that enqueued this callback
+       * @param t - the error or exception that caused the failure
+       */
       @Override
-      public void failure(RetrofitError error) {
-        tokenCallback.onError(error);
+      public void onFailure(Call<TokenApiResponse> call, Throwable t) {
+        Log.e(LOG_TAG, t.getMessage());
+        // Don't want to change public method signature in v1.1.1
+        // this is meant to be a minor revision
+        // TODO: in a major revision, make TokenCallback.onError use throwable directly
+        if (t instanceof Exception) {
+          tokenCallback.onError((Exception) t);
+        } else {
+          t.printStackTrace();
+          tokenCallback.onError(new Exception(t.getMessage(), t));
+        }
+
       }
+
     });
   }
 

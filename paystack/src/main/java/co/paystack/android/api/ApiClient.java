@@ -4,8 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import co.paystack.android.api.service.ApiService;
-import retrofit.RestAdapter;
-import retrofit.converter.GsonConverter;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+//import retrofit2.RestAdapter;
+//import retrofit2.converter.GsonConverter;
 
 /**
  * API Client Class
@@ -24,13 +27,17 @@ public class ApiClient {
         .setDateFormat("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'")
         .create();
 
-    RestAdapter restAdapter = new RestAdapter.Builder()
-        .setLogLevel(RestAdapter.LogLevel.FULL)
-        .setEndpoint(API_URL)
-        .setConverter(new GsonConverter(gson))
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(API_URL)
+        .addConverterFactory(GsonConverterFactory.create())
         .build();
+//    RestAdapter restAdapter = new RestAdapter.Builder()
+//        .setLogLevel(RestAdapter.LogLevel.FULL)
+//        .setEndpoint()
+//        .setConverter(new GsonConverter(gson))
+//        .build();
 
-    apiService = restAdapter.create(ApiService.class);
+    apiService = retrofit.create(ApiService.class);
   }
 
   public ApiService getApiService() {
