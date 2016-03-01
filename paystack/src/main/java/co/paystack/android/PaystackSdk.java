@@ -139,9 +139,9 @@ public final class PaystackSdk {
   /**
    * Method for creating a token, using {@link PaystackSdk}. You won't need to create an instance
    * of {@link Paystack} by yourself.
-   * <p/>
+   * <br>
    * Equivalent to these two lines:
-   * <p/>
+   * <br>
    * {@code
    * Paystack paystack = new Paystack(PUBLISHABLE_KEY);
    * paystack.createToken();

@@ -22,7 +22,8 @@ public class Utils {
     /**
      * To validate if the sdk has been initialized
      *
-     * @throws PaystackSdkNotInitializedException
+     * @throws PaystackSdkNotInitializedException - An exception that let's you know that you
+     *          did not initialize the sdk before the call was made
      */
     public static void validateSdkInitialized() throws PaystackSdkNotInitializedException {
       if (!PaystackSdk.isSdkInitialized()) {

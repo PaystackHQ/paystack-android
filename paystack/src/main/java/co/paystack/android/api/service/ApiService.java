@@ -17,6 +17,9 @@ public interface ApiService {
    * call for creating token
    *
    * @param fields - the fields of postData to send
+   * @return Call - a call that can be executed directly `call.execute()` (synchronous implementation)
+   *            or enqueued `call.enqueue(params)` (asynchronous implementation)
+   * @see retrofit2.Call
    */
   @FormUrlEncoded
   @POST("/bosco/createmobiletoken")

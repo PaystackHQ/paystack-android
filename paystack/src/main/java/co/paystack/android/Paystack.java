@@ -12,7 +12,7 @@ import co.paystack.android.utils.Utils;
 
 /**
  * This is the Paystack model class.\n
- * <p/>
+ * <br>
  * Try not to use this class directly.
  * Instead, access the functionalities of this class via the {@link PaystackSdk}
  *

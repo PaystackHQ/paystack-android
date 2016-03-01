@@ -10,7 +10,7 @@ public class TokenRequestBody {
   public static final String FIELD_CLIENT_DATA = "clientdata";
   public static final String FIELD_PUBLISHABLE_KEY = "publishablekey";
   /**
-   * Value for encrypted & concatenated card details
+   * Value for encrypted and concatenated card details
    */
   @SerializedName("clientdata")
   public String clientData;
