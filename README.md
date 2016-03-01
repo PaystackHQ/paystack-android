@@ -1,6 +1,6 @@
-## paystack-android
+## Paystack Android
 
-This is a library for easy integration of Paystack with your Android application
+This is a library for easy integration of Paystack with your Android application. Use this library in your android app so we shoulder the burden of PCI compliance by helping you avoid the need to send card data directly to your server. Instead, this library sends credit card data directly to our servers, where we can convert them to tokens. You should then charge the token later in your server-side code.
 
 ## Installation
 
@@ -13,7 +13,7 @@ You do not need to clone this repository or download the files. Just add the fol
       }
     }
     dependencies {
-      compile 'co.paystack.android:paystack:1.1.0'
+      compile 'co.paystack.android:paystack:1.1.1'
     }
 
 ### Eclipse
@@ -52,7 +52,7 @@ Before you can create a token with the PaystackSdk, you need to set your publish
 
 ### 3. createToken
 Creating a single-use token with the PaystackSdk is quite straightforward.
-
+```java
     //build a card
     Card card = new Card.Builder(cardNumber, expiryMonth, expiryYear, cvc).build();
 
@@ -68,7 +68,7 @@ Creating a single-use token with the PaystackSdk is quite straightforward.
             //handle error here
         }
     });
-
+```
 The first argument to the PaystackSdk.createToken is the card object. A basic Card object contains:
 
 + cardNumber: the card number as a String without any seperator e.g 5555555555554444
@@ -91,7 +91,7 @@ Send the token to your server and create a charge by calling our REST API. An au
 **Example**
 
 ```bash
-    curl https://api.paystack.co/transaction/charge_token \
+   $ curl https://api.paystack.co/transaction/charge_token \
     -H "Authorization: Bearer SECRET_KEY" \
     -H "Content-Type: application/json" \
     -d '{"token": "PSTK_r4ec2m75mrgsd8n9", "email": "customer@email.com", "amount": 10000, "reference": "amutaJHSYGWakinlade256"}' \
@@ -123,35 +123,35 @@ if ((intval($code) === 200) && array_key_exists('status', $body) && $body['statu
 
 
 **Result**
-
-    {  "status": true,
-       "message": "Charge successful",
-       "data": {
-                "amount": 10000,
-                "transaction_date": "2016-01-26T15:34:02.000Z",
-    "status": "success",
-    "reference": "amutaJHSYGWakinlade256",
-    "domain": "test",
-    "authorization": {
-      "authorization_code": "AUTH_d47nbp3x",
-      "card_type": "visa",
-      "last4": "1111",
-      "bank": null
-    },
-    "customer": {
-      "first_name": "John",
-      "last_name": "Doe",
-      "email": "customer@email.com"
-    },
-    "plan": 0}}
-
+```json
+    {  
+        "status": true,
+        "message": "Charge successful",
+        "data": {
+            "amount": 10000,
+            "transaction_date": "2016-01-26T15:34:02.000Z",
+            "status": "success",
+            "reference": "amutaJHSYGWakinlade256",
+            "domain": "test",
+            "authorization": {
+            "authorization_code": "AUTH_d47nbp3x",
+            "card_type": "visa",
+            "last4": "1111",
+            "bank": null
+        },
+        "customer": {
+            "first_name": "John",
+            "last_name": "Doe",
+            "email": "customer@email.com"
+        },
+        "plan": 0
+    }
+```
 
 
 
 ### 5. Charging Returning Customers
 See details for charging returning customers [here](https://developers.paystack.co/docs/charging-returning-customers). 
-
- 
 
 ### 6. Library aided card validation & utility methods
 The library provides validation methods to validate the fields of the card.
