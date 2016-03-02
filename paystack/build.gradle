@@ -55,7 +55,7 @@ ext {
     gitUrl = 'https://github.com/PaystackHQ/paystack-android.git'
 
     licenseName = 'The Apache Software License, Version 2.0'
-    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    licenseUrl = 'https://raw.githubusercontent.com/PaystackHQ/paystack-android/master/LICENSE.txt'
     allLicenses = ["Apache-2.0"]
 }
 
