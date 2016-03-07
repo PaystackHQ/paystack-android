@@ -27,7 +27,15 @@ To use this library with Eclipse, you need to:
 
 ### 0. Prepare for use
 
-To prepare for use, you must ensure to add the internet permissions to the AndroidManifest.xml
+To prepare for use, you must ensure that your app has internet permissions by making sure the `uses-permission` line below is present in the AndroidManifest.xml.
+
+```xml
+<manifest xlmns:android...>
+ ...
+ <uses-permission android:name="android.permission.INTERNET" />
+ <application ...
+</manifest>
+```
 
 ### 1. initializeSdk
 
