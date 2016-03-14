@@ -1,20 +1,34 @@
 ## Paystack Android
 
-This is a library for easy integration of Paystack with your Android application. Use this library in your android app so we shoulder the burden of PCI compliance by helping you avoid the need to send card data directly to your server. Instead, this library sends credit card data directly to our servers, where we can convert them to tokens. You should then charge the token later in your server-side code.
+This is a library for easy integration of [Paystack](https://paystack.com) with your Android application. Use this 
+library in your android app so we shoulder the burden of PCI compliance by helping you 
+avoid the need to send card data directly to your server. Instead, this library sends credit 
+card data directly to our servers, where we can convert them to `tokens`. You should then 
+charge the `token` in your server-side code.
+
+Note that `tokens` are one-time use and should be charged to confirm validity of card. A successful
+charge will return an `auth_code` which you will then save on your server and use for future charges.
+
+## Requirements
+- Android SDKv16 (Android 4.1 "Jelly Bean") - This is the first SDK version that includes 
+`TLSv1.2` which is required by our servers. Native app support for user devices older than 
+API 16 will not be available.
 
 ## Installation
 
 ### Android Studio (using Gradle)
 You do not need to clone this repository or download the files. Just add the following lines to your app's `build.gradle`:
 
-    repositories {
-      maven {
-          url 'https://dl.bintray.com/paystack/maven/'
-      }
-    }
-    dependencies {
-      compile 'co.paystack.android:paystack:1.2.0'
-    }
+```gradle
+repositories {
+  maven {
+      url 'https://dl.bintray.com/paystack/maven/'
+  }
+}
+dependencies {
+  compile 'co.paystack.android:paystack:1.2.0'
+}
+```
 
 ### Eclipse
 To use this library with Eclipse, you need to:
@@ -33,7 +47,7 @@ To prepare for use, you must ensure that your app has internet permissions by ma
 <manifest xlmns:android...>
  ...
  <uses-permission android:name="android.permission.INTERNET" />
- <application ...
+ <application ... />
 </manifest>
 ```
 
@@ -41,7 +55,9 @@ To prepare for use, you must ensure that your app has internet permissions by ma
 
 To use the Paysack android sdk, you need to first initialize the sdk using the PaystackSdk class.
 
-    PaystackSdk.initialize(getApplicationContext());
+```java
+PaystackSdk.initialize(getApplicationContext());
+```
 
 Make sure to call this method in the onCreate method of your Fragment or Activity.
 
@@ -50,13 +66,18 @@ Make sure to call this method in the onCreate method of your Fragment or Activit
 Before you can create a token with the PaystackSdk, you need to set your publishable key. The library provides two approaches,
 
 #### a. Add the following lines to the `<application></application>` tag of your AndroidManifest.xml
-    <meta-data
-        android:name="co.paystack.android.PublishableKey"
-        android:value="your publishable key"/>
+
+```xml
+<meta-data
+    android:name="co.paystack.android.PublishableKey"
+    android:value="your publishable key"/>
+```
 
 #### b. Set the publishable key by code
-    PaystackSdk.setPublishableKey(publishableKey);
 
+```java
+PaystackSdk.setPublishableKey(publishableKey);
+```
 
 ### 3. createToken
 Creating a single-use token with the PaystackSdk is quite straightforward.
@@ -106,7 +127,7 @@ Send the token to your server and create a charge by calling our REST API. An au
     -X POST
 
 ```
-###Using the [Paystack-PHP library](https://github.com/yabacon/paystack-php) or [Paystack PHP class](https://github.com/yabacon/paystack-class)
+### Using the [Paystack-PHP library](https://github.com/yabacon/paystack-php) or [Paystack PHP class](https://github.com/yabacon/paystack-class)
 ```php
 list($headers, $body, $code) = $paystack->transaction->chargeToken([
                 'reference'=>'amutaJHSYGWakinlade256',
