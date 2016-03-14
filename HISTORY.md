@@ -1,5 +1,14 @@
 # History
-Last updated Mar 2, 2016
+Last updated Mar 14, 2016
+
+## Commits on Mar 14, 2016
+- Bump `PaystackSdk` version to `1.2.0`
+- Example App will use `v1.2.0`
+- Added default sample card to example activity so token request is one-click
+- Added `TLSSocketFactory` class that pegs all socket calls to use `TLSv1.2`
+- ApiClient will throw new exceptions in case `TLSv1.2` is not found
+- Make `retrofit` use custom `okHttpClient` that uses `TLSSocketFactory` to create requests
+- Took out stray `statuscode` integer
 
 ## Commits on Mar 2, 2016
 - Added Markdown templates > @ibrahimlawal - bb030a6  

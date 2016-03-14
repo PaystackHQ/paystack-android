@@ -2,6 +2,9 @@ package co.paystack.android;
 
 import android.util.Log;
 
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.concurrent.Executor;
 
@@ -47,22 +50,21 @@ public class TokenManager implements Paystack.TokenCreator {
       //request token from paystack server
       createServerSideToken(tokenRequestBody, tokenCallback);
 
-    } catch (CardException ce) {
+    } catch (CardException
+        | KeyManagementException
+        | NoSuchAlgorithmException
+        | AuthenticationException
+        | KeyStoreException ce) {
+      Log.e(LOG_TAG, ce.getMessage(), ce);
       if (tokenCallback != null) {
         tokenCallback.onError(ce);
-      }
-      Log.e(LOG_TAG, ce.getMessage(), ce);
-    } catch (AuthenticationException ae) {
-      if (tokenCallback != null) {
-        tokenCallback.onError(ae);
-        Log.e(LOG_TAG, ae.getMessage(), ae);
       }
     }
 
   }
 
 
-  private void createServerSideToken(TokenRequestBody tokenRequestBody, final Paystack.TokenCallback tokenCallback) {
+  private void createServerSideToken(TokenRequestBody tokenRequestBody, final Paystack.TokenCallback tokenCallback) throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
     //call retrofit api service
     ApiService apiService = new ApiClient().getApiService();
 
@@ -83,7 +85,6 @@ public class TokenManager implements Paystack.TokenCreator {
        */
       @Override
       public void onResponse(Call<TokenApiResponse> call, Response<TokenApiResponse> response) {
-        int statuscode = response.code();
         TokenApiResponse tokenApiResponse = response.body();
         if (tokenApiResponse != null) {
           //check for status...if 0 return an error with the message
@@ -110,7 +111,7 @@ public class TokenManager implements Paystack.TokenCreator {
       @Override
       public void onFailure(Call<TokenApiResponse> call, Throwable t) {
         Log.e(LOG_TAG, t.getMessage());
-        // Don't want to change public method signature in v1.1.1
+        // Don't want to change public method signature yet
         // this is meant to be a minor revision
         // TODO: in a major revision, make TokenCallback.onError use throwable directly
         if (t instanceof Exception) {

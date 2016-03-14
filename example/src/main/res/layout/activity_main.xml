@@ -6,7 +6,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:id="@+id/layout_custom_form"
@@ -32,6 +32,7 @@
                     android:hint="@string/card_number"
                     android:inputType="number"
                     android:minEms="8"
+                    android:text="@string/sample_card"
                     />
 
                 <EditText
@@ -42,7 +43,8 @@
                     android:hint="@string/cvv"
                     android:inputType="number"
                     android:maxLength="4"
-                    android:minEms="4"/>
+                    android:minEms="4"
+                    android:text="@string/sample_cvv"/>
             </LinearLayout>
 
             <View
@@ -61,7 +63,8 @@
                 android:hint="@string/mm"
                 android:inputType="number"
                 android:maxEms="3"
-                android:maxLength="2"/>
+                android:maxLength="2"
+                android:text="@string/sample_month"/>
 
             <EditText
                 android:id="@+id/edit_expiry_year"
@@ -73,7 +76,8 @@
                 android:hint="@string/yyyy"
                 android:inputType="number"
                 android:maxEms="4"
-                android:maxLength="4"/>
+                android:maxLength="4"
+                android:text="@string/sample_year"/>
 
             <Button
                 android:id="@+id/button_create_token"

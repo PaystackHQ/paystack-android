@@ -3,7 +3,13 @@ package co.paystack.android.api;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+
 import co.paystack.android.api.service.ApiService;
+import co.paystack.android.api.utils.TLSSocketFactory;
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -22,20 +28,21 @@ public class ApiClient {
 
   private ApiService apiService;
 
-  public ApiClient() {
+  public ApiClient() throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {
     Gson gson = new GsonBuilder()
         .setDateFormat("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'")
         .create();
 
+    OkHttpClient okHttpClient = new OkHttpClient
+        .Builder()
+        .sslSocketFactory(new TLSSocketFactory())
+        .build();
+
     Retrofit retrofit = new Retrofit.Builder()
         .baseUrl(API_URL)
-        .addConverterFactory(GsonConverterFactory.create())
+        .client(okHttpClient)
+        .addConverterFactory(GsonConverterFactory.create(gson))
         .build();
-//    RestAdapter restAdapter = new RestAdapter.Builder()
-//        .setLogLevel(RestAdapter.LogLevel.FULL)
-//        .setEndpoint()
-//        .setConverter(new GsonConverter(gson))
-//        .build();
 
     apiService = retrofit.create(ApiService.class);
   }

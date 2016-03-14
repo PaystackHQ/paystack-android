@@ -4,6 +4,13 @@ Last updated Mar 2, 2016
 
 All notable changes to this project will be documented in this file.
 
+## Released v1.2.0 - 2016-03-14
+- ApiClient will throw new exceptions in case `TLSv1.2` is not found
+- Make `retrofit` use custom `okHttpClient` that uses our socket factory to create requests
+
+**Fixed**
+- Rework Android Library to work with only TLS v1.2
+
 ## NEXT - YYYY-MM-DD
 
 ## Added - 2016-03-02

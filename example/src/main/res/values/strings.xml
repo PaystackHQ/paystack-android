@@ -12,4 +12,8 @@
     <string name="no_token">No token</string>
     <string name="token_null_message">Token was null</string>
     <string name="token_not_gotten">Unable to get token</string>
+    <string name="sample_card">4111111111111111</string>
+    <string name="sample_cvv">411</string>
+    <string name="sample_month">11</string>
+    <string name="sample_year">2018</string>
 </resources>

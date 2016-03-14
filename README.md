@@ -13,7 +13,7 @@ You do not need to clone this repository or download the files. Just add the fol
       }
     }
     dependencies {
-      compile 'co.paystack.android:paystack:1.1.1'
+      compile 'co.paystack.android:paystack:1.2.0'
     }
 
 ### Eclipse

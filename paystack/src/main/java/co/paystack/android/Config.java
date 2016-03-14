@@ -7,7 +7,7 @@ package co.paystack.android;
  */
 public class Config {
 
-  public static final int VERSION_CODE = 1;
+  public static final int VERSION_CODE = 4;
 
-  public static final String VERSION_NAME = "1.0";
+  public static final String VERSION_NAME = "1.2.0";
 }
