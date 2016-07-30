@@ -22,15 +22,21 @@ import java.security.NoSuchAlgorithmException;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.X509TrustManager;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
 public class TLSSocketFactory extends SSLSocketFactory {
 
+  public X509TrustManager getTrustManager() {
+    return x509TrustManager;
+  }
+
   // Field named delegate so okHttp 3.1.2 will be
   // able to get our trust manager as suggested here:
   // https://github.com/square/okhttp/issues/2323#issuecomment-185055040
   private SSLSocketFactory delegate;
+  private X509TrustManager x509TrustManager;
 
   public TLSSocketFactory() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
     SSLContext context = SSLContext.getInstance("TLS");
@@ -41,6 +47,11 @@ public class TLSSocketFactory extends SSLSocketFactory {
     TrustManager[] tm = trustManagerFactory.getTrustManagers();
 
     context.init(null, tm, null);
+    for (int i = 0; i < tm.length; i++) {
+      if (tm[i] instanceof X509TrustManager) {
+        x509TrustManager = (X509TrustManager) tm[i];
+      }
+    }
 
     delegate = context.getSocketFactory();
   }

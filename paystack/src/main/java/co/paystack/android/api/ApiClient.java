@@ -33,9 +33,10 @@ public class ApiClient {
         .setDateFormat("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'")
         .create();
 
+    TLSSocketFactory tlsV1point2factory = new TLSSocketFactory();
     OkHttpClient okHttpClient = new OkHttpClient
         .Builder()
-        .sslSocketFactory(new TLSSocketFactory())
+        .sslSocketFactory(tlsV1point2factory, tlsV1point2factory.getTrustManager())
         .build();
 
     Retrofit retrofit = new Retrofit.Builder()
