@@ -26,7 +26,7 @@ repositories {
   }
 }
 dependencies {
-  compile 'co.paystack.android:paystack:1.2.0'
+  compile 'co.paystack.android:paystack:1.2.1'
 }
 ```
 
@@ -209,4 +209,4 @@ This method returns an estimate of the string representation of the card type.
 
 ## Contact
 
-For more enquiries and technical questions regarding the Android PaystackSdk, please send an email to androidsupport@paystack.co
+For more enquiries and technical questions regarding the Android PaystackSdk, please send an email to support@paystack.co
