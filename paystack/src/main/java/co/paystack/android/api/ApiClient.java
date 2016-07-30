@@ -36,7 +36,7 @@ public class ApiClient {
     TLSSocketFactory tlsV1point2factory = new TLSSocketFactory();
     OkHttpClient okHttpClient = new OkHttpClient
         .Builder()
-        .sslSocketFactory(tlsV1point2factory, tlsV1point2factory.getTrustManager())
+        .sslSocketFactory(tlsV1point2factory, tlsV1point2factory.getX509TrustManager())
         .build();
 
     Retrofit retrofit = new Retrofit.Builder()
