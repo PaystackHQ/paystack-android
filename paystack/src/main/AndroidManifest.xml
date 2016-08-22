@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="co.paystack.android"
-    >
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="co.paystack.android">
+
+    <application>
+        <activity android:name=".ui.PinActivity"></activity>
+    </application>
 
 </manifest>

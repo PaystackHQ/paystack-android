@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -180,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
     if (token != null) {
       mTextCard.setText(String.format("Card last 4 digits: %s", token.last4));
       mTextToken.setText(String.format("Token: %s", token.token));
+      Log.d("HABANAH",token.token);
     } else {
       mTextCard.setText(R.string.token_not_gotten);
       mTextToken.setText(R.string.token_null_message);
