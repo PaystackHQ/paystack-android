@@ -29,7 +29,6 @@ import retrofit2.Response;
  * @author {androidsupport@paystack.co} on 9/17/15.
  */
 public class TokenManager implements Paystack.TokenCreator {
-    private static final String CARD_CONCATENATOR = "*";
 
     private static final String LOG_TAG = TokenManager.class.getSimpleName();
 
@@ -37,7 +36,7 @@ public class TokenManager implements Paystack.TokenCreator {
     public void create(final Card card, String publicKey, final Paystack.TokenCallback tokenCallback, Executor executor) {
         try {
             //concatenate card fields
-            String cardString = concatenateCardFields(card);
+            String cardString = StringUtils.concatenateCardFields(card);
 
             //encrypt
             final String encCardString = Crypto.encrypt(cardString);
@@ -122,31 +121,4 @@ public class TokenManager implements Paystack.TokenCreator {
         });
     }
 
-    private String concatenateCardFields(Card card) throws CardException {
-        if (card == null) {
-            throw new CardException("Card cannot be null");
-        }
-
-        String number = StringUtils.nullify(card.getNumber());
-        String cvc = StringUtils.nullify(card.getCvc());
-        int expiryMonth = card.getExpiryMonth();
-        int expiryYear = card.getExpiryYear();
-
-        String cardString = null;
-        String[] cardFields = {number, cvc, expiryMonth + "", expiryYear + ""};
-
-        if (!StringUtils.isEmpty(number)) {
-            for (int i = 0; i < cardFields.length; i++) {
-                if (i == 0 && cardFields.length > 1)
-                    cardString = cardFields[i] + CARD_CONCATENATOR;
-                else if (i == cardFields.length - 1)
-                    cardString += cardFields[i];
-                else
-                    cardString = cardString + cardFields[i] + CARD_CONCATENATOR;
-            }
-            return cardString;
-        } else {
-            throw new CardException("Invalid card details: Card number is empty or null");
-        }
-    }
 }

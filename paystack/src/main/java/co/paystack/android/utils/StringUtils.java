@@ -1,5 +1,8 @@
 package co.paystack.android.utils;
 
+import co.paystack.android.exceptions.CardException;
+import co.paystack.android.model.Card;
+
 /**
  * String utility methods
  *
@@ -7,7 +10,9 @@ package co.paystack.android.utils;
  */
 public class StringUtils {
 
-  public static boolean isEmpty(String value) {
+    public static final String CARD_CONCATENATOR = "*";
+
+    public static boolean isEmpty(String value) {
     return value == null || value.length() < 1 || value.equalsIgnoreCase("null");
   }
 
@@ -27,4 +32,32 @@ public class StringUtils {
     }
     return value;
   }
+
+    public static String concatenateCardFields(Card card) throws CardException {
+        if (card == null) {
+            throw new CardException("Card cannot be null");
+        }
+
+        String number = nullify(card.getNumber());
+        String cvc = nullify(card.getCvc());
+        int expiryMonth = card.getExpiryMonth();
+        int expiryYear = card.getExpiryYear();
+
+        String cardString = null;
+        String[] cardFields = {number, cvc, expiryMonth + "", expiryYear + ""};
+
+        if (!isEmpty(number)) {
+            for (int i = 0; i < cardFields.length; i++) {
+                if (i == 0 && cardFields.length > 1)
+                    cardString = cardFields[i] + CARD_CONCATENATOR;
+                else if (i == cardFields.length - 1)
+                    cardString += cardFields[i];
+                else
+                    cardString = cardString + cardFields[i] + CARD_CONCATENATOR;
+            }
+            return cardString;
+        } else {
+            throw new CardException("Invalid card details: Card number is empty or null");
+        }
+    }
 }
