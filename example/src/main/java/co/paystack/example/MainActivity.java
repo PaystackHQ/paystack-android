@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
   private void createToken(Card card) {
     //then create token using PaystackSdk class
-    PaystackSdk.createToken(card, new Paystack.TokenCallback() {
+    PaystackSdk.createToken(this, card, new Paystack.TokenCallback() {
       @Override
       public void onCreate(Token token) {
 
@@ -181,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
     if (token != null) {
       mTextCard.setText(String.format("Card last 4 digits: %s", token.last4));
       mTextToken.setText(String.format("Token: %s", token.token));
-      Log.d("HABANAH",token.token);
     } else {
       mTextCard.setText(R.string.token_not_gotten);
       mTextToken.setText(R.string.token_null_message);

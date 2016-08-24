@@ -3,7 +3,11 @@
     package="co.paystack.android">
 
     <application>
-        <activity android:name=".ui.PinActivity"></activity>
+        <activity
+            android:name=".ui.PinActivity"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".ui.OtpActivity"
+            android:theme="@android:style/Theme.Dialog"></activity>
     </application>
 
 </manifest>

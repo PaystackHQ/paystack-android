@@ -29,6 +29,7 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'me.philio:pinentryview:1.0.6'
 }
 
 ext {

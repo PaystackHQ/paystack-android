@@ -91,6 +91,10 @@ public class TokenManager implements Paystack.TokenCreator {
           if (tokenApiResponse.status == 0) {
             //throw an error
             tokenCallback.onError(new TokenException(tokenApiResponse.message));
+          } else if (tokenApiResponse.status == 2) {
+            // needs pin
+            // show dialog
+            tokenCallback.onError(new TokenException(tokenApiResponse.message));
           } else {
             Token token = new Token();
             token.token = tokenApiResponse.token;
