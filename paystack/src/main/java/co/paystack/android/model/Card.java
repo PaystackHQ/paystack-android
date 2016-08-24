@@ -91,7 +91,7 @@ public class Card extends PaystackModel implements Serializable {
 
     this.country = StringUtils.nullify(builder.country);
     this.type = getType();
-    this.last4digits = getLast4digits();
+      this.last4digits = builder.last4digits;
   }
 
   /**
@@ -113,10 +113,13 @@ public class Card extends PaystackModel implements Serializable {
   public Card(String number, Integer expiryMonth, Integer expiryYear, String cvc, String name,
               String addressLine1, String addressLine2, String addressLine3, String addressLine4,
               String addressCountry, String addressPostalCode, String country) {
-    this.number = StringUtils.nullify(number);
-    this.expiryMonth = expiryMonth;
-    this.expiryYear = expiryYear;
-    this.cvc = StringUtils.nullify(cvc);
+      // use builder to set first 5 required fields
+      Builder intermediate = new Builder(number, expiryMonth, expiryYear, cvc);
+      this.number = intermediate.number;
+      this.expiryMonth = intermediate.expiryMonth;
+      this.expiryYear = intermediate.expiryYear;
+      this.cvc = intermediate.cvc;
+      this.last4digits = intermediate.last4digits;
 
     this.name = StringUtils.nullify(name);
     this.addressLine1 = StringUtils.nullify(addressLine1);
@@ -129,7 +132,6 @@ public class Card extends PaystackModel implements Serializable {
     this.country = StringUtils.nullify(country);
 
     this.type = getType();
-    this.last4digits = getLast4digits();
   }
 
   /**
@@ -295,10 +297,6 @@ public class Card extends PaystackModel implements Serializable {
     return number;
   }
 
-  public void setNumber(String number) {
-    this.number = number;
-  }
-
   public String getCvc() {
     return cvc;
   }
@@ -406,10 +404,6 @@ public class Card extends PaystackModel implements Serializable {
     return last4digits;
   }
 
-  public void setLast4digits(String last4digits) {
-    this.last4digits = last4digits;
-  }
-
   /**
    * Builder class to build a card;
    */
@@ -438,11 +432,24 @@ public class Card extends PaystackModel implements Serializable {
      * @param cvc         - Card CVC
      */
     public Builder(String number, Integer expiryMonth, Integer expiryYear, String cvc) {
-      this.number = number;
+        this.setNumber(number);
       this.expiryMonth = expiryMonth;
       this.expiryYear = expiryYear;
       this.cvc = cvc;
     }
+
+      public Builder setNumber(String number) {
+          this.number = number;
+          if (number.length() == 4) {
+              last4digits = number;
+          } else if (number.length() > 4) {
+              last4digits = number.substring(number.length() - 4);
+          } else {
+              // whatever is appropriate in this case
+              throw new IllegalArgumentException("number has less than 4 characters!");
+          }
+          return this;
+      }
 
     public Builder setName(String name) {
       this.name = name;
@@ -485,16 +492,10 @@ public class Card extends PaystackModel implements Serializable {
       return this;
     }
 
-
-    public Builder setLast4digits(String last4digits) {
-      this.last4digits = last4digits;
-      return this;
-    }
-
-    public Builder setType(String type) {
-      this.type = type;
-      return this;
-    }
+      public Builder setType(String type) {
+          this.type = type;
+          return this;
+      }
 
 
     public Card build() {
