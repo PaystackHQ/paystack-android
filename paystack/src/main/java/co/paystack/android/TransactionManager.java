@@ -39,6 +39,8 @@ public class TransactionManager {
     private ChargeRequestBody chargeRequestBody;
     private ValidateRequestBody validateRequestBody;
     private ApiService apiService;
+    private final PinSingleton psi = PinSingleton.getInstance();
+    private final OtpSingleton osi = OtpSingleton.getInstance();
 
     public TransactionManager(Activity activity, Charge charge, Paystack.TransactionCallback transactionCallback) {
         this.activity = activity;
@@ -180,17 +182,17 @@ public class TransactionManager {
         protected String doInBackground(Void... params) {
             Intent i = new Intent(activity, PinActivity.class);
             activity.startActivity(i);
-            PinSingleton si = PinSingleton.getInstance();
 
-            synchronized (si) {
+
+            synchronized (psi) {
                 try {
-                    si.wait();
+                    psi.wait();
                 } catch (InterruptedException e) {
                     transactionCallback.onError(new Exception("PIN entry Interrupted"));
                 }
             }
 
-            return si.getPin();
+            return psi.getPin();
         }
 
         @Override
@@ -211,17 +213,17 @@ public class TransactionManager {
         protected String doInBackground(Void... params) {
             Intent i = new Intent(activity, OtpActivity.class);
             activity.startActivity(i);
-            OtpSingleton si = OtpSingleton.getInstance();
 
-            synchronized (si) {
+
+            synchronized (osi) {
                 try {
-                    si.wait();
+                    osi.wait();
                 } catch (InterruptedException e) {
                     transactionCallback.onError(new Exception("PIN entry Interrupted"));
                 }
             }
 
-            return si.getOtp();
+            return osi.getOtp();
         }
 
         @Override
