@@ -46,7 +46,7 @@ public class ChargeRequestBody extends BaseRequestBody {
     }
 
     public ChargeRequestBody(Charge charge) {
-        this.clientData = StringUtils.concatenateCardFields(charge.getCard());
+        this.clientData = Crypto.encrypt(StringUtils.concatenateCardFields(charge.getCard()));
         this.last4 = charge.getCard().getLast4digits();
         this.public_key = PaystackSdk.getPublicKey();
         this.email = charge.getEmail();
