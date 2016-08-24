@@ -24,6 +24,8 @@ public final class PaystackSdk {
      * key for public key property in the AndroidManifest.xml
      */
     private static final String KEY_PUBLIC_KEY_PROP = "co.paystack.android.PublicKey";
+    @Deprecated
+    private static final String KEY_PUBLISHABLE_KEY_PROP = "co.paystack.android.PublishableKey";
     /**
      * Flag to know if sdk has been initialized
      */
@@ -105,6 +107,11 @@ public final class PaystackSdk {
         PaystackSdk.publicKey = publicKey;
     }
 
+    @Deprecated
+    public static void setPublishableKey(String publishableKey) {
+        PaystackSdk.publicKey = publishableKey;
+    }
+
     public static Context getApplicationContext() {
         return applicationContext;
     }
@@ -132,6 +139,11 @@ public final class PaystackSdk {
         //check public key
         if (publicKey == null) {
             publicKey = applicationInfo.metaData.getString(KEY_PUBLIC_KEY_PROP);
+        }
+
+        // try with publishable key
+        if (publicKey == null) {
+            publicKey = applicationInfo.metaData.getString(KEY_PUBLISHABLE_KEY_PROP);
         }
 
     }
