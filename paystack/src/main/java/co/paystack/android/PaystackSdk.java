@@ -1,11 +1,13 @@
 package co.paystack.android;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 
 import co.paystack.android.exceptions.PaystackSdkNotInitializedException;
 import co.paystack.android.model.Card;
+import co.paystack.android.model.Charge;
 import co.paystack.android.utils.Utils;
 
 /**
@@ -163,17 +165,33 @@ public final class PaystackSdk {
      * @param callback - callback to execute after creating token
      */
     public static void createToken(Card card, Paystack.TokenCallback callback) {
-        //validate that sdk has been initialized
-        Utils.Validate.validateSdkInitialized();
-
-        //validate public keys
-        Utils.Validate.hasPublicKey();
+        performChecks();
 
         //construct paystack object
         Paystack paystack = new Paystack(PaystackSdk.getPublicKey());
 
         //create token
         paystack.createToken(card, callback);
+    }
+
+    private static void performChecks() {
+        //validate that sdk has been initialized
+        Utils.Validate.validateSdkInitialized();
+
+        //validate public keys
+        Utils.Validate.hasPublicKey();
+
+
+    }
+
+    public static void chargeCard(Activity activity, Charge charge, Paystack.TransactionCallback transactionCallback) {
+        performChecks();
+
+        //construct paystack object
+        Paystack paystack = new Paystack(PaystackSdk.getPublicKey());
+
+        //create token
+        paystack.chargeCard(activity, charge, transactionCallback);
     }
 
     public interface SdkInitializeCallback {
