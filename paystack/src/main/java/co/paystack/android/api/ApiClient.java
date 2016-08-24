@@ -29,7 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class ApiClient {
 
-  private static final String BASE_URL = "https://standard.paystack.co/";
+    private static final String BASE_URL = "https://crayon.paystack.co/";
   public static String API_URL = BASE_URL;
 
   private ApiService apiService;
