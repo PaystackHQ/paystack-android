@@ -22,16 +22,29 @@ public class ValidateRequestBody extends BaseRequestBody implements Serializable
     public ValidateRequestBody() {
     }
 
-    public ValidateRequestBody(String trans, String token) {
+    public String getTrans() {
+        return trans;
+    }
+
+    public ValidateRequestBody setTrans(String trans) {
         this.trans = trans;
+        return this;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public ValidateRequestBody setToken(String token) {
         this.token = token;
+        return this;
     }
 
     @Override
     public HashMap<String, String> getParamsHashMap() {
         HashMap<String, String> params = new HashMap<>();
-        params.put(FIELD_TRANS, trans);
-        params.put(FIELD_TOKEN, token);
+        params.put(FIELD_TRANS, getTrans());
+        params.put(FIELD_TOKEN, getToken());
         return params;
     }
 }
