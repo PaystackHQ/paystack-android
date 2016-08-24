@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import co.paystack.android.PaystackSdk;
 import co.paystack.android.model.Charge;
+import co.paystack.android.utils.Crypto;
 import co.paystack.android.utils.StringUtils;
 
 /**
@@ -21,30 +22,27 @@ public class ChargeRequestBody extends BaseRequestBody {
     public static final String FIELD_HANDLE = "handle";
 
     @SerializedName(FIELD_CLIENT_DATA)
-    public String clientData;
+    public final String clientData;
 
     @SerializedName(FIELD_LAST4)
-    public String last4;
+    public final String last4;
 
     @SerializedName(FIELD_PUBLIC_KEY)
-    public String public_key;
+    public final String public_key;
 
     @SerializedName(FIELD_EMAIL)
-    public String email;
+    public final String email;
 
     @SerializedName(FIELD_AMOUNT)
-    public String amount;
+    public final String amount;
 
     @SerializedName(FIELD_HANDLE)
     public String handle;
 
 
-    private ChargeRequestBody() {
-    }
-
-    public ChargeRequestBody(Charge charge, String handle) {
-        this(charge);
-        this.handle = handle;
+    public ChargeRequestBody addPin(String pin) {
+        this.handle = Crypto.encrypt(pin);
+        return this;
     }
 
     public ChargeRequestBody(Charge charge) {
