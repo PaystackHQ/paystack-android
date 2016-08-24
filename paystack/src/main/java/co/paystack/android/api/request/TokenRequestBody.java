@@ -2,6 +2,8 @@ package co.paystack.android.api.request;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.HashMap;
+
 /**
  * A token request
  */
@@ -21,11 +23,19 @@ public class TokenRequestBody extends BaseRequestBody {
   public String publicKey;
 
 
-  public TokenRequestBody() {
+    private TokenRequestBody() {
   }
 
     public TokenRequestBody(String clientData, String publicKey) {
     this.clientData = clientData;
         this.publicKey = publicKey;
   }
+
+    @Override
+    public HashMap<String, String> getParamsHashMap() {
+        HashMap<String, String> params = new HashMap<>();
+        params.put(FIELD_PUBLIC_KEY, publicKey);
+        params.put(FIELD_CLIENT_DATA, clientData);
+        return params;
+    }
 }
