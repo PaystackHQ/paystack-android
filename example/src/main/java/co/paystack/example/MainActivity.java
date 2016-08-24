@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
   private void createToken(Card card) {
     //then create token using PaystackSdk class
-    PaystackSdk.createToken(this, card, new Paystack.TokenCallback() {
+      PaystackSdk.createToken(card, new Paystack.TokenCallback() {
       @Override
       public void onCreate(Token token) {
 

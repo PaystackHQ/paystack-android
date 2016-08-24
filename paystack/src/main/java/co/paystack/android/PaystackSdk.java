@@ -1,6 +1,5 @@
 package co.paystack.android;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -151,37 +150,22 @@ public final class PaystackSdk {
      * @param card     - card whose token we need to create
      * @param callback - callback to execute after creating token
      */
-    public static void createToken(final Activity activity, Card card, final Paystack.TokenCallback callback) {
+    public static void createToken(Card card, Paystack.TokenCallback callback) {
         //validate that sdk has been initialized
         Utils.Validate.validateSdkInitialized();
 
         //validate publishable keys
         Utils.Validate.hasPublishableKey();
-//        activity.runOnUiThread(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                Intent intent = new Intent(activity, PinActivity.class);
-////                intent.putExtra("callback",callback);
-////               intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                //callback.onCreate(null);
-//                activity.startActivity(intent);
-//
-//            }
-//        });
 
-//        construct paystack object
+        //construct paystack object
         Paystack paystack = new Paystack(PaystackSdk.getPublishableKey());
 
-//        create token
-        paystack.createToken(card, activity, callback);
-
-
+        //create token
+        paystack.createToken(card, callback);
     }
 
     public interface SdkInitializeCallback {
         void onInitialized();
     }
-
 
 }

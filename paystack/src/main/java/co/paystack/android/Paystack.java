@@ -1,10 +1,5 @@
 package co.paystack.android;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.util.Log;
-
 import java.util.concurrent.Executor;
 
 import co.paystack.android.exceptions.AuthenticationException;
@@ -13,8 +8,6 @@ import co.paystack.android.exceptions.PaystackSdkNotInitializedException;
 import co.paystack.android.model.Card;
 import co.paystack.android.model.PaystackModel;
 import co.paystack.android.model.Token;
-import co.paystack.android.ui.PinActivity;
-import co.paystack.android.ui.PinSingleton;
 import co.paystack.android.utils.Utils;
 
 /**
@@ -29,7 +22,6 @@ public class Paystack extends PaystackModel {
 
     private static final TokenManager tokenManager = new TokenManager();
     private String publishableKey;
-    private Card card;
 
     /**
      * Constructor.
@@ -64,13 +56,6 @@ public class Paystack extends PaystackModel {
 
     }
 
-    private TokenCallback tokenCallback;
-
-    protected void setTokenCallBack(final TokenCallback callback) {
-        this.tokenCallback = callback;
-    }
-
-
     /**
      * Method to create token for the transaction, assumes the publishable key has been previously set.
      *
@@ -78,46 +63,8 @@ public class Paystack extends PaystackModel {
      * @param tokenCallback - a callback to execute after getting the token
      * @throws AuthenticationException if publishable key hasn't been set.
      */
-    public void createToken(Card card, Activity activity, TokenCallback tokenCallback) {
-        this.setTokenCallBack(tokenCallback);
-        this.setCard(card);
-        new ParentAsyncTask().execute(activity);
-
-    }
-
-    public void setCard(Card card) {
-        this.card = card;
-    }
-
-    private class ParentAsyncTask extends AsyncTask<Activity, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(Activity... params) {
-            // do what you need and if you decide to stop this activity and wait for the sub-activity, do this
-            Intent i = new Intent(params[0], PinActivity.class);
-            params[0].startActivity(i);
-            PinSingleton si = PinSingleton.getInstance();
-            //si.setOtpMessage("Hullabloo");
-            synchronized (si) {
-                try {
-                    si.wait();
-                } catch (InterruptedException e) {
-                    tokenCallback.onError(new Exception("PIN entry Interrupted"));
-                }
-            }
-            Log.d("HAHAHAHAHA", "Yes!! I waited and got token: " + si.getPin());
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-            if (aBoolean) {
-                createToken(card, publishableKey, tokenCallback);
-            } else {
-                tokenCallback.onError(new Exception("UNxepectd"));
-            }
-        }
+    public void createToken(Card card, TokenCallback tokenCallback) {
+        createToken(card, publishableKey, tokenCallback);
     }
 
     /**

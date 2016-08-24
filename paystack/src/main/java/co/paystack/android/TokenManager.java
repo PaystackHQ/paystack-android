@@ -29,132 +29,124 @@ import retrofit2.Response;
  * @author {androidsupport@paystack.co} on 9/17/15.
  */
 public class TokenManager implements Paystack.TokenCreator {
-  private static final String CARD_CONCATENATOR = "*";
-  private static final String RSA_PUBLIC_KEY = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANIsL+RHqfkBiKGn/D1y1QnNrMkKzxWP" +
-      "2wkeSokw2OJrCI+d6YGJPrHHx+nmb/Qn885/R01Gw6d7M824qofmCvkCAwEAAQ==";
+    private static final String CARD_CONCATENATOR = "*";
 
-  private static final String LOG_TAG = TokenManager.class.getSimpleName();
+    private static final String LOG_TAG = TokenManager.class.getSimpleName();
 
-  @Override
-  public void create(final Card card, String publishableKey, final Paystack.TokenCallback tokenCallback, Executor executor) {
-    try {
-      //concatenate card fields
-      String cardString = concatenateCardFields(card);
+    @Override
+    public void create(final Card card, String publishableKey, final Paystack.TokenCallback tokenCallback, Executor executor) {
+        try {
+            //concatenate card fields
+            String cardString = concatenateCardFields(card);
 
-      //encrypt
-      final String encCardString = Crypto.encrypt(cardString, RSA_PUBLIC_KEY);
+            //encrypt
+            final String encCardString = Crypto.encrypt(cardString);
 
-      //create tokenRequestBody
-      final TokenRequestBody tokenRequestBody = new TokenRequestBody(encCardString, publishableKey);
+            //create tokenRequestBody
+            final TokenRequestBody tokenRequestBody = new TokenRequestBody(encCardString, publishableKey);
 
-      //request token from paystack server
-      createServerSideToken(tokenRequestBody, tokenCallback);
+            //request token from paystack server
+            createServerSideToken(tokenRequestBody, tokenCallback);
 
-    } catch (CardException
-        | KeyManagementException
-        | NoSuchAlgorithmException
-        | AuthenticationException
-        | KeyStoreException ce) {
-      Log.e(LOG_TAG, ce.getMessage(), ce);
-      if (tokenCallback != null) {
-        tokenCallback.onError(ce);
-      }
+        } catch (CardException
+                | KeyManagementException
+                | NoSuchAlgorithmException
+                | AuthenticationException
+                | KeyStoreException ce) {
+            Log.e(LOG_TAG, ce.getMessage(), ce);
+            if (tokenCallback != null) {
+                tokenCallback.onError(ce);
+            }
+        }
+
     }
 
-  }
 
+    private void createServerSideToken(TokenRequestBody tokenRequestBody, final Paystack.TokenCallback tokenCallback) throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
+        //call retrofit api service
+        ApiService apiService = new ApiClient().getApiService();
 
-  private void createServerSideToken(TokenRequestBody tokenRequestBody, final Paystack.TokenCallback tokenCallback) throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
-    //call retrofit api service
-    ApiService apiService = new ApiClient().getApiService();
+        HashMap<String, String> params = new HashMap<>();
+        params.put(TokenRequestBody.FIELD_PUBLISHABLE_KEY, tokenRequestBody.publishableKey);
+        params.put(TokenRequestBody.FIELD_CLIENT_DATA, tokenRequestBody.clientData);
 
-    HashMap<String, String> params = new HashMap<>();
-    params.put(TokenRequestBody.FIELD_PUBLISHABLE_KEY, tokenRequestBody.publishableKey);
-    params.put(TokenRequestBody.FIELD_CLIENT_DATA, tokenRequestBody.clientData);
+        Call<TokenApiResponse> call = apiService.createToken(params);
+        call.enqueue(new Callback<TokenApiResponse>() {
+            /**
+             * Invoked for a received HTTP response.
+             * <p/>
 
-    Call<TokenApiResponse> call = apiService.createToken(params);
-    call.enqueue(new Callback<TokenApiResponse>() {
-      /**
-       * Invoked for a received HTTP response.
-       * <p/>
-       * Note: An HTTP response may still indicate an application-level failure such as a 404 or 500.
-       * Call {@link Response#isSuccess()} to determine if the response indicates success.
-       *
-       * @param call     - the call enqueueing this callback
-       * @param response - response from the server after call is made
-       */
-      @Override
-      public void onResponse(Call<TokenApiResponse> call, Response<TokenApiResponse> response) {
-        TokenApiResponse tokenApiResponse = response.body();
-        if (tokenApiResponse != null) {
-          //check for status...if 0 return an error with the message
-          if (tokenApiResponse.status == 0) {
-            //throw an error
-            tokenCallback.onError(new TokenException(tokenApiResponse.message));
-          } else if (tokenApiResponse.status == 2) {
-            // needs pin
-            // show dialog
-            tokenCallback.onError(new TokenException(tokenApiResponse.message));
-          } else {
-            Token token = new Token();
-            token.token = tokenApiResponse.token;
-            token.last4 = tokenApiResponse.last4;
+             * @param call     - the call enqueueing this callback
+             * @param response - response from the server after call is made
+             */
+            @Override
+            public void onResponse(Call<TokenApiResponse> call, Response<TokenApiResponse> response) {
+                TokenApiResponse tokenApiResponse = response.body();
+                if (tokenApiResponse != null) {
+                    //check for status...if 0 return an error with the message
+                    if (tokenApiResponse.status == 0) {
+                        //throw an error
+                        tokenCallback.onError(new TokenException(tokenApiResponse.message));
+                    } else {
+                        Token token = new Token();
+                        token.token = tokenApiResponse.token;
+                        token.last4 = tokenApiResponse.last4;
 
-            tokenCallback.onCreate(token);
-          }
+                        tokenCallback.onCreate(token);
+                    }
+                }
+            }
+
+            /**
+             * Invoked when a network exception occurred talking to the server or when an unexpected
+             * exception occurred creating the request or processing the response.
+             *
+             * @param call - call that enqueued this callback
+             * @param t    - the error or exception that caused the failure
+             */
+            @Override
+            public void onFailure(Call<TokenApiResponse> call, Throwable t) {
+                Log.e(LOG_TAG, t.getMessage());
+                // Don't want to change public method signature yet
+                // this is meant to be a minor revision
+                // TODO: in a major revision, make TokenCallback.onError use throwable directly
+                if (t instanceof Exception) {
+                    tokenCallback.onError((Exception) t);
+                } else {
+                    t.printStackTrace();
+                    tokenCallback.onError(new Exception(t.getMessage(), t));
+                }
+
+            }
+
+        });
+    }
+
+    private String concatenateCardFields(Card card) throws CardException {
+        if (card == null) {
+            throw new CardException("Card cannot be null");
         }
-      }
 
-      /**
-       * Invoked when a network exception occurred talking to the server or when an unexpected
-       * exception occurred creating the request or processing the response.
-       *
-       * @param call - call that enqueued this callback
-       * @param t - the error or exception that caused the failure
-       */
-      @Override
-      public void onFailure(Call<TokenApiResponse> call, Throwable t) {
-        Log.e(LOG_TAG, t.getMessage());
-        // Don't want to change public method signature yet
-        // this is meant to be a minor revision
-        // TODO: in a major revision, make TokenCallback.onError use throwable directly
-        if (t instanceof Exception) {
-          tokenCallback.onError((Exception) t);
+        String number = StringUtils.nullify(card.getNumber());
+        String cvc = StringUtils.nullify(card.getCvc());
+        int expiryMonth = card.getExpiryMonth();
+        int expiryYear = card.getExpiryYear();
+
+        String cardString = null;
+        String[] cardFields = {number, cvc, expiryMonth + "", expiryYear + ""};
+
+        if (!StringUtils.isEmpty(number)) {
+            for (int i = 0; i < cardFields.length; i++) {
+                if (i == 0 && cardFields.length > 1)
+                    cardString = cardFields[i] + CARD_CONCATENATOR;
+                else if (i == cardFields.length - 1)
+                    cardString += cardFields[i];
+                else
+                    cardString = cardString + cardFields[i] + CARD_CONCATENATOR;
+            }
+            return cardString;
         } else {
-          t.printStackTrace();
-          tokenCallback.onError(new Exception(t.getMessage(), t));
+            throw new CardException("Invalid card details: Card number is empty or null");
         }
-
-      }
-
-    });
-  }
-
-  private String concatenateCardFields(Card card) throws CardException {
-    if (card == null) {
-      throw new CardException("Card cannot be null");
     }
-
-    String number = StringUtils.nullify(card.getNumber());
-    String cvc = StringUtils.nullify(card.getCvc());
-    int expiryMonth = card.getExpiryMonth();
-    int expiryYear = card.getExpiryYear();
-
-    String cardString = null;
-    String[] cardFields = {number, cvc, expiryMonth + "", expiryYear + ""};
-
-    if (!StringUtils.isEmpty(number)) {
-      for (int i = 0; i < cardFields.length; i++) {
-        if (i == 0 && cardFields.length > 1)
-          cardString = cardFields[i] + CARD_CONCATENATOR;
-        else if (i == cardFields.length - 1)
-          cardString += cardFields[i];
-        else
-          cardString = cardString + cardFields[i] + CARD_CONCATENATOR;
-      }
-      return cardString;
-    } else {
-      throw new CardException("Invalid card details: Card number is empty or null");
-    }
-  }
 }
