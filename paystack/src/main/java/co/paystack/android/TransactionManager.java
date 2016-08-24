@@ -53,10 +53,15 @@ public class TransactionManager {
     public void initiate() {
         try {
 
-            //create tokenRequestBody
-            chargeRequestBody = new ChargeRequestBody(charge);
-            validateRequestBody = new ValidateRequestBody();
-            apiService = new ApiClient().getApiService();
+            if(apiService == null){
+                apiService = new ApiClient().getApiService();
+            }
+            if(chargeRequestBody == null) {
+                chargeRequestBody = new ChargeRequestBody(charge);
+            }
+            if(validateRequestBody == null) {
+                validateRequestBody = new ValidateRequestBody();
+            }
 
             //request token from paystack server
             initiateChargeOnServer();
@@ -99,6 +104,7 @@ public class TransactionManager {
     private void validateChargeOnServer() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
 
         HashMap<String, String> params = validateRequestBody.getParamsHashMap();
+        Log.d("LLLLLLL", params.toString());
 
         Call<TransactionApiResponse> call = apiService.validateCharge(params);
         call.enqueue(new Callback<TransactionApiResponse>() {
@@ -134,6 +140,7 @@ public class TransactionManager {
     private void initiateChargeOnServer() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
 
         HashMap<String, String> params = chargeRequestBody.getParamsHashMap();
+        Log.d("LLLLLLL", params.toString());
 
         Call<TransactionApiResponse> call = apiService.charge(params);
         call.enqueue(new Callback<TransactionApiResponse>() {
