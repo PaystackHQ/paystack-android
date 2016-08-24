@@ -2,9 +2,8 @@ package co.paystack.android.api.service;
 
 import java.util.HashMap;
 
-import co.paystack.android.api.model.ChargeApiResponse;
 import co.paystack.android.api.model.TokenApiResponse;
-import co.paystack.android.api.model.ValidateApiResponse;
+import co.paystack.android.api.model.TransactionApiResponse;
 import retrofit2.Call;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -30,12 +29,12 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("/charge/mobile_charge")
-    Call<ChargeApiResponse> charge(@FieldMap HashMap<String, String> fields);
+    Call<TransactionApiResponse> charge(@FieldMap HashMap<String, String> fields);
 
 
     @FormUrlEncoded
     @POST("/charge/validate")
-    Call<ValidateApiResponse> validateCharge(@FieldMap HashMap<String, String> fields);
+    Call<TransactionApiResponse> validateCharge(@FieldMap HashMap<String, String> fields);
 
 
 }
