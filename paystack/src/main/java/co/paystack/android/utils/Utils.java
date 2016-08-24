@@ -48,12 +48,12 @@ public class Utils {
       }
     }
 
-    public static String hasPublishableKey() throws PaystackSdkNotInitializedException {
-      String publishableKey = PaystackSdk.getPublishableKey();
-      if (publishableKey == null) {
+      public static String hasPublicKey() throws PaystackSdkNotInitializedException {
+          String publicKey = PaystackSdk.getPublicKey();
+          if (publicKey == null) {
         throw new IllegalStateException("No Publishable key found, please set the Publishable key.");
       }
-      return publishableKey;
+          return publicKey;
     }
 
     public static void validateNotNull(Object arg, String name) {

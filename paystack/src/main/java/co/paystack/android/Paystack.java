@@ -21,7 +21,7 @@ import co.paystack.android.utils.Utils;
 public class Paystack extends PaystackModel {
 
     private static final TokenManager tokenManager = new TokenManager();
-    private String publishableKey;
+    private String publicKey;
 
     /**
      * Constructor.
@@ -31,50 +31,50 @@ public class Paystack extends PaystackModel {
         Utils.Validate.validateSdkInitialized();
     }
 
-    protected Paystack(String publishableKey) throws AuthenticationException {
-        setPublishableKey(publishableKey);
+    protected Paystack(String publicKey) throws AuthenticationException {
+        setPublicKey(publicKey);
     }
 
     /**
-     * Sets the publishable key
+     * Sets the public key
      *
-     * @param publishableKey - App Developer's publishable key
+     * @param publicKey - App Developer's public key
      */
-    public void setPublishableKey(String publishableKey) throws AuthenticationException {
-        //validate the publishable key
-        validatePublishableKey(publishableKey);
-        this.publishableKey = publishableKey;
+    public void setPublicKey(String publicKey) throws AuthenticationException {
+        //validate the public key
+        validatePublicKey(publicKey);
+        this.publicKey = publicKey;
     }
 
-    private void validatePublishableKey(String publishableKey) throws AuthenticationException {
+    private void validatePublicKey(String publicKey) throws AuthenticationException {
         //check for null value, and length and startswith pk_
-        if (publishableKey == null || publishableKey.length() < 1 || !publishableKey.startsWith("pk_")) {
-            throw new AuthenticationException("Invalid publishable key. To create a token, " +
-                    "you must use a valid publishable key.\nEnsure that you have set a publishable key." +
+        if (publicKey == null || publicKey.length() < 1 || !publicKey.startsWith("pk_")) {
+            throw new AuthenticationException("Invalid public key. To create a token, " +
+                    "you must use a valid public key.\nEnsure that you have set a public key." +
                     "\nCheck http://paystack.co for more");
         }
 
     }
 
     /**
-     * Method to create token for the transaction, assumes the publishable key has been previously set.
+     * Method to create token for the transaction, assumes the public key has been previously set.
      *
      * @param card          - a card whose token we want to create
      * @param tokenCallback - a callback to execute after getting the token
-     * @throws AuthenticationException if publishable key hasn't been set.
+     * @throws AuthenticationException if public key hasn't been set.
      */
     public void createToken(Card card, TokenCallback tokenCallback) {
-        createToken(card, publishableKey, tokenCallback);
+        createToken(card, publicKey, tokenCallback);
     }
 
     /**
      * Method to create token for the transaction
      *
      * @param card           - a card
-     * @param publishableKey - the key provided by App Developer
+     * @param publicKey - the key provided by App Developer
      * @param tokenCallback  - a callback to execute after getting the token
      */
-    public void createToken(Card card, String publishableKey, TokenCallback tokenCallback) {
+    public void createToken(Card card, String publicKey, TokenCallback tokenCallback) {
         //check for the needed data, if absent, send an exception through the tokenCallback;
         try {
             //null check for card
@@ -86,8 +86,8 @@ public class Paystack extends PaystackModel {
                 throw new CardException("Invalid parameter: Card not valid");
             }
 
-            //validate publishable key
-            validatePublishableKey(publishableKey);
+            //validate public key
+            validatePublicKey(publicKey);
 
             //null check for tokenCallback
             if (tokenCallback == null) {
@@ -96,7 +96,7 @@ public class Paystack extends PaystackModel {
 
 
             //do actual create token.
-            tokenManager.create(card, publishableKey, tokenCallback, null);
+            tokenManager.create(card, publicKey, tokenCallback, null);
         } catch (AuthenticationException | CardException ae) {
             assert tokenCallback != null;
             tokenCallback.onError(ae);
@@ -104,7 +104,7 @@ public class Paystack extends PaystackModel {
     }
 
     interface TokenCreator {
-        void create(Card card, String publishableKey, TokenCallback tokenCallback, Executor executor);
+        void create(Card card, String publicKey, TokenCallback tokenCallback, Executor executor);
     }
 
     public interface TokenCallback {

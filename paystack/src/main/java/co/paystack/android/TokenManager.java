@@ -34,7 +34,7 @@ public class TokenManager implements Paystack.TokenCreator {
     private static final String LOG_TAG = TokenManager.class.getSimpleName();
 
     @Override
-    public void create(final Card card, String publishableKey, final Paystack.TokenCallback tokenCallback, Executor executor) {
+    public void create(final Card card, String publicKey, final Paystack.TokenCallback tokenCallback, Executor executor) {
         try {
             //concatenate card fields
             String cardString = concatenateCardFields(card);
@@ -43,7 +43,7 @@ public class TokenManager implements Paystack.TokenCreator {
             final String encCardString = Crypto.encrypt(cardString);
 
             //create tokenRequestBody
-            final TokenRequestBody tokenRequestBody = new TokenRequestBody(encCardString, publishableKey);
+            final TokenRequestBody tokenRequestBody = new TokenRequestBody(encCardString, publicKey);
 
             //request token from paystack server
             createServerSideToken(tokenRequestBody, tokenCallback);
@@ -67,7 +67,7 @@ public class TokenManager implements Paystack.TokenCreator {
         ApiService apiService = new ApiClient().getApiService();
 
         HashMap<String, String> params = new HashMap<>();
-        params.put(TokenRequestBody.FIELD_PUBLISHABLE_KEY, tokenRequestBody.publishableKey);
+        params.put(TokenRequestBody.FIELD_PUBLIC_KEY, tokenRequestBody.publicKey);
         params.put(TokenRequestBody.FIELD_CLIENT_DATA, tokenRequestBody.clientData);
 
         Call<TokenApiResponse> call = apiService.createToken(params);

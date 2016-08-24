@@ -87,7 +87,7 @@ public class Crypto {
       //generate public key
       key = kf.generatePublic(spec);
     } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-      throw new AuthenticationException("Invalid publishable key: " + e.getMessage());
+        throw new AuthenticationException("Invalid public key: " + e.getMessage());
     }
     return key;
 

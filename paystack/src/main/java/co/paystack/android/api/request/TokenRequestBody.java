@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 public class TokenRequestBody extends BaseRequestBody {
 
   public static final String FIELD_CLIENT_DATA = "clientdata";
-  public static final String FIELD_PUBLISHABLE_KEY = "publishablekey";
+    public static final String FIELD_PUBLIC_KEY = "public_key";
   /**
    * Value for encrypted and concatenated card details
    */
@@ -17,15 +17,15 @@ public class TokenRequestBody extends BaseRequestBody {
   /**
    * Value for cardtype
    */
-  @SerializedName("publishablekey")
-  public String publishableKey;
+  @SerializedName("public_key")
+  public String publicKey;
 
 
   public TokenRequestBody() {
   }
 
-  public TokenRequestBody(String clientData, String publishableKey) {
+    public TokenRequestBody(String clientData, String publicKey) {
     this.clientData = clientData;
-    this.publishableKey = publishableKey;
+        this.publicKey = publicKey;
   }
 }

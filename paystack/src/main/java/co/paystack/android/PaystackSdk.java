@@ -21,17 +21,17 @@ public final class PaystackSdk {
      */
     public static final int VERSION_CODE = Config.VERSION_CODE;
     /**
-     * key for publishable key property in the AndroidManifest.xml
+     * key for public key property in the AndroidManifest.xml
      */
-    private static final String KEY_PUBLISHABLE_KEY_PROP = "co.paystack.android.PublishableKey";
+    private static final String KEY_PUBLIC_KEY_PROP = "co.paystack.android.PublicKey";
     /**
      * Flag to know if sdk has been initialized
      */
     private static boolean sdkInitialized;
     /**
-     * Reference to the publishable key
+     * Reference to the public key
      */
-    private static volatile String publishableKey;
+    private static volatile String publicKey;
     private static volatile String merchantId;
     private static volatile String secretKey;
     private static Context applicationContext;
@@ -84,25 +84,25 @@ public final class PaystackSdk {
     }
 
     /**
-     * Return publishable key
+     * Return public key
      *
-     * @return publishable key
+     * @return public key
      * @throws PaystackSdkNotInitializedException if the sdk hasn't been initialized
      */
-    public static String getPublishableKey() throws PaystackSdkNotInitializedException {
+    public static String getPublicKey() throws PaystackSdkNotInitializedException {
         //validate that the sdk has been initialized
         Utils.Validate.validateSdkInitialized();
 
-        return publishableKey;
+        return publicKey;
     }
 
     /**
-     * Sets the publishable key
+     * Sets the public key
      *
-     * @param publishableKey - App Developer's publishable key
+     * @param publicKey - App Developer's public key
      */
-    public static void setPublishableKey(String publishableKey) {
-        PaystackSdk.publishableKey = publishableKey;
+    public static void setPublicKey(String publicKey) {
+        PaystackSdk.publicKey = publicKey;
     }
 
     public static Context getApplicationContext() {
@@ -129,9 +129,9 @@ public final class PaystackSdk {
             return;
         }
 
-        //check publishable key
-        if (publishableKey == null) {
-            publishableKey = applicationInfo.metaData.getString(KEY_PUBLISHABLE_KEY_PROP);
+        //check public key
+        if (publicKey == null) {
+            publicKey = applicationInfo.metaData.getString(KEY_PUBLIC_KEY_PROP);
         }
 
     }
@@ -143,7 +143,7 @@ public final class PaystackSdk {
      * Equivalent to these two lines:
      * <br>
      * {@code
-     * Paystack paystack = new Paystack(PUBLISHABLE_KEY);
+     * Paystack paystack = new Paystack(PUBLIC_KEY);
      * paystack.createToken();
      * }
      *
@@ -154,11 +154,11 @@ public final class PaystackSdk {
         //validate that sdk has been initialized
         Utils.Validate.validateSdkInitialized();
 
-        //validate publishable keys
-        Utils.Validate.hasPublishableKey();
+        //validate public keys
+        Utils.Validate.hasPublicKey();
 
         //construct paystack object
-        Paystack paystack = new Paystack(PaystackSdk.getPublishableKey());
+        Paystack paystack = new Paystack(PaystackSdk.getPublicKey());
 
         //create token
         paystack.createToken(card, callback);
