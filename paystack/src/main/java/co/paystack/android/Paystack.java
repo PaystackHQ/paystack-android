@@ -1,13 +1,17 @@
 package co.paystack.android;
 
+import android.app.Activity;
+
 import java.util.concurrent.Executor;
 
 import co.paystack.android.exceptions.AuthenticationException;
 import co.paystack.android.exceptions.CardException;
 import co.paystack.android.exceptions.PaystackSdkNotInitializedException;
 import co.paystack.android.model.Card;
+import co.paystack.android.model.Charge;
 import co.paystack.android.model.PaystackModel;
 import co.paystack.android.model.Token;
+import co.paystack.android.model.Transaction;
 import co.paystack.android.utils.Utils;
 
 /**
@@ -67,6 +71,10 @@ public class Paystack extends PaystackModel {
         createToken(card, publicKey, tokenCallback);
     }
 
+    public void chargeCard(Activity activity, Charge charge, TransactionCallback transactionCallback) {
+        chargeCard(activity, charge, publicKey, transactionCallback);
+    }
+
     /**
      * Method to create token for the transaction
      *
@@ -103,14 +111,63 @@ public class Paystack extends PaystackModel {
         }
     }
 
+    public void chargeCard(Activity activity, Charge charge, String publicKey, TransactionCallback transactionCallback) {
+        //check for the needed data, if absent, send an exception through the tokenCallback;
+        try {
+            //null check for card
+            if(charge == null){
+                throw new RuntimeException("Required parameter: Charge cannot be null");
+            }
+
+            if (charge.getAmount() < 5000) {
+                throw new RuntimeException("Required parameter: Amount cannot be less than 5000 (50 naira)");
+            }
+
+            if (charge.getCard() == null) {
+                throw new RuntimeException("Required parameter: Card cannot be null");
+            }
+            //validate card
+            if (!charge.getCard().isValid()) {
+                throw new CardException("Invalid parameter: Card not valid");
+            }
+
+            //validate public key
+            validatePublicKey(publicKey);
+
+            //null check for tokenCallback
+            if (transactionCallback == null) {
+                throw new RuntimeException("Required parameter, tokenCallback cannot be null");
+            }
+
+            TransactionManager transactionManager = new TransactionManager(activity, charge, transactionCallback);
+
+            transactionManager.initiate();
+
+        } catch (AuthenticationException | CardException ae) {
+            assert transactionCallback != null;
+            transactionCallback.onError(ae);
+        }
+    }
+
     interface TokenCreator {
         void create(Card card, String publicKey, TokenCallback tokenCallback, Executor executor);
     }
 
-    public interface TokenCallback {
+    public interface BaseCallback {
+        void onError(Exception error);
+    }
+
+    public interface TokenCallback extends BaseCallback{
         void onCreate(Token token);
 
-        void onError(Exception error);
+    }
+
+    public interface TransactionCallback {
+        void onValidate(Transaction transaction);
+
+        void beforeValidate(Transaction transaction);
+
+        void onError(Throwable error);
     }
 
 }
