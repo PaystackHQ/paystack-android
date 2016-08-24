@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * A token request
  */
-public class TokenRequestBody {
+public class TokenRequestBody extends BaseRequestBody {
 
   public static final String FIELD_CLIENT_DATA = "clientdata";
   public static final String FIELD_PUBLISHABLE_KEY = "publishablekey";
