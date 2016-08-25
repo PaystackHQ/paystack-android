@@ -161,6 +161,7 @@ public class TransactionManager {
                         // show dialog
                         transactionCallback.beforeValidate(transactionApiResponse.getTransaction());
                         validateRequestBody.setTrans(transactionApiResponse.trans);
+                        osi.setOtpMessage(transactionApiResponse.message);
                         new OtpAsyncTask().execute();
                         return;
                     } else if (transactionApiResponse.hasValidReferenceAndTrans()) {
