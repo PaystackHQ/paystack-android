@@ -9,7 +9,6 @@ import co.paystack.android.exceptions.InvalidEmailException;
  */
 public class Charge extends PaystackModel {
     private Card card;
-    private String pin;
     private String email;
     private int amount;
 
@@ -19,15 +18,6 @@ public class Charge extends PaystackModel {
 
     public Charge setCard(Card card) {
         this.card = card;
-        return this;
-    }
-
-    public String getPin() {
-        return pin;
-    }
-
-    public Charge setPin(String pin) {
-        this.pin = pin;
         return this;
     }
 
