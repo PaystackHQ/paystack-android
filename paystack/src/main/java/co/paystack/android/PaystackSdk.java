@@ -162,6 +162,7 @@ public final class PaystackSdk {
      * @param card     - card whose token we need to create
      * @param callback - callback to execute after creating token
      */
+    @Deprecated
     public static void createToken(Card card, Paystack.TokenCallback callback) {
         performChecks();
 
