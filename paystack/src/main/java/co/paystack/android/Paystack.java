@@ -67,6 +67,7 @@ public class Paystack extends PaystackModel {
      * @param tokenCallback - a callback to execute after getting the token
      * @throws AuthenticationException if public key hasn't been set.
      */
+    @Deprecated
     public void createToken(Card card, TokenCallback tokenCallback) {
         createToken(card, publicKey, tokenCallback);
     }
@@ -157,6 +158,7 @@ public class Paystack extends PaystackModel {
         void onError(Throwable error);
     }
 
+    @Deprecated
     public interface TokenCallback extends BaseCallback {
         void onCreate(Token token);
 
