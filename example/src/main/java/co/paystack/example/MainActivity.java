@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 validateCardForm();
 
                 //check card validity
-                if (card.isValid()) {
+                if (card != null && card.isValid()) {
                     dialog.setMessage("Request token please wait");
                     dialog.setCancelable(true);
                     dialog.setCanceledOnTouchOutside(true);
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 validateTransactionForm();
 
                 //check card validity
-                if (card.isValid()) {
+                if (card != null && card.isValid()) {
                     dialog.setMessage("Performing transaction... please wait");
                     dialog.setCancelable(true);
                     dialog.setCanceledOnTouchOutside(true);
