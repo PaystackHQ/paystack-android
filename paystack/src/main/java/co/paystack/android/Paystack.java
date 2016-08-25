@@ -71,8 +71,8 @@ public class Paystack extends PaystackModel {
         createToken(card, publicKey, tokenCallback);
     }
 
-    public void performTransaction(Activity activity, Charge charge, TransactionCallback transactionCallback) {
-        performTransaction(activity, charge, publicKey, transactionCallback);
+    public void chargeCard(Activity activity, Charge charge, TransactionCallback transactionCallback) {
+        chargeCard(activity, charge, publicKey, transactionCallback);
     }
 
     /**
@@ -111,7 +111,7 @@ public class Paystack extends PaystackModel {
         }
     }
 
-    public void performTransaction(Activity activity, Charge charge, String publicKey, TransactionCallback transactionCallback) {
+    public void chargeCard(Activity activity, Charge charge, String publicKey, TransactionCallback transactionCallback) {
         //check for the needed data, if absent, send an exception through the tokenCallback;
         try {
             //null check for card
@@ -141,7 +141,7 @@ public class Paystack extends PaystackModel {
 
             TransactionManager transactionManager = new TransactionManager(activity, charge, transactionCallback);
 
-            transactionManager.performTransaction();
+            transactionManager.chargeCard();
 
         } catch (AuthenticationException | CardException ae) {
             assert transactionCallback != null;
@@ -162,12 +162,10 @@ public class Paystack extends PaystackModel {
 
     }
 
-    public interface TransactionCallback {
-        void onValidate(Transaction transaction);
+    public interface TransactionCallback extends BaseCallback {
+        void onSuccess(Transaction transaction);
 
         void beforeValidate(Transaction transaction);
-
-        void onError(Throwable error);
     }
 
 }

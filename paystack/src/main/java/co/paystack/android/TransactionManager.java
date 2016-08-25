@@ -61,7 +61,7 @@ public class TransactionManager {
         }
     }
 
-    public void performTransaction() {
+    public void chargeCard() {
         try {
 
             initiate();
@@ -119,7 +119,7 @@ public class TransactionManager {
                     } else if (transactionApiResponse.status == 1) {
                         // needs pin
                         // show dialog
-                        transactionCallback.onValidate(transactionApiResponse.getTransaction());
+                        transactionCallback.onSuccess(transactionApiResponse.getTransaction());
                         return;
                     }
                 }
@@ -165,7 +165,7 @@ public class TransactionManager {
                         new OtpAsyncTask().execute();
                         return;
                     } else if (transactionApiResponse.hasValidReferenceAndTrans()) {
-                        transactionCallback.onValidate(transactionApiResponse.getTransaction());
+                        transactionCallback.onSuccess(transactionApiResponse.getTransaction());
                         return;
                     }
                 }
@@ -206,7 +206,7 @@ public class TransactionManager {
             super.onPostExecute(pin);
             if (pin != null && (4 == pin.length())) {
                 chargeRequestBody.addPin(pin);
-                TransactionManager.this.performTransaction();
+                TransactionManager.this.chargeCard();
             } else {
                 transactionCallback.onError(new Exception("PIN must be exactly 4 digits"));
             }

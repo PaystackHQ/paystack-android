@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
                     dialog.show();
 
-                    performTransaction();
+                    chargeCard();
                 }
             }
         });
@@ -222,11 +222,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void performTransaction() {
+    private void chargeCard() {
         transaction = null;
         PaystackSdk.chargeCard(this, charge, new Paystack.TransactionCallback() {
             @Override
-            public void onValidate(Transaction transaction) {
+            public void onSuccess(Transaction transaction) {
                 // This is called only after transaction is successful
                 if (dialog.isShowing()) {
                     dialog.dismiss();

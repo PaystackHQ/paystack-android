@@ -36,8 +36,6 @@ public final class PaystackSdk {
      * Reference to the public key
      */
     private static volatile String publicKey;
-    private static volatile String merchantId;
-    private static volatile String secretKey;
     private static Context applicationContext;
 
     /**
@@ -143,9 +141,9 @@ public final class PaystackSdk {
             publicKey = applicationInfo.metaData.getString(KEY_PUBLIC_KEY_PROP);
         }
 
-        // try with public key
+        // try with publishable key
         if (publicKey == null) {
-            publicKey = applicationInfo.metaData.getString(KEY_PUBLIC_KEY_PROP);
+            publicKey = applicationInfo.metaData.getString(KEY_PUBLISHABLE_KEY_PROP);
         }
 
     }
@@ -191,7 +189,7 @@ public final class PaystackSdk {
         Paystack paystack = new Paystack(PaystackSdk.getPublicKey());
 
         //create token
-        paystack.performTransaction(activity, charge, transactionCallback);
+        paystack.chargeCard(activity, charge, transactionCallback);
     }
 
     public interface SdkInitializeCallback {
