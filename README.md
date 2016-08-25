@@ -87,7 +87,7 @@ Charging with the PaystackSdk is quite straightforward.
     //add amount to charge
     charge.setAmount(amount);
 
-    //perform transaction
+    //charge card
     PaystackSdk.chargeCard(activity, charge, new Paystack.TransactionCallback() {
         @Override
         public void onSuccess(Transaction transaction) {
