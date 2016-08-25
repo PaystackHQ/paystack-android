@@ -118,12 +118,14 @@ open activity is just fine.
 Send the reference to your server and verify by calling our REST API. An authorization will be returned which
 will allow you know if its code is reusable. You can learn more about our verify call [here](developers.paystack.co/docs/verifying-transactions).
 
-> We are retiring the create token function but you can access the old documentation [here](CREATETOKEN.md)
 
-### 7. Charging Returning Customers
+> We are retiring the createToken function. You can access the old documentation [here](CREATETOKEN.md).
+
+
+### 5. Charging Returning Customers
 See details for charging returning customers [here](https://developers.paystack.co/docs/charging-returning-customers).
 
-### 8. Library aided card validation & utility methods
+### 6. Library aided card validation & utility methods
 The library provides validation methods to validate the fields of the card.
 
 #### card.validNumber
