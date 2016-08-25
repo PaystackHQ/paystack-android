@@ -71,7 +71,7 @@ Before you can create a token with the PaystackSdk, you need to set your public 
 ```xml
 <meta-data
     android:name="co.paystack.android.PublicKey"
-    android:value="your public key"/>
+    android:value="your public key obtained from: https://dashboard.paystack.co/#/settings/developer"/>
 ```
 
 #### b. Set the public key by code
@@ -80,7 +80,49 @@ Before you can create a token with the PaystackSdk, you need to set your public 
 PaystackSdk.setPublicKey(publicKey);
 ```
 
-### 3. createToken
+### 3. performTransaction
+Charging with the PaystackSdk is quite straightforward.
+```java
+    //create a charge
+    Charge charge = new Charge();
+    //Add card to the charge
+    charge.setCard(new Card.Builder(cardNumber, expiryMonth, expiryYear, cvc).build());
+    //add an email for customer
+    charge.setEmail(email);
+    //add amount to charge
+    charge.setAmount(amount);
+
+    //perform transaction
+    PaystackSdk.chargeCard(activity, charge, new Paystack.TransactionCallback() {
+        @Override
+        public void onValidate(Transaction transaction) {
+            // This is called only after transaction is deemed successful
+            // retrieve the transaction, and send to your server for verification.
+        }
+
+        @Override
+        public void beforeValidate(Transaction transaction) {
+            // This is called only before requesting OTP
+            // Save reference so you may send to server if
+            // error occurs with OTP, you should still verify on server
+        }
+
+        @Override
+        public void onError(Throwable error) {
+          //handle error here
+        }
+
+    });
+```
+The first argument to the PaystackSdk.chargeCard is the calling activity object. Always
+give an activity that will stay open till the end of the transaction. The currently
+open activity is just fine.
+
+### 4. Verifying the transaction
+Send the reference to your server and verify by calling our REST API. An authorization will be returned which
+will allow you know if its code is reusable. You can learn more about our verify call [here](developers.paystack.co/docs/verifying-transactions).
+
+### 5. createToken
 Creating a single-use token with the PaystackSdk is quite straightforward.
 ```java
     //build a card
@@ -94,7 +136,7 @@ Creating a single-use token with the PaystackSdk is quite straightforward.
         }
 
         @Override
-        public void onError(Exception error) {
+        public void onError(Throwable error) {
             //handle error here
         }
     });
@@ -106,7 +148,7 @@ The first argument to the PaystackSdk.createToken is the card object. A basic Ca
 + expiryYear: the expiry year as an integer e.g 2015
 + cvc: the card security code as a String e.g 123
 
-### 4. Charging the tokens.
+### 6. Charging the tokens.
 Send the token to your server and create a charge by calling our REST API. An authorization_code will be returned once the single-use token has been charged successfully. You can learn more about our API [here](https://developers.paystack.co/docs/getting-started).
 
  **Endpoint:** https://api.paystack.co/transaction/charge_token
@@ -153,6 +195,7 @@ if ((intval($code) === 200) && array_key_exists('status', $body) && $body['statu
 
 
 **Result**
+
 ```json
     {  
         "status": true,
@@ -180,10 +223,10 @@ if ((intval($code) === 200) && array_key_exists('status', $body) && $body['statu
 
 
 
-### 5. Charging Returning Customers
+### 7. Charging Returning Customers
 See details for charging returning customers [here](https://developers.paystack.co/docs/charging-returning-customers).
 
-### 6. Library aided card validation & utility methods
+### 8. Library aided card validation & utility methods
 The library provides validation methods to validate the fields of the card.
 
 #### card.validNumber
