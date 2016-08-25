@@ -223,6 +223,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void performTransaction() {
+        transaction = null;
         PaystackSdk.chargeCard(this, charge, new Paystack.TransactionCallback() {
             @Override
             public void onValidate(Transaction transaction) {
