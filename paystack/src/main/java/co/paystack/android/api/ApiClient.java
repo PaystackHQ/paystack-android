@@ -1,5 +1,7 @@
 package co.paystack.android.api;
 
+import android.os.Build;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -8,7 +10,6 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 
-import co.paystack.android.BuildConfig;
 import co.paystack.android.Config;
 import co.paystack.android.api.service.ApiService;
 import co.paystack.android.api.utils.TLSSocketFactory;
@@ -24,8 +25,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * API Client Class
- * <p/>
- * Provides a service by which we can make API calls
+ * <p>
+ * Provides a service by which we can make API calls</p>
  */
 public class ApiClient {
 
@@ -48,7 +49,7 @@ public class ApiClient {
                         Request original = chain.request();
                         // Add headers so we get Android version and Paystack Library version
                         Request.Builder builder = original.newBuilder()
-                                .header("User-Agent", "Android_" + Config.VERSION_CODE + "_Paystack_" + BuildConfig.VERSION_NAME)
+                                .header("User-Agent", "Android_" + Build.VERSION.SDK_INT + "_Paystack_" + Config.VERSION_NAME)
                                 .header("Accept", "application/json")
                                 .method(original.method(), original.body());
                         Request request = builder.build();
