@@ -51,7 +51,7 @@ public class Utils {
       public static String hasPublicKey() throws PaystackSdkNotInitializedException {
           String publicKey = PaystackSdk.getPublicKey();
           if (publicKey == null) {
-        throw new IllegalStateException("No Publishable key found, please set the Publishable key.");
+        throw new IllegalStateException("No Public key found, please set the Public key.");
       }
           return publicKey;
     }

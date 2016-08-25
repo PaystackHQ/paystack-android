@@ -23,7 +23,7 @@
 //@Config(constants = BuildConfig.class /*, sdk = 21, manifest = "src/main/AndroidManifest.xml"*/)
 //public class PaystackTest {
 //
-//    private static final String DUMMY_PUBLISHABLE_KEY = "";
+//    private static final String DUMMY_PUBLIC_KEY = "";
 //    private static final Card NULL_CARD = new Card(null, null, null, null);
 //    private static final Card VALID_CARD = new Card.Builder("4123450131001381", 2017, 03, "883").build();
 //    private static final Paystack.TokenCallback DUMMY_TOKEN_CALLBACK = new Paystack.TokenCallback() {
@@ -46,11 +46,11 @@
 ////    @Test(expected = RuntimeException.class)
 ////    public void createTokenShouldFailWithoutCard(){
 ////        Paystack paystack = new Paystack();
-////        paystack.createToken(null, DUMMY_PUBLISHABLE_KEY, DUMMY_TOKEN_CALLBACK);
+////        paystack.createToken(null, DUMMY_PUBLIC_KEY, DUMMY_TOKEN_CALLBACK);
 ////    }
 ////
 ////    //@Test(expected = AuthenticationException.class)
-////    public void createTokenShouldFailWithNullPublishableKey(){
+////    public void createTokenShouldFailWithNullPublicKey(){
 ////        Paystack paystack = new Paystack();
 ////        paystack.createToken(VALID_CARD, null, DUMMY_TOKEN_CALLBACK);
 ////    }
@@ -58,13 +58,13 @@
 ////    @Test(expected = RuntimeException.class)
 ////    public void createTokenShouldFailWithNullTokenCallback(){
 ////        Paystack paystack = new Paystack();
-////        paystack.createToken(VALID_CARD, DUMMY_PUBLISHABLE_KEY, null);
+////        paystack.createToken(VALID_CARD, DUMMY_PUBLIC_KEY, null);
 ////    }
 ////
 ////    @Test
 ////    public void canCreateToken(){
 ////        Paystack paystack = new Paystack();
-////        paystack.createToken(VALID_CARD, DUMMY_PUBLISHABLE_KEY, DUMMY_TOKEN_CALLBACK);
+////        paystack.createToken(VALID_CARD, DUMMY_PUBLIC_KEY, DUMMY_TOKEN_CALLBACK);
 ////        assertTrue(true);
 ////    }
 //}

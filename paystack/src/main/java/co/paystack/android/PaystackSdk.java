@@ -110,8 +110,8 @@ public final class PaystackSdk {
     }
 
     @Deprecated
-    public static void setPublishableKey(String publishableKey) {
-        PaystackSdk.publicKey = publishableKey;
+    public static void setPublishableKey(String publicKey) {
+        PaystackSdk.publicKey = publicKey;
     }
 
     public static Context getApplicationContext() {
@@ -143,9 +143,9 @@ public final class PaystackSdk {
             publicKey = applicationInfo.metaData.getString(KEY_PUBLIC_KEY_PROP);
         }
 
-        // try with publishable key
+        // try with public key
         if (publicKey == null) {
-            publicKey = applicationInfo.metaData.getString(KEY_PUBLISHABLE_KEY_PROP);
+            publicKey = applicationInfo.metaData.getString(KEY_PUBLIC_KEY_PROP);
         }
 
     }

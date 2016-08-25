@@ -13,7 +13,7 @@
 
         <!-- metadata for paystack -->
         <meta-data
-            android:name="co.paystack.android.PublishableKey"
+            android:name="co.paystack.android.PublicKey"
             android:value="pk_live_2bf31d4aea08ab31f5d0cfd645c7e4f67025d259"/>
 
         <activity

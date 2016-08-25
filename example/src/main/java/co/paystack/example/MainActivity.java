@@ -21,7 +21,7 @@ import co.paystack.android.model.Transaction;
 
 public class MainActivity extends AppCompatActivity {
 
-    //private static final String PUBLISHABLE_KEY = "your publishable key";
+    //private static final String PUBLIC_KEY = "your public key";
 
 
     EditText mEditCardNum;

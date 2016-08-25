@@ -4,6 +4,15 @@ Last updated Mar 2, 2016
 
 All notable changes to this project will be documented in this file.
 
+## Released v2.0 - 2016-08-25
+- Added Perform Transaction
+- Added Verve Card Support
+- Added PIN and OTP
+
+## Released v1.2.1 - 2016-07-30
+- Update retrofit and okHttp
+- okHttp no more uses reflection so we get it the default trust manager
+
 ## Released v1.2.0 - 2016-03-14
 - ApiClient will throw new exceptions in case `TLSv1.2` is not found
 - Make `retrofit` use custom `okHttpClient` that uses our socket factory to create requests
@@ -31,7 +40,7 @@ All notable changes to this project will be documented in this file.
 
 ## Released v1.1.0 - 2016-01-26
 - Updated readme to include instructions for charging tokens, charging returning customers - @shollsman  
-- RSA KEY now a constant fixed in library. - @ibrahimlawal 
+- RSA KEY now a constant fixed in library. - @ibrahimlawal
 
 ## Released v1.1.0 - 2015-10-07
 - Initial release published - @segunfamisa

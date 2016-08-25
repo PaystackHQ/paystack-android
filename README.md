@@ -1,17 +1,18 @@
 ## Paystack Android
 
-This is a library for easy integration of [Paystack](https://paystack.com) with your Android application. Use this 
-library in your android app so we shoulder the burden of PCI compliance by helping you 
-avoid the need to send card data directly to your server. Instead, this library sends credit 
-card data directly to our servers, where we can convert them to `tokens`. You should then 
-charge the `token` in your server-side code.
+This is a library for easy integration of [Paystack](https://paystack.com) with your Android application. Use this
+library in your android app so we shoulder the burden of PCI compliance by helping you
+avoid the need to send card data directly to your server. Instead, this library sends credit
+card data directly to our servers. We can convert them to `tokens`. You should then
+charge the `token` in your server-side code. We can also perform the transaction including PIN
+and OTP transactions securely.
 
-Note that `tokens` are one-time use and should be charged to confirm validity of card. A successful
+>Note that `tokens` are one-time use and should be charged to confirm validity of card. A successful
 charge will return an `auth_code` which you will then save on your server and use for future charges.
 
 ## Requirements
-- Android SDKv16 (Android 4.1 "Jelly Bean") - This is the first SDK version that includes 
-`TLSv1.2` which is required by our servers. Native app support for user devices older than 
+- Android SDKv16 (Android 4.1 "Jelly Bean") - This is the first SDK version that includes
+`TLSv1.2` which is required by our servers. Native app support for user devices older than
 API 16 will not be available.
 
 ## Installation
@@ -26,7 +27,7 @@ repositories {
   }
 }
 dependencies {
-  compile 'co.paystack.android:paystack:1.2.1'
+  compile 'co.paystack.android:paystack:2.0'
 }
 ```
 
@@ -61,22 +62,22 @@ PaystackSdk.initialize(getApplicationContext());
 
 Make sure to call this method in the onCreate method of your Fragment or Activity.
 
-### 2. setPublishableKey
+### 2. setPublicKey
 
-Before you can create a token with the PaystackSdk, you need to set your publishable key. The library provides two approaches,
+Before you can create a token with the PaystackSdk, you need to set your public key. The library provides two approaches,
 
 #### a. Add the following lines to the `<application></application>` tag of your AndroidManifest.xml
 
 ```xml
 <meta-data
-    android:name="co.paystack.android.PublishableKey"
-    android:value="your publishable key"/>
+    android:name="co.paystack.android.PublicKey"
+    android:value="your public key"/>
 ```
 
-#### b. Set the publishable key by code
+#### b. Set the public key by code
 
 ```java
-PaystackSdk.setPublishableKey(publishableKey);
+PaystackSdk.setPublicKey(publicKey);
 ```
 
 ### 3. createToken
@@ -105,17 +106,17 @@ The first argument to the PaystackSdk.createToken is the card object. A basic Ca
 + expiryYear: the expiry year as an integer e.g 2015
 + cvc: the card security code as a String e.g 123
 
-### 4. Charging the tokens. 
+### 4. Charging the tokens.
 Send the token to your server and create a charge by calling our REST API. An authorization_code will be returned once the single-use token has been charged successfully. You can learn more about our API [here](https://developers.paystack.co/docs/getting-started).
- 
+
  **Endpoint:** https://api.paystack.co/transaction/charge_token
 
  **Parameters:**
- 
+
 
  - email  - customer's email address (required)
  - reference - unique reference  (required)
- - amount - Amount in Kobo (required) 
+ - amount - Amount in Kobo (required)
 
 **Example**
 
@@ -135,13 +136,13 @@ list($headers, $body, $code) = $paystack->transaction->chargeToken([
                 'email'=>'customer@email.com',
                 'amount'=>10000 // in kobo
               ]);
-              
+
 // check if authorization code was generated
 if ((intval($code) === 200) && array_key_exists('status', $body) && $body['status']) {
     // body contains Array with data similar to result below
-    $authorization_code = $body['authorization']['authorization_code']; 
+    $authorization_code = $body['authorization']['authorization_code'];
     // save the authorization_code so you may charge in future
-    
+
 } else {
 // invalid body was returned
 // handle this or troubleshoot
@@ -180,7 +181,7 @@ if ((intval($code) === 200) && array_key_exists('status', $body) && $body['statu
 
 
 ### 5. Charging Returning Customers
-See details for charging returning customers [here](https://developers.paystack.co/docs/charging-returning-customers). 
+See details for charging returning customers [here](https://developers.paystack.co/docs/charging-returning-customers).
 
 ### 6. Library aided card validation & utility methods
 The library provides validation methods to validate the fields of the card.
@@ -204,7 +205,7 @@ This method returns an estimate of the string representation of the card type.
 
 1. Clone the repository.
 2. Import the project either using Android Studio or Eclipse
-3. Add your publishable key to your AndroidManifest.xml file
+3. Add your public key to your AndroidManifest.xml file
 4. Build and run the project on your device or emulator
 
 ## Contact
