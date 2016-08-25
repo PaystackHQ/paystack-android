@@ -21,10 +21,12 @@ import co.paystack.android.exceptions.AuthenticationException;
  */
 public class Crypto {
 
-  private static String ALGORITHM = "RSA";
-  private static String CIPHER = "RSA/ECB/PKCS1Padding";
+    private static final String PAYSTACK_RSA_PUBLIC_KEY = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANIsL+RHqfkBiKGn/D1y1QnNrMkKzxWP" +
+            "2wkeSokw2OJrCI+d6YGJPrHHx+nmb/Qn885/R01Gw6d7M824qofmCvkCAwEAAQ==";
+    private static String ALGORITHM = "RSA";
+    private static String CIPHER = "RSA/ECB/PKCS1Padding";
 
-  private static byte[] encrypt(String text, PublicKey key) {
+    private static byte[] encrypt(String text, PublicKey key) {
     byte[] cipherText = null;
 
     try {
@@ -47,7 +49,11 @@ public class Crypto {
     return new String(Base64.encode(encrypt(text, getPublicKeyFromString(publicKey)), Base64.NO_WRAP));
   }
 
-  private static String decrypt(byte[] text, PrivateKey key) {
+    public static String encrypt(String text) throws AuthenticationException {
+        return new String(Base64.encode(encrypt(text, getPublicKeyFromString(PAYSTACK_RSA_PUBLIC_KEY)), Base64.NO_WRAP));
+    }
+
+    private static String decrypt(byte[] text, PrivateKey key) {
     byte[] decryptedText = null;
 
     try {
@@ -80,7 +86,7 @@ public class Crypto {
       //generate public key
       key = kf.generatePublic(spec);
     } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-      throw new AuthenticationException("Invalid publishable key: " + e.getMessage());
+        throw new AuthenticationException("Invalid public key: " + e.getMessage());
     }
     return key;
 

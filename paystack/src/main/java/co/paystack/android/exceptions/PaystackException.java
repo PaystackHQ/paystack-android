@@ -9,11 +9,11 @@ import java.io.Serializable;
  */
 public class PaystackException extends RuntimeException implements Serializable {
 
-  public PaystackException(String message) {
-    super(message, null);
-  }
+    public PaystackException(String message) {
+        super(message, null);
+    }
 
-  public PaystackException(String message, Throwable e) {
-    super(message, e);
-  }
+    public PaystackException(String message, Throwable e) {
+        super(message, e);
+    }
 }

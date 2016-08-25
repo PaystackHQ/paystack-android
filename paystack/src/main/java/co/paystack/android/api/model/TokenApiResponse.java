@@ -9,9 +9,9 @@ import java.io.Serializable;
  */
 public class TokenApiResponse extends ApiResponse implements Serializable {
 
-  @SerializedName("token")
-  public String token;
+    @SerializedName("token")
+    public String token;
 
-  @SerializedName("last4")
-  public String last4;
+    @SerializedName("last4")
+    public String last4;
 }

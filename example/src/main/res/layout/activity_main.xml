@@ -87,6 +87,59 @@
                 android:layout_centerHorizontal="true"
                 android:padding="8dp"
                 android:text="@string/create_token"/>
+
+            <EditText
+                android:id="@+id/edit_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/button_create_token"
+                android:inputType="textEmailAddress"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:gravity="center"
+                android:text="someone@example.com"/>
+
+            <EditText
+                android:id="@+id/edit_amount_in_kobo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:gravity="center"
+                android:layout_below="@id/edit_email"
+                android:inputType="number"
+                android:digits="0123456789"
+                android:text="10000"/>
+
+            <Button
+                android:id="@+id/button_perform_transaction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edit_amount_in_kobo"
+                android:layout_centerHorizontal="true"
+                android:padding="8dp"
+                android:text="Perform Transaction"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_transaction_response"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_custom_form"
+            android:background="#1C3A4B"
+            android:gravity="center_vertical"
+            android:minHeight="70dp"
+            >
+
+            <TextView
+                android:id="@+id/textview_reference"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="@string/no_transaction_yet"
+                android:textColor="#ffffff"/>
+
         </RelativeLayout>
 
 
@@ -94,10 +147,10 @@
             android:id="@+id/layout_token_response"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/layout_custom_form"
+            android:layout_below="@+id/layout_transaction_response"
             android:background="#1C3A4B"
             android:gravity="center_vertical"
-            android:minHeight="150dp"
+            android:minHeight="70dp"
             >
 
             <TextView

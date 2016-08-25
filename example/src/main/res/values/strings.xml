@@ -14,6 +14,7 @@
     <string name="token_not_gotten">Unable to get token</string>
     <string name="sample_card">4123450131001381</string>
     <string name="sample_cvv">883</string>
-    <string name="sample_month">11</string>
-    <string name="sample_year">2019</string>
+    <string name="sample_month">01</string>
+    <string name="sample_year">2020</string>
+    <string name="no_transaction_yet">No transaction yet</string>
 </resources>

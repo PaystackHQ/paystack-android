@@ -5,11 +5,11 @@ package co.paystack.android.exceptions;
  */
 public class CardException extends PaystackException {
 
-  public CardException(String message) {
-    super(message);
-  }
+    public CardException(String message) {
+        super(message);
+    }
 
-  public CardException(String message, Throwable e) {
-    super(message, e);
-  }
+    public CardException(String message, Throwable e) {
+        super(message, e);
+    }
 }
