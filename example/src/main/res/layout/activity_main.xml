@@ -32,7 +32,6 @@
                     android:hint="@string/card_number"
                     android:inputType="number"
                     android:minEms="8"
-                    android:text="@string/sample_card"
                     />
 
                 <EditText
@@ -43,8 +42,7 @@
                     android:hint="@string/cvv"
                     android:inputType="number"
                     android:maxLength="4"
-                    android:minEms="4"
-                    android:text="@string/sample_cvv"/>
+                    android:minEms="4"/>
             </LinearLayout>
 
             <View
@@ -63,8 +61,7 @@
                 android:hint="@string/mm"
                 android:inputType="number"
                 android:maxEms="3"
-                android:maxLength="2"
-                android:text="@string/sample_month"/>
+                android:maxLength="2"/>
 
             <EditText
                 android:id="@+id/edit_expiry_year"
@@ -76,8 +73,7 @@
                 android:hint="@string/yyyy"
                 android:inputType="number"
                 android:maxEms="4"
-                android:maxLength="4"
-                android:text="@string/sample_year"/>
+                android:maxLength="4"/>
 
             <Button
                 android:id="@+id/button_create_token"
@@ -97,7 +93,7 @@
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:gravity="center"
-                android:text="someone@example.com"/>
+                android:text="support@paystack.com"/>
 
             <EditText
                 android:id="@+id/edit_amount_in_kobo"
@@ -106,6 +102,7 @@
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:gravity="center"
+                android:hint="@string/amount_in_kobo"
                 android:layout_below="@id/edit_email"
                 android:inputType="number"
                 android:digits="0123456789"

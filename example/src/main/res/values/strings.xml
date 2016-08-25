@@ -17,4 +17,5 @@
     <string name="sample_month">01</string>
     <string name="sample_year">2020</string>
     <string name="no_transaction_yet">No transaction yet</string>
+    <string name="amount_in_kobo">Amount in Kobo</string>
 </resources>
