@@ -21,11 +21,10 @@ import co.paystack.android.exceptions.AuthenticationException;
  */
 public class Crypto {
 
-  private static String ALGORITHM = "RSA";
-  private static String CIPHER = "RSA/ECB/PKCS1Padding";
     private static final String PAYSTACK_RSA_PUBLIC_KEY = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANIsL+RHqfkBiKGn/D1y1QnNrMkKzxWP" +
             "2wkeSokw2OJrCI+d6YGJPrHHx+nmb/Qn885/R01Gw6d7M824qofmCvkCAwEAAQ==";
-
+    private static String ALGORITHM = "RSA";
+    private static String CIPHER = "RSA/ECB/PKCS1Padding";
 
     private static byte[] encrypt(String text, PublicKey key) {
     byte[] cipherText = null;

@@ -106,15 +106,7 @@ public class TokenManager implements Paystack.TokenCreator {
             @Override
             public void onFailure(Call<TokenApiResponse> call, Throwable t) {
                 Log.e(LOG_TAG, t.getMessage());
-                // Don't want to change public method signature yet
-                // this is meant to be a minor revision
-                // TODO: in a major revision, make TokenCallback.onError use throwable directly
-                if (t instanceof Exception) {
-                    tokenCallback.onError((Exception) t);
-                } else {
-                    t.printStackTrace();
-                    tokenCallback.onError(new Exception(t.getMessage(), t));
-                }
+                tokenCallback.onError(t);
 
             }
 

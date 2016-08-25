@@ -13,15 +13,15 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * PaystackSdk Test Class
- *
+ * <p/>
  * Tests the paystack sdk
  */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class /*, sdk = 21, manifest = "src/main/AndroidManifest.xml"*/)
 public class PaystackSdkTest {
 
-  private static final String TEST_PUBLISHABLE_KEY = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANIsL+RHqfkBiKGn/D1y1QnNrMkKzxWP\n" +
-      "2wkeSokw2OJrCI+d6YGJPrHHx+nmb/Qn885/R01Gw6d7M824qofmCvkCAwEAAQ==";
+    private static final String TEST_PUBLISHABLE_KEY = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANIsL+RHqfkBiKGn/D1y1QnNrMkKzxWP\n" +
+            "2wkeSokw2OJrCI+d6YGJPrHHx+nmb/Qn885/R01Gw6d7M824qofmCvkCAwEAAQ==";
 
 
 //    @Test(expected = PaystackSdkNotInitializedException.class)
@@ -34,16 +34,16 @@ public class PaystackSdkTest {
 //        PaystackSdk.initialize(App.getAppContext());
 //    }
 
-  @Test(expected = NullPointerException.class)
-  public void initPaystackSdkWithNullParamsShouldThrowException() {
-    PaystackSdk.initialize(null);
-  }
+    @Test(expected = NullPointerException.class)
+    public void initPaystackSdkWithNullParamsShouldThrowException() {
+        PaystackSdk.initialize(null);
+    }
 
-  @Test
-  public void initPaystackSdkWithPaystackActivityShouldPass() {
-    PaystackSdk.initialize(App.getAppContext());
-    assertTrue(PaystackSdk.isSdkInitialized());
-  }
+    @Test
+    public void initPaystackSdkWithPaystackActivityShouldPass() {
+        PaystackSdk.initialize(App.getAppContext());
+        assertTrue(PaystackSdk.isSdkInitialized());
+    }
 
 
 }

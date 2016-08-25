@@ -9,9 +9,9 @@ import java.io.Serializable;
  */
 public class Token extends PaystackModel implements Serializable {
 
-  public String token;
+    public String token;
 
-  public String last4;
+    public String last4;
 
 
 //    private Token(Parcel in){

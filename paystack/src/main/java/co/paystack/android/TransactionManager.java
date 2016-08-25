@@ -33,14 +33,15 @@ import retrofit2.Response;
  */
 public class TransactionManager {
 
+    private static final String LOG_TAG = TransactionManager.class.getSimpleName();
     private final Activity activity;
     private final Charge charge;
     private final Paystack.TransactionCallback transactionCallback;
+    private final PinSingleton psi = PinSingleton.getInstance();
+    private final OtpSingleton osi = OtpSingleton.getInstance();
     private ChargeRequestBody chargeRequestBody;
     private ValidateRequestBody validateRequestBody;
     private ApiService apiService;
-    private final PinSingleton psi = PinSingleton.getInstance();
-    private final OtpSingleton osi = OtpSingleton.getInstance();
 
     public TransactionManager(Activity activity, Charge charge, Paystack.TransactionCallback transactionCallback) {
         this.activity = activity;
@@ -48,20 +49,22 @@ public class TransactionManager {
         this.transactionCallback = transactionCallback;
     }
 
-    private static final String LOG_TAG = TransactionManager.class.getSimpleName();
+    public void initiate() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+        if (apiService == null) {
+            apiService = new ApiClient().getApiService();
+        }
+        if (chargeRequestBody == null) {
+            chargeRequestBody = new ChargeRequestBody(charge);
+        }
+        if (validateRequestBody == null) {
+            validateRequestBody = new ValidateRequestBody();
+        }
+    }
 
-    public void initiate() {
+    public void performTransaction() {
         try {
 
-            if(apiService == null){
-                apiService = new ApiClient().getApiService();
-            }
-            if(chargeRequestBody == null) {
-                chargeRequestBody = new ChargeRequestBody(charge);
-            }
-            if(validateRequestBody == null) {
-                validateRequestBody = new ValidateRequestBody();
-            }
+            initiate();
 
             //request token from paystack server
             initiateChargeOnServer();
@@ -82,9 +85,6 @@ public class TransactionManager {
     public void validate() {
         try {
 
-            //create tokenRequestBody
-
-
             //request token from paystack server
             validateChargeOnServer();
 
@@ -104,7 +104,6 @@ public class TransactionManager {
     private void validateChargeOnServer() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
 
         HashMap<String, String> params = validateRequestBody.getParamsHashMap();
-        Log.d("LLLLLLL", params.toString());
 
         Call<TransactionApiResponse> call = apiService.validateCharge(params);
         call.enqueue(new Callback<TransactionApiResponse>() {
@@ -140,7 +139,6 @@ public class TransactionManager {
     private void initiateChargeOnServer() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
 
         HashMap<String, String> params = chargeRequestBody.getParamsHashMap();
-        Log.d("LLLLLLL", params.toString());
 
         Call<TransactionApiResponse> call = apiService.charge(params);
         call.enqueue(new Callback<TransactionApiResponse>() {
@@ -207,7 +205,7 @@ public class TransactionManager {
             super.onPostExecute(pin);
             if (pin != null && (4 == pin.length())) {
                 chargeRequestBody.addPin(pin);
-                TransactionManager.this.initiate();
+                TransactionManager.this.performTransaction();
             } else {
                 transactionCallback.onError(new Exception("PIN must be exactly 4 digits"));
             }

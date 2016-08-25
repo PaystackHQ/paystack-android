@@ -191,7 +191,7 @@ public final class PaystackSdk {
         Paystack paystack = new Paystack(PaystackSdk.getPublicKey());
 
         //create token
-        paystack.chargeCard(activity, charge, transactionCallback);
+        paystack.performTransaction(activity, charge, transactionCallback);
     }
 
     public interface SdkInitializeCallback {

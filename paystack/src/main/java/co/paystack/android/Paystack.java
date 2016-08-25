@@ -71,16 +71,16 @@ public class Paystack extends PaystackModel {
         createToken(card, publicKey, tokenCallback);
     }
 
-    public void chargeCard(Activity activity, Charge charge, TransactionCallback transactionCallback) {
-        chargeCard(activity, charge, publicKey, transactionCallback);
+    public void performTransaction(Activity activity, Charge charge, TransactionCallback transactionCallback) {
+        performTransaction(activity, charge, publicKey, transactionCallback);
     }
 
     /**
      * Method to create token for the transaction
      *
-     * @param card           - a card
-     * @param publicKey - the key provided by App Developer
-     * @param tokenCallback  - a callback to execute after getting the token
+     * @param card          - a card
+     * @param publicKey     - the key provided by App Developer
+     * @param tokenCallback - a callback to execute after getting the token
      */
     public void createToken(Card card, String publicKey, TokenCallback tokenCallback) {
         //check for the needed data, if absent, send an exception through the tokenCallback;
@@ -111,11 +111,11 @@ public class Paystack extends PaystackModel {
         }
     }
 
-    public void chargeCard(Activity activity, Charge charge, String publicKey, TransactionCallback transactionCallback) {
+    public void performTransaction(Activity activity, Charge charge, String publicKey, TransactionCallback transactionCallback) {
         //check for the needed data, if absent, send an exception through the tokenCallback;
         try {
             //null check for card
-            if(charge == null){
+            if (charge == null) {
                 throw new RuntimeException("Required parameter: Charge cannot be null");
             }
 
@@ -141,7 +141,7 @@ public class Paystack extends PaystackModel {
 
             TransactionManager transactionManager = new TransactionManager(activity, charge, transactionCallback);
 
-            transactionManager.initiate();
+            transactionManager.performTransaction();
 
         } catch (AuthenticationException | CardException ae) {
             assert transactionCallback != null;
@@ -154,10 +154,10 @@ public class Paystack extends PaystackModel {
     }
 
     public interface BaseCallback {
-        void onError(Exception error);
+        void onError(Throwable error);
     }
 
-    public interface TokenCallback extends BaseCallback{
+    public interface TokenCallback extends BaseCallback {
         void onCreate(Token token);
 
     }

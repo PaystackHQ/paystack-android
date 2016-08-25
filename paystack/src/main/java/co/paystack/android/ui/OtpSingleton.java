@@ -1,8 +1,16 @@
 package co.paystack.android.ui;
 
 public class OtpSingleton {
+    private static OtpSingleton instance = new OtpSingleton();
     private String otp = "";
     private String otpMessage = "";
+
+    private OtpSingleton() {
+    }
+
+    public static OtpSingleton getInstance() {
+        return instance;
+    }
 
     public String getOtpMessage() {
         return otpMessage;
@@ -20,14 +28,5 @@ public class OtpSingleton {
     public OtpSingleton setOtp(String otp) {
         this.otp = otp;
         return this;
-    }
-
-    private OtpSingleton() {
-    }
-
-    private static OtpSingleton instance = new OtpSingleton();
-
-    public static OtpSingleton getInstance() {
-        return instance;
     }
 }

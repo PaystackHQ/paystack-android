@@ -7,10 +7,10 @@ import com.google.gson.annotations.SerializedName;
  */
 public class ApiResponse extends BaseApiModel {
 
-  @SerializedName("status")
-  public int status;
+    @SerializedName("status")
+    public int status;
 
-  @SerializedName("message")
-  public String message;
+    @SerializedName("message")
+    public String message;
 
 }
