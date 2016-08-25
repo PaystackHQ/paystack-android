@@ -11,8 +11,8 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 5
-        versionName "1.2.1"
+        versionCode 6
+        versionName "2.0"
     }
     buildTypes {
         release {
@@ -46,7 +46,7 @@ ext {
     artifact = 'paystack'
 
     libraryDescription = 'An android sdk for working with paystack'
-    libraryVersion = '1.2.1'
+    libraryVersion = '2.0'
 
     developerId = 'paystack'
     developerName = 'Paystack'
