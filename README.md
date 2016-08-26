@@ -116,7 +116,7 @@ open activity is just fine.
 
 ### 4. Verifying the transaction
 Send the reference to your server and verify by calling our REST API. An authorization will be returned which
-will allow you know if its code is reusable. You can learn more about our verify call [here](developers.paystack.co/docs/verifying-transactions).
+will allow you know if its code is reusable. You can learn more about our verify call [here](https://developers.paystack.co/docs/verifying-transactions).
 
 
 > We are retiring the createToken function. You can access the old documentation [here](CREATETOKEN.md).
