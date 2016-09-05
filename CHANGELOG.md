@@ -1,8 +1,11 @@
 # Change Log
-Last updated Mar 2, 2016
+Last updated Sep 5, 2016
 (from http://keepachangelog.com/)
 
 All notable changes to this project will be documented in this file.
+
+## Released v2.0.1 on Sep 5, 2016
+- Increase all connection timeout to 5 minutes.
 
 ## Released v2.0 - 2016-08-25
 - Added Perform Transaction

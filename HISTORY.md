@@ -1,5 +1,18 @@
 # History
-Last updated Mar 14, 2016
+Last updated Sep 5, 2016
+
+## Commits on Sep 5, 2016
+- Increase all connection timeout to 5 minutes.
+
+## Commits on Aug 24, 2016
+- Add chargeCard
+- Deprecate PaystackSdk.createToken
+- Deprecate createToken
+
+## Commits on Aug 24, 2016
+- Add chargeCard
+- Deprecate PaystackSdk.createToken
+- Deprecate createToken
 
 ## Commits on Mar 14, 2016
 - Bump `PaystackSdk` version to `1.2.0`
