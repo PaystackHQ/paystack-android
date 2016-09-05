@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.TimeUnit;
 
 import co.paystack.android.Config;
 import co.paystack.android.api.service.ApiService;
@@ -58,6 +59,9 @@ public class ApiClient {
                     }
                 })
                 .sslSocketFactory(tlsV1point2factory, tlsV1point2factory.getX509TrustManager())
+                .connectTimeout(5, TimeUnit.MINUTES)
+                .readTimeout(5, TimeUnit.MINUTES)
+                .writeTimeout(5, TimeUnit.MINUTES)
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
