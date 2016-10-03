@@ -148,7 +148,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         charge.setAmount(amount);
+        // Remember to use a unique reference from your server each time.
+        // You may decide not to set a reference, we will provide a value
+        // in that case
+        charge.setReference("7073397683");
 
+        // OUR SDK is Split Payments Aware
+        // You may also set a subaccount, transaction_charge and bearer
+        // Remember that only when a subaccount is provided will the rest be used
+        // charge.setSubaccount("ACCT_azbwwp4s9jidin0iq")
+        //        .setBearer(Charge.Bearer.subaccount)
+        //        .setTransactionCharge(18.9);
 
     }
 
