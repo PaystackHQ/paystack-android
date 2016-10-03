@@ -19,6 +19,10 @@ public class ChargeRequestBody extends BaseRequestBody {
     public static final String FIELD_PUBLIC_KEY = "public_key";
     public static final String FIELD_EMAIL = "email";
     public static final String FIELD_AMOUNT = "amount";
+    public static final String FIELD_REFERENCE = "reference";
+    public static final String FIELD_SUBACCOUNT = "subaccount";
+    public static final String FIELD_TRANSACTION_CHARGE = "transaction_charge";
+    public static final String FIELD_BEARER = "bearer";
     public static final String FIELD_HANDLE = "handle";
 
     @SerializedName(FIELD_CLIENT_DATA)
@@ -36,6 +40,18 @@ public class ChargeRequestBody extends BaseRequestBody {
     @SerializedName(FIELD_AMOUNT)
     public final String amount;
 
+    @SerializedName(FIELD_REFERENCE)
+    public final String reference;
+
+    @SerializedName(FIELD_SUBACCOUNT)
+    public final String subaccount;
+
+    @SerializedName(FIELD_TRANSACTION_CHARGE)
+    public final String transaction_charge;
+
+    @SerializedName(FIELD_BEARER)
+    public final String bearer;
+
     @SerializedName(FIELD_HANDLE)
     public String handle;
 
@@ -51,6 +67,10 @@ public class ChargeRequestBody extends BaseRequestBody {
         this.public_key = PaystackSdk.getPublicKey();
         this.email = charge.getEmail();
         this.amount = Integer.toString(charge.getAmount());
+        this.reference = charge.getReference();
+        this.subaccount = charge.getSubaccount();
+        this.transaction_charge = charge.getTransactionCharge() > 0 ? Double.toString(charge.getTransactionCharge()) : null;
+        this.bearer = charge.getBearer();
     }
 
 
@@ -64,6 +84,18 @@ public class ChargeRequestBody extends BaseRequestBody {
         params.put(FIELD_AMOUNT, amount);
         if (handle != null) {
             params.put(FIELD_HANDLE, handle);
+        }
+        if (reference != null) {
+            params.put(FIELD_REFERENCE, reference);
+        }
+        if (subaccount != null) {
+            params.put(FIELD_SUBACCOUNT, subaccount);
+        }
+        if (transaction_charge != null) {
+            params.put(FIELD_TRANSACTION_CHARGE, transaction_charge);
+        }
+        if (bearer != null) {
+            params.put(FIELD_BEARER, bearer);
         }
 
         return params;

@@ -12,6 +12,47 @@ public class Charge extends PaystackModel {
     private String email;
     private int amount;
 
+    private double transactionCharge;
+    private String subaccount;
+    private String reference;
+    private String bearer;
+
+    public double getTransactionCharge() {
+        return transactionCharge;
+    }
+
+    public Charge setTransactionCharge(double transactionCharge) {
+        this.transactionCharge = transactionCharge;
+        return this;
+    }
+
+    public String getSubaccount() {
+        return subaccount;
+    }
+
+    public Charge setSubaccount(String subaccount) {
+        this.subaccount = subaccount;
+        return this;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public Charge setReference(String reference) {
+        this.reference = reference;
+        return this;
+    }
+
+    public String getBearer() {
+        return bearer;
+    }
+
+    public Charge setBearer(String bearer) {
+        this.bearer = bearer;
+        return this;
+    }
+
     public Card getCard() {
         return card;
     }
