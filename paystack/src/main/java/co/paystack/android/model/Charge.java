@@ -2,10 +2,7 @@ package co.paystack.android.model;
 
 import android.util.Patterns;
 
-import java.util.Arrays;
-
 import co.paystack.android.exceptions.InvalidAmountException;
-import co.paystack.android.exceptions.InvalidBearerException;
 import co.paystack.android.exceptions.InvalidEmailException;
 
 /**
@@ -16,12 +13,14 @@ public class Charge extends PaystackModel {
     private String email;
     private int amount;
 
+    public enum Bearer {
+        merchant, subaccount
+    }
+
     private double transactionCharge;
     private String subaccount;
     private String reference;
-    private String bearer;
-
-    private String[] validBearers = {"subaccount", "merchant"};
+    private Bearer bearer;
 
     public double getTransactionCharge() {
         return transactionCharge;
@@ -50,13 +49,11 @@ public class Charge extends PaystackModel {
         return this;
     }
 
-    public String getBearer() {
+    public Bearer getBearer() {
         return bearer;
     }
 
-    public Charge setBearer(String bearer) {
-        if (Arrays.asList(validBearers).contains(bearer))
-            throw new InvalidBearerException(bearer);
+    public Charge setBearer(Bearer bearer) {
         this.bearer = bearer;
         return this;
     }

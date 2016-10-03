@@ -70,7 +70,7 @@ public class ChargeRequestBody extends BaseRequestBody {
         this.reference = charge.getReference();
         this.subaccount = charge.getSubaccount();
         this.transaction_charge = charge.getTransactionCharge() > 0 ? Double.toString(charge.getTransactionCharge()) : null;
-        this.bearer = charge.getBearer();
+        this.bearer = charge.getBearer() != null ? charge.getBearer().name() : null;
     }
 
 
