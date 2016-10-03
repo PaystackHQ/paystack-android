@@ -4,15 +4,15 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '24.0.1'
+    buildToolsVersion '24.0.2'
     lintOptions {
         abortOnError false
     }
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 7
-        versionName "2.0.1"
+        versionCode 8
+        versionName "2.0.2"
     }
     buildTypes {
         release {
@@ -28,7 +28,7 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
-    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'me.philio:pinentryview:1.0.6'
 }
 
@@ -46,7 +46,7 @@ ext {
     artifact = 'paystack'
 
     libraryDescription = 'An android sdk for working with paystack'
-    libraryVersion = '2.0.1'
+    libraryVersion = '2.0.2'
 
     developerId = 'paystack'
     developerName = 'Paystack'
