@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         // Remember that only when a subaccount is provided will the rest be used
         // charge.setSubaccount("ACCT_azbwwp4s9jidin0iq")
         //        .setBearer(Charge.Bearer.subaccount)
-        //        .setTransactionCharge(18.9);
+        //        .setTransactionCharge(18);
 
     }
 
