@@ -17,16 +17,16 @@ public class Charge extends PaystackModel {
         merchant, subaccount
     }
 
-    private double transactionCharge;
+    private int transactionCharge;
     private String subaccount;
     private String reference;
     private Bearer bearer;
 
-    public double getTransactionCharge() {
+    public int getTransactionCharge() {
         return transactionCharge;
     }
 
-    public Charge setTransactionCharge(double transactionCharge) {
+    public Charge setTransactionCharge(int transactionCharge) {
         this.transactionCharge = transactionCharge;
         return this;
     }
