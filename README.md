@@ -84,7 +84,9 @@ Charging with the PaystackSdk is quite straightforward.
     charge.setCard(new Card.Builder(cardNumber, expiryMonth, expiryYear, cvc).build());
     //add an email for customer
     charge.setEmail(email);
-    //add amount to charge
+    // add amount to charge
+    // setAmount accepts the kobo value
+    // which is: the naira value multiplied by 100.
     charge.setAmount(amount);
 
     //charge card
