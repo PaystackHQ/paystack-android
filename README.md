@@ -22,7 +22,7 @@ repositories {
   }
 }
 dependencies {
-  compile 'co.paystack.android:paystack:2.0.1'
+  compile 'co.paystack.android:paystack:2.0.2'
 }
 ```
 
@@ -88,7 +88,17 @@ Charging with the PaystackSdk is quite straightforward.
     // setAmount accepts the kobo value
     // which is: the naira value multiplied by 100.
     charge.setAmount(amount);
+    // Remember to use a unique reference from your server each time.
+    // You may decide not to set a reference, we will provide a value
+    // in that case
+    //        charge.setReference("7073397683");
 
+    // OUR SDK is Split Payments Aware
+    // You may also set a subaccount, transaction_charge and bearer
+    // Remember that only when a subaccount is provided will the rest be used
+    // charge.setSubaccount("ACCT_azbwwp4s9jidin0iq")
+    //        .setBearer(Charge.Bearer.subaccount)
+    //        .setTransactionCharge(18);
     //charge card
     PaystackSdk.chargeCard(activity, charge, new Paystack.TransactionCallback() {
         @Override
