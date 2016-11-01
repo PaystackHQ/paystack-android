@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Dialog.PinEntry" parent="AlertDialog.AppCompat">
+    <style name="Dialog.PinEntry" parent="Theme.AppCompat">
     </style>
 
-    <style name="Dialog.OtpEntry" parent="AlertDialog.AppCompat">
+    <style name="Dialog.OtpEntry" parent="Theme.AppCompat">
     </style>
 
 </resources>
