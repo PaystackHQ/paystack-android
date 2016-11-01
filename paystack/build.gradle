@@ -4,7 +4,7 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '24.0.2'
+    buildToolsVersion '24.0.3'
     lintOptions {
         abortOnError false
     }
@@ -29,7 +29,8 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'me.philio:pinentryview:1.0.6'
+
+    compile 'com.alimuzaffar.lib:pinentryedittext:1.0'
 }
 
 ext {
