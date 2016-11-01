@@ -1,17 +1,18 @@
 package co.paystack.android.ui;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import co.paystack.android.R;
-import me.philio.pinentry.PinEntryView;
+import com.alimuzaffar.lib.pin.PinEntryEditText;
 
-public class PinActivity extends Activity {
+import co.paystack.android.R;
+
+public class PinActivity extends AppCompatActivity {
 
     private Button continueButton;
-    private PinEntryView pinEntryView;
+    private PinEntryEditText pinEntryView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +25,9 @@ public class PinActivity extends Activity {
     protected void onResume() {
         super.onResume();
         continueButton = (Button) findViewById(R.id.continueButton);
-        pinEntryView = (PinEntryView) findViewById(R.id.pinEntryView);
+
+        pinEntryView = (PinEntryEditText) findViewById(R.id.pinEntryView);
+
         continueButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
