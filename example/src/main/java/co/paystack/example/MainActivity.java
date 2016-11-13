@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+
 import co.paystack.android.Paystack;
 import co.paystack.android.PaystackSdk;
 import co.paystack.android.model.Card;
@@ -119,6 +121,12 @@ public class MainActivity extends AppCompatActivity {
 
         charge = new Charge();
         charge.setCard(card);
+        try {
+            charge.putCustomField("Paid Via", "Android SDK");
+            charge.putMetadata("Cart ID", Integer.toString(299390));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         //validate fields
         String email = mEditEmail.getText().toString().trim();

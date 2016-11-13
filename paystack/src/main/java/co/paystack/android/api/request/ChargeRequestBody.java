@@ -1,5 +1,7 @@
 package co.paystack.android.api.request;
 
+import android.util.Log;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.HashMap;
@@ -24,6 +26,7 @@ public class ChargeRequestBody extends BaseRequestBody {
     public static final String FIELD_TRANSACTION_CHARGE = "transaction_charge";
     public static final String FIELD_BEARER = "bearer";
     public static final String FIELD_HANDLE = "handle";
+    public static final String FIELD_METADATA = "metadata";
 
     @SerializedName(FIELD_CLIENT_DATA)
     public final String clientData;
@@ -55,6 +58,9 @@ public class ChargeRequestBody extends BaseRequestBody {
     @SerializedName(FIELD_HANDLE)
     public String handle;
 
+    @SerializedName(FIELD_METADATA)
+    public String metadata;
+
 
     public ChargeRequestBody addPin(String pin) {
         this.handle = Crypto.encrypt(pin);
@@ -71,6 +77,7 @@ public class ChargeRequestBody extends BaseRequestBody {
         this.subaccount = charge.getSubaccount();
         this.transaction_charge = charge.getTransactionCharge() > 0 ? Integer.toString(charge.getTransactionCharge()) : null;
         this.bearer = charge.getBearer() != null ? charge.getBearer().name() : null;
+        this.metadata = charge.getMetadata();
     }
 
 
@@ -97,7 +104,10 @@ public class ChargeRequestBody extends BaseRequestBody {
         if (bearer != null) {
             params.put(FIELD_BEARER, bearer);
         }
-
+        if (metadata != null) {
+            params.put(FIELD_METADATA, metadata);
+        }
+Log.d("barabara",params.toString());
         return params;
     }
 }
