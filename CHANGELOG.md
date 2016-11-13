@@ -4,6 +4,13 @@ Last updated Sep 5, 2016
 
 All notable changes to this project will be documented in this file.
 
+## Released v2.1.0 on Nov 13, 2016
+- Add metadata support.
+- HOTFIX Verve card support fully functional
+
+## Released v2.0.2 on Sep 5, 2016
+- Add split payment awareness.
+
 ## Released v2.0.1 on Sep 5, 2016
 - Increase all connection timeout to 5 minutes.
 
