@@ -112,13 +112,13 @@ public class TransactionManager {
                 TransactionApiResponse transactionApiResponse = response.body();
                 if (transactionApiResponse != null) {
                     //check for status...if 0 return an error with the message
-                    if (transactionApiResponse.status == 0) {
+                    if (transactionApiResponse.status.equalsIgnoreCase("0")) {
                         //throw an error
                         transactionCallback.onError(new ValidateException(transactionApiResponse.message));
                         return;
-                    } else if (transactionApiResponse.status == 1) {
-                        // needs pin
-                        // show dialog
+                    } else if (transactionApiResponse.hasValidReferenceAndTrans() &&
+                            (transactionApiResponse.status.equalsIgnoreCase("1")
+                                    || transactionApiResponse.status.equalsIgnoreCase("success"))) {
                         transactionCallback.onSuccess(transactionApiResponse.getTransaction());
                         return;
                     }
@@ -147,16 +147,16 @@ public class TransactionManager {
                 TransactionApiResponse transactionApiResponse = response.body();
                 if (transactionApiResponse != null) {
                     //check for status...if 0 return an error with the message
-                    if (transactionApiResponse.status == 0) {
+                    if (transactionApiResponse.status.equalsIgnoreCase("0")) {
                         //throw an error
                         transactionCallback.onError(new ChargeException(transactionApiResponse.message));
                         return;
-                    } else if (transactionApiResponse.status == 2) {
+                    } else if (transactionApiResponse.status.equalsIgnoreCase("2")) {
                         // needs pin
                         // show dialog
                         new PinAsyncTask().execute();
                         return;
-                    } else if (transactionApiResponse.status == 3 && transactionApiResponse.hasValidReferenceAndTrans()) {
+                    } else if (transactionApiResponse.status.equalsIgnoreCase("3") && transactionApiResponse.hasValidReferenceAndTrans()) {
                         // needs otp
                         // show dialog
                         transactionCallback.beforeValidate(transactionApiResponse.getTransaction());

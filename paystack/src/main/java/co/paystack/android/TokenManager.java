@@ -83,7 +83,7 @@ public class TokenManager implements Paystack.TokenCreator {
                 TokenApiResponse tokenApiResponse = response.body();
                 if (tokenApiResponse != null) {
                     //check for status...if 0 return an error with the message
-                    if (tokenApiResponse.status == 0) {
+                    if (tokenApiResponse.status.equals("0")) {
                         //throw an error
                         tokenCallback.onError(new TokenException(tokenApiResponse.message));
                     } else {

@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 public class ApiResponse extends BaseApiModel {
 
     @SerializedName("status")
-    public int status;
+    public String status;
 
     @SerializedName("message")
     public String message;
