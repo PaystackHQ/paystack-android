@@ -75,6 +75,8 @@ public class ChargeRequestBody extends BaseRequestBody {
         return this;
     }
 
+    private HashMap<String, String> additionalParameters;
+
     public ChargeRequestBody(Charge charge) {
         this.clientData = Crypto.encrypt(StringUtils.concatenateCardFields(charge.getCard()));
         this.last4 = charge.getCard().getLast4digits();
@@ -88,12 +90,14 @@ public class ChargeRequestBody extends BaseRequestBody {
         this.metadata = charge.getMetadata();
         this.plan = charge.getPlan();
         this.currency = charge.getCurrency();
+        this.additionalParameters = charge.getAdditionalParameters();
     }
 
 
     @Override
     public HashMap<String, String> getParamsHashMap() {
-        HashMap<String, String> params = new HashMap<>();
+        // set values will override additional params provided
+        HashMap<String, String> params = additionalParameters;
         params.put(FIELD_PUBLIC_KEY, public_key);
         params.put(FIELD_CLIENT_DATA, clientData);
         params.put(FIELD_LAST4, last4);

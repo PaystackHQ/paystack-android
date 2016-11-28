@@ -7,6 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 import co.paystack.android.exceptions.InvalidAmountException;
 import co.paystack.android.exceptions.InvalidEmailException;
 
@@ -21,9 +23,20 @@ public class Charge extends PaystackModel {
     private JSONObject metadata;
     private JSONArray custom_fields;
     private boolean hasMeta = false;
+    private HashMap<String, String> additionalParameters;
+
+    public void addParameter(String key, String value){
+        this.additionalParameters.put(key, value);
+    }
+
+    public HashMap<String, String> getAdditionalParameters(){
+        return additionalParameters;
+    }
 
     public Charge() {
         this.metadata = new JSONObject();
+        this.amount = -1;
+        this.additionalParameters = new HashMap<>();
         this.custom_fields = new JSONArray();
         try {
             this.metadata.put("custom_fields", this.custom_fields);
@@ -33,7 +46,7 @@ public class Charge extends PaystackModel {
     }
 
     public enum Bearer {
-        merchant, subaccount
+        account, subaccount
     }
 
     private int transactionCharge;
