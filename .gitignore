@@ -1,10 +1,9 @@
 .gradle
-/local.properties
-/.idea/workspace.xml
-/.idea/libraries
 .DS_Store
+.idea
+*.iml
+/local.properties
 /build
 /captures
-local.properties
-.idea
-Paystack.iml
+.externalNativeBuild
+projectFilesBackup/
