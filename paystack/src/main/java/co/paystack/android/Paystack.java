@@ -119,11 +119,7 @@ public class Paystack extends PaystackModel {
             if (charge == null) {
                 throw new RuntimeException("Required parameter: Charge cannot be null");
             }
-
-            if (charge.getAmount() < 5000) {
-                throw new RuntimeException("Required parameter: Amount cannot be less than 5000 (50 naira)");
-            }
-
+            
             if (charge.getCard() == null) {
                 throw new RuntimeException("Required parameter: Card cannot be null");
             }
