@@ -41,6 +41,27 @@ public class Charge extends PaystackModel {
     private String reference;
     private Bearer bearer;
 
+    private String currency;
+    private String plan;
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public Charge setCurrency(String currency) {
+        this.currency = currency;
+        return this;
+    }
+
+    public String getPlan() {
+        return plan;
+    }
+
+    public Charge setPlan(String plan) {
+        this.plan = plan;
+        return this;
+    }
+
     public int getTransactionCharge() {
         return transactionCharge;
     }

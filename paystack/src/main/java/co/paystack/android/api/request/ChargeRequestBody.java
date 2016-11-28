@@ -27,6 +27,8 @@ public class ChargeRequestBody extends BaseRequestBody {
     public static final String FIELD_BEARER = "bearer";
     public static final String FIELD_HANDLE = "handle";
     public static final String FIELD_METADATA = "metadata";
+    public static final String FIELD_CURRENCY = "currency";
+    public static final String FIELD_PLAN = "plan";
 
     @SerializedName(FIELD_CLIENT_DATA)
     public final String clientData;
@@ -61,6 +63,12 @@ public class ChargeRequestBody extends BaseRequestBody {
     @SerializedName(FIELD_METADATA)
     public String metadata;
 
+    @SerializedName(FIELD_CURRENCY)
+    public String currency;
+
+    @SerializedName(FIELD_PLAN)
+    public String plan;
+
 
     public ChargeRequestBody addPin(String pin) {
         this.handle = Crypto.encrypt(pin);
@@ -78,6 +86,8 @@ public class ChargeRequestBody extends BaseRequestBody {
         this.transaction_charge = charge.getTransactionCharge() > 0 ? Integer.toString(charge.getTransactionCharge()) : null;
         this.bearer = charge.getBearer() != null ? charge.getBearer().name() : null;
         this.metadata = charge.getMetadata();
+        this.plan = charge.getPlan();
+        this.currency = charge.getCurrency();
     }
 
 
@@ -107,7 +117,12 @@ public class ChargeRequestBody extends BaseRequestBody {
         if (metadata != null) {
             params.put(FIELD_METADATA, metadata);
         }
-Log.d("barabara",params.toString());
+        if (plan != null) {
+            params.put(FIELD_PLAN, plan);
+        }
+        if (currency != null) {
+            params.put(FIELD_CURRENCY, currency);
+        }
         return params;
     }
 }

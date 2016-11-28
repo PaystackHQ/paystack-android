@@ -168,6 +168,11 @@ public class MainActivity extends AppCompatActivity {
         //        .setBearer(Charge.Bearer.subaccount)
         //        .setTransactionCharge(18);
 
+        // OUR SDK is Plans Aware, and MultiCurrency Aware
+        // You may also set a currency and plan
+        // charge.setPlan("PLN_sh897hueidh")
+        //        .setCurrency("NGN")
+
     }
 
     /**
