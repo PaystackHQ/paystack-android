@@ -11,7 +11,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeUnit;
 
-import co.paystack.android.Config;
+import co.paystack.android.BuildConfig;
 import co.paystack.android.api.service.ApiService;
 import co.paystack.android.api.utils.TLSSocketFactory;
 import okhttp3.Interceptor;
@@ -50,7 +50,7 @@ public class ApiClient {
                         Request original = chain.request();
                         // Add headers so we get Android version and Paystack Library version
                         Request.Builder builder = original.newBuilder()
-                                .header("User-Agent", "Android_" + Build.VERSION.SDK_INT + "_Paystack_" + Config.VERSION_NAME)
+                                .header("User-Agent", "Android_" + Build.VERSION.SDK_INT + "_Paystack_" + BuildConfig.VERSION_NAME)
                                 .header("Accept", "application/json")
                                 .method(original.method(), original.body());
                         Request request = builder.build();

@@ -21,7 +21,7 @@ public final class PaystackSdk {
     /**
      * Value for the version code of this sdk
      */
-    public static final int VERSION_CODE = Config.VERSION_CODE;
+    public static final int VERSION_CODE = BuildConfig.VERSION_CODE;
     /**
      * key for public key property in the AndroidManifest.xml
      */
