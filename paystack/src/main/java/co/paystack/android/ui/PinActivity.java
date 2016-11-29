@@ -2,17 +2,14 @@ package co.paystack.android.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
 
-import com.alimuzaffar.lib.pin.PinEntryEditText;
+import co.paystack.android.design.widget.PinPadView;
 
 import co.paystack.android.R;
 
 public class PinActivity extends AppCompatActivity {
 
-    private Button continueButton;
-    private PinEntryEditText pinEntryView;
+    private PinPadView pinpadView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,22 +21,21 @@ public class PinActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        continueButton = (Button) findViewById(R.id.continueButton);
 
-        pinEntryView = (PinEntryEditText) findViewById(R.id.pinEntryView);
+        pinpadView = (PinPadView) findViewById(R.id.pinpadView);
 
-        continueButton.setOnClickListener(new View.OnClickListener() {
-
+        pinpadView.setOnCompletedListener(new PinPadView.OnCompletedListener() {
             @Override
-            public void onClick(View view) {
+            public void onCompleted(String pin) {
                 PinSingleton si = PinSingleton.getInstance();
                 synchronized (si) {
-                    si.setPin(pinEntryView.getText().toString());
+                    si.setPin(pin);
                     si.notify();
 
                 }
                 PinActivity.this.finish();
             }
         });
+
     }
 }
