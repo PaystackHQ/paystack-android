@@ -66,8 +66,6 @@ public class MainActivity extends AppCompatActivity {
         mTextToken = (TextView) findViewById(R.id.textview_token);
         mTextReference = (TextView) findViewById(R.id.textview_reference);
 
-        dialog = new ProgressDialog(this);
-
         //initialize sdk
         PaystackSdk.initialize(getApplicationContext());
 
@@ -82,7 +80,8 @@ public class MainActivity extends AppCompatActivity {
 
                 //check card validity
                 if (card != null && card.isValid()) {
-                    dialog.setMessage("Request token please wait");
+                    dialog = new ProgressDialog(MainActivity.this);
+                    dialog.setMessage("Requesting token please wait");
                     dialog.setCancelable(true);
                     dialog.setCanceledOnTouchOutside(true);
 
@@ -103,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //check card validity
                 if (card != null && card.isValid()) {
+                    dialog = new ProgressDialog(MainActivity.this);
                     dialog.setMessage("Performing transaction... please wait");
                     dialog.setCancelable(true);
                     dialog.setCanceledOnTouchOutside(true);
@@ -249,13 +249,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if ((dialog != null) && dialog.isShowing()){
+            dialog.dismiss();
+        }
+        dialog = null;
+    }
+
     private void chargeCard() {
+
         transaction = null;
         PaystackSdk.chargeCard(this, charge, new Paystack.TransactionCallback() {
             @Override
             public void onSuccess(Transaction transaction) {
                 // This is called only after transaction is successful
-                if (dialog.isShowing()) {
+                if ((dialog != null) && dialog.isShowing()) {
                     dialog.dismiss();
                 }
 
@@ -269,6 +280,7 @@ public class MainActivity extends AppCompatActivity {
                 // This is called only before requesting OTP
                 // Save reference so you may send to server if
                 // error occurs with OTP
+                // No need to dismiss dialog
                 MainActivity.this.transaction = transaction;
                 Toast.makeText(MainActivity.this, transaction.reference, Toast.LENGTH_LONG).show();
                 updateTextViews();
@@ -276,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable error) {
-                if (dialog.isShowing()) {
+                if ((dialog != null) && dialog.isShowing()) {
                     dialog.dismiss();
                 }
                 if (MainActivity.this.transaction == null) {
@@ -293,13 +305,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createToken(Card card) {
+        dialog = new ProgressDialog(this);
+
         //then create token using PaystackSdk class
         PaystackSdk.createToken(card, new Paystack.TokenCallback() {
             @Override
             public void onCreate(Token token) {
 
                 //here you retrieve the token, and send to your server for charging.
-                if (dialog.isShowing()) {
+                if ((dialog != null) && dialog.isShowing()) {
                     dialog.dismiss();
                 }
 
@@ -310,7 +324,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable error) {
-                if (dialog.isShowing()) {
+                if ((dialog != null) && dialog.isShowing()) {
                     dialog.dismiss();
                 }
                 Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
