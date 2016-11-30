@@ -5,10 +5,10 @@
     <application>
         <activity
             android:name=".ui.PinActivity"
-            android:theme="@style/Dialog.PinEntry"/>
+            android:theme="@style/Paystack.Dialog.PinEntry"/>
         <activity
             android:name=".ui.OtpActivity"
-            android:theme="@style/Dialog.OtpEntry" />
+            android:theme="@style/Paystack.Dialog.OtpEntry" />
     </application>
 
 </manifest>

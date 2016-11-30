@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Dialog.PinEntry" parent="Theme.AppCompat">
+    <style name="Paystack.Dialog" parent="Theme.AppCompat">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
 
-    <style name="Dialog.OtpEntry" parent="Theme.AppCompat">
+    <style name="Paystack.Dialog.PinEntry" parent="Paystack.Dialog">
+    </style>
+
+    <style name="Paystack.Dialog.OtpEntry" parent="Paystack.Dialog">
     </style>
 
 </resources>
