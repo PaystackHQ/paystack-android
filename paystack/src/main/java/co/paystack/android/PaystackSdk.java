@@ -36,7 +36,6 @@ public final class PaystackSdk {
      * Reference to the public key
      */
     private static volatile String publicKey;
-    private static Context applicationContext;
 
     /**
      * Initialize PaystackSdk with a callback when has been initilized successfully.
@@ -61,8 +60,6 @@ public final class PaystackSdk {
 
         //load data from PaystackSdk
         PaystackSdk.loadFromManifest(applicationContext);
-
-        PaystackSdk.applicationContext = applicationContext;
 
         sdkInitialized = true;
 
@@ -110,10 +107,6 @@ public final class PaystackSdk {
     @Deprecated
     public static void setPublishableKey(String publicKey) {
         PaystackSdk.publicKey = publicKey;
-    }
-
-    public static Context getApplicationContext() {
-        return applicationContext;
     }
 
     private static void loadFromManifest(Context context) {
