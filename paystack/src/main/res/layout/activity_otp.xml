@@ -1,27 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
                 tools:context=".ui.OtpActivity">
+    <Space
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp"/>
 
     <co.paystack.android.design.widget.PinPadView
         android:id="@+id/pinpadView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        app:vibrate_on_incomplete_submit="false"
+        app:auto_submit="false"
         android:background="#292929"
-        app:text_prompt="Please enter OTP"
-        app:prompt_textsize="15sp"
-        app:button_numeric_textsize="17sp"
-        app:button_alpha_textsize="8sp"
+        app:prompt_text="Please enter OTP"
+        app:prompt_textsize="13sp"
+        app:button_numeric_textsize="15sp"
+        app:button_alpha_textsize="0sp"
         app:button_drawable_size="24dp"
         app:place_digits_randomly="false"
         app:pin_length="10"
-        app:pin_indicator_stroke_width="0dp"
-        app:text_color="@android:color/holo_blue_bright"/>
+        app:pin_indicator_stroke_width="0dp"/>
 
-</FrameLayout>
+</LinearLayout>

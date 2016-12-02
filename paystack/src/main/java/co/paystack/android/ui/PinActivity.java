@@ -24,7 +24,7 @@ public class PinActivity extends AppCompatActivity {
 
         pinpadView = (PinPadView) findViewById(R.id.pinpadView);
 
-        pinpadView.setOnCompletedListener(new PinPadView.OnCompletedListener() {
+        pinpadView.setOnSubmitListener(new PinPadView.OnSubmitListener() {
             @Override
             public void onCompleted(String pin) {
                 PinSingleton si = PinSingleton.getInstance();
@@ -34,6 +34,11 @@ public class PinActivity extends AppCompatActivity {
 
                 }
                 PinActivity.this.finish();
+            }
+
+            @Override
+            public void onIncompleteSubmit(String s) {
+                // warn of incomplete PIN
             }
         });
 
