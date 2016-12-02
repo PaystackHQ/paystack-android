@@ -305,8 +305,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createToken(Card card) {
-        dialog = new ProgressDialog(this);
-
         //then create token using PaystackSdk class
         PaystackSdk.createToken(card, new Paystack.TokenCallback() {
             @Override
