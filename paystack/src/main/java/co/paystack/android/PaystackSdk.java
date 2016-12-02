@@ -124,8 +124,7 @@ public final class PaystackSdk {
         ApplicationInfo applicationInfo;
         try {
             applicationInfo = context.getPackageManager().getApplicationInfo(
-                    context.getPackageName(),
-                    PackageManager.GET_ACTIVITIES | PackageManager.GET_META_DATA
+                    context.getPackageName(), PackageManager.GET_META_DATA
             );
         } catch (PackageManager.NameNotFoundException e) {
             return;
