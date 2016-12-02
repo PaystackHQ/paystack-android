@@ -22,7 +22,7 @@ repositories {
   }
 }
 dependencies {
-  compile 'co.paystack.android:paystack:2.1.1'
+  compile 'co.paystack.android:paystack:2.1.2'
 }
 ```
 
