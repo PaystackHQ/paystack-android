@@ -1,21 +1,25 @@
 ### createToken
 Creating a single-use token with the PaystackSdk is quite straightforward.
 ```java
-    //build a card
-    Card card = new Card.Builder(cardNumber, expiryMonth, expiryYear, cvc).build();
+class tokeningActivity{
+    public void createToken(){
+        //build a card
+        Card card = new Card.Builder(cardNumber, expiryMonth, expiryYear, cvc).build();
 
-    //create token
-    PaystackSdk.createToken(card, new Paystack.TokenCallback() {
-        @Override
-        public void onCreate(Token token) {
-            //retrieve the token, and send to your server for charging.
-        }
+        //create token
+        PaystackSdk.createToken(card, new Paystack.TokenCallback() {
+            @Override
+            public void onCreate(Token token) {
+                //retrieve the token, and send to your server for charging.
+            }
 
-        @Override
-        public void onError(Throwable error) {
-            //handle error here
-        }
-    });
+            @Override
+            public void onError(Throwable error) {
+                //handle error here
+            }
+        });
+    }
+}
 ```
 The first argument to the PaystackSdk.createToken is the card object. A basic Card object contains:
 

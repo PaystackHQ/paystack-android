@@ -35,11 +35,7 @@ To use this library with Eclipse, you need to:
 To prepare for use, you must ensure that your app has internet permissions by making sure the `uses-permission` line below is present in the AndroidManifest.xml.
 
 ```xml
-<manifest xlmns:android...>
- ...
- <uses-permission android:name="android.permission.INTERNET" />
- <application ... />
-</manifest>
+<uses-permission android:name="android.permission.INTERNET" />
 ```
 
 ### 1. initializeSdk
@@ -47,7 +43,14 @@ To prepare for use, you must ensure that your app has internet permissions by ma
 To use the Paysack android sdk, you need to first initialize the sdk using the PaystackSdk class.
 
 ```java
-PaystackSdk.initialize(getApplicationContext());
+class Application{
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        PaystackSdk.initialize(getApplicationContext());
+    }
+}
 ```
 
 Make sure to call this method in the onCreate method of your Fragment or Activity.
@@ -67,55 +70,63 @@ Before you can create a token with the PaystackSdk, you need to set your public 
 #### b. Set the public key by code
 
 ```java
-PaystackSdk.setPublicKey(publicKey);
+class Bootstrap{
+    public static void setPaystackKey(String publicKey) {
+        PaystackSdk.setPublicKey(publicKey);
+    }
+}
 ```
 
 ### 3. chargeCard
 Charging with the PaystackSdk is quite straightforward.
 ```java
-    //create a charge
-    Charge charge = new Charge();
-    //Add card to the charge
-    charge.setCard(new Card.Builder(cardNumber, expiryMonth, expiryYear, cvc).build());
-    //add an email for customer
-    charge.setEmail(email);
-    // add amount to charge
-    // setAmount accepts the kobo value
-    // which is: the naira value multiplied by 100.
-    charge.setAmount(amount);
-    // Remember to use a unique reference from your server each time.
-    // You may decide not to set a reference, we will provide a value
-    // in that case
-    //        charge.setReference("7073397683");
+class chargingActivity{
+   public void performCharge(){
+       //create a charge
+       Charge charge = new Charge();
+       //Add card to the charge
+       charge.setCard(new Card.Builder(cardNumber, expiryMonth, expiryYear, cvc).build());
+       //add an email for customer
+       charge.setEmail(email);
+       // add amount to charge
+       // setAmount accepts the kobo value
+       // which is: the naira value multiplied by 100.
+       charge.setAmount(amount);
+       // Remember to use a unique reference from your server each time.
+       // You may decide not to set a reference, we will provide a value
+       // in that case
+       //        charge.setReference("7073397683");
 
-    // OUR SDK is Split Payments Aware
-    // You may also set a subaccount, transaction_charge and bearer
-    // Remember that only when a subaccount is provided will the rest be used
-    // charge.setSubaccount("ACCT_azbwwp4s9jidin0iq")
-    //        .setBearer(Charge.Bearer.subaccount)
-    //        .setTransactionCharge(18);
-    //charge card
-    PaystackSdk.chargeCard(activity, charge, new Paystack.TransactionCallback() {
-        @Override
-        public void onSuccess(Transaction transaction) {
-            // This is called only after transaction is deemed successful
-            // retrieve the transaction, and send its reference to your server
-            // for verification.
-        }
+       // OUR SDK is Split Payments Aware
+       // You may also set a subaccount, transaction_charge and bearer
+       // Remember that only when a subaccount is provided will the rest be used
+       // charge.setSubaccount("ACCT_azbwwp4s9jidin0iq")
+       //        .setBearer(Charge.Bearer.subaccount)
+       //        .setTransactionCharge(18);
+       //charge card
+       PaystackSdk.chargeCard(activity, charge, new Paystack.TransactionCallback() {
+           @Override
+           public void onSuccess(Transaction transaction) {
+               // This is called only after transaction is deemed successful
+               // retrieve the transaction, and send its reference to your server
+               // for verification.
+           }
 
-        @Override
-        public void beforeValidate(Transaction transaction) {
-            // This is called only before requesting OTP
-            // Save reference so you may send to server. If
-            // error occurs with OTP, you should still verify on server
-        }
+           @Override
+           public void beforeValidate(Transaction transaction) {
+               // This is called only before requesting OTP
+               // Save reference so you may send to server. If
+               // error occurs with OTP, you should still verify on server
+           }
 
-        @Override
-        public void onError(Throwable error) {
-          //handle error here
-        }
+           @Override
+           public void onError(Throwable error) {
+             //handle error here
+           }
 
-    });
+       });
+   }
+}
 ```
 The first argument to the PaystackSdk.chargeCard is the calling activity object. Always
 give an activity that will stay open till the end of the transaction. The currently
