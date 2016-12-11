@@ -16,11 +16,6 @@ API 16 will not be available.
 You do not need to clone this repository or download the files. Just add the following lines to your app's `build.gradle`:
 
 ```gradle
-repositories {
-  maven {
-      url 'https://dl.bintray.com/paystack/maven/'
-  }
-}
 dependencies {
   compile 'co.paystack.android:paystack:2.1.2'
 }

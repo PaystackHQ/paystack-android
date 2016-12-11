@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        charge.setAmount(amount);
+//        charge.setAmount(amount);
         // Remember to use a unique reference from your server each time.
         // You may decide not to set a reference, we will provide a value
         // in that case
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
 
         // OUR SDK is Plans Aware, and MultiCurrency Aware
         // You may also set a currency and plan
-        // charge.setPlan("PLN_sh897hueidh")
+        charge.setPlan("PLN_waiagu1thcyiebp");
         //        .setCurrency("USD");
 
         // You can add additional parameters to the transaction
