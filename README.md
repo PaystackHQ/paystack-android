@@ -5,6 +5,8 @@ library in your android app so we shoulder the burden of PCI compliance by helpi
 avoid the need to send card data directly to your server. Instead, this library sends credit
 card data directly to our servers.
 
+> We have retired the createToken function. Please upgrade your existing apps and use `chargeCard` instead.
+
 ## Requirements
 - Android SDKv16 (Android 4.1 "Jelly Bean") - This is the first SDK version that includes
 `TLSv1.2` which is required by our servers. Native app support for user devices older than
@@ -57,7 +59,7 @@ Make sure to call this method in the onCreate method of your Fragment or Activit
 
 ### 2. setPublicKey
 
-Before you can create a token with the PaystackSdk, you need to set your public key. The library provides two approaches,
+Before you can charge a card with the PaystackSdk, you need to set your public key. The library provides two approaches,
 
 #### a. Add the following lines to the `<application></application>` tag of your AndroidManifest.xml
 
@@ -136,10 +138,6 @@ open activity is just fine.
 Send the reference to your server and verify by calling our REST API. An authorization will be returned which
 will allow you know if its code is reusable. You can learn more about our verify call [here](https://developers.paystack.co/docs/verifying-transactions).
 
-
-> We are retiring the createToken function. You can access the old documentation [here](CREATETOKEN.md).
-
-
 ### 5. Charging Returning Customers
 See details for charging returning customers [here](https://developers.paystack.co/docs/charging-returning-customers).
 
@@ -156,7 +154,7 @@ Method that checks if the card security code is valid
 Method checks if the expiry date (combination of year and month) is valid.
 
 #### card.isValid
-Method to check if the card is valid. Always do this check, before creating the token.
+Method to check if the card is valid. Always do this check, before charging the card.
 
 #### card.getType
 This method returns an estimate of the string representation of the card type.
