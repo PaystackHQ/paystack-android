@@ -23,19 +23,14 @@ import co.paystack.android.model.Transaction;
 
 public class MainActivity extends AppCompatActivity {
 
-    //private static final String PUBLIC_KEY = "your public key";
-
-
     EditText mEditCardNum;
     EditText mEditCVC;
     EditText mEditExpiryMonth;
     EditText mEditExpiryYear;
-    Button mButtonCreateToken;
 
     TextView mTextCard;
     TextView mTextToken;
 
-    Token token;
     Card card;
 
     ProgressDialog dialog;
@@ -59,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
         mEditEmail = (EditText) findViewById(R.id.edit_email);
         mEditAmountInKobo = (EditText) findViewById(R.id.edit_amount_in_kobo);
 
-        mButtonCreateToken = (Button) findViewById(R.id.button_create_token);
         mButtonPerformTransaction = (Button) findViewById(R.id.button_perform_transaction);
 
         mTextCard = (TextView) findViewById(R.id.textview_card);
@@ -68,29 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
         //initialize sdk
         PaystackSdk.initialize(getApplicationContext());
-
-
-        //set click listener
-        mButtonCreateToken.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                //validate form
-                validateCardForm();
-
-                //check card validity
-                if (card != null && card.isValid()) {
-                    dialog = new ProgressDialog(MainActivity.this);
-                    dialog.setMessage("Requesting token please wait");
-                    dialog.setCancelable(true);
-                    dialog.setCanceledOnTouchOutside(true);
-
-                    dialog.show();
-
-                    createToken(card);
-                }
-            }
-        });
 
         //set click listener
         mButtonPerformTransaction.setOnClickListener(new View.OnClickListener() {
@@ -155,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-//        charge.setAmount(amount);
+        charge.setAmount(amount);
         // Remember to use a unique reference from your server each time.
         // You may decide not to set a reference, we will provide a value
         // in that case
@@ -170,7 +141,8 @@ public class MainActivity extends AppCompatActivity {
 
         // OUR SDK is Plans Aware, and MultiCurrency Aware
         // You may also set a currency and plan
-        charge.setPlan("PLN_waiagu1thcyiebp");
+        // charge.setPlan("PLN_waiagu1thcyiebp");
+        //        .addParameter("invoice_limit",7)
         //        .setCurrency("USD");
 
         // You can add additional parameters to the transaction
@@ -304,42 +276,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void createToken(Card card) {
-        //then create token using PaystackSdk class
-        PaystackSdk.createToken(card, new Paystack.TokenCallback() {
-            @Override
-            public void onCreate(Token token) {
-
-                //here you retrieve the token, and send to your server for charging.
-                if ((dialog != null) && dialog.isShowing()) {
-                    dialog.dismiss();
-                }
-
-                Toast.makeText(MainActivity.this, token.token, Toast.LENGTH_LONG).show();
-                MainActivity.this.token = token;
-                updateTextViews();
-            }
-
-            @Override
-            public void onError(Throwable error) {
-                if ((dialog != null) && dialog.isShowing()) {
-                    dialog.dismiss();
-                }
-                Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
-                updateTextViews();
-            }
-        });
-    }
-
     private void updateTextViews() {
-        if (token != null) {
-            mTextCard.setText(String.format("Card last 4 digits: %s", token.last4));
-            mTextToken.setText(String.format("Token: %s", token.token));
-        } else if (transaction != null) {
+        if (transaction != null) {
             mTextReference.setText(String.format("Reference: %s", transaction.reference));
         } else {
-            mTextCard.setText(R.string.token_not_gotten);
-            mTextToken.setText(R.string.token_null_message);
+            mTextCard.setText("Unable to charge card");
+            mTextToken.setText("No transaction");
         }
     }
 
