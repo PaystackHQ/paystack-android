@@ -1,3 +1,8 @@
+[![API](https://img.shields.io/badge/API-16%2B-blue.svg?style=plastic)](https://android-arsenal.com/api?level=16)
+
+
+
+
 ## Paystack Android
 
 This is a library for easy integration of [Paystack](https://paystack.com) with your Android application. Use this
