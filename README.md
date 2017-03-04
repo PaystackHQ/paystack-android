@@ -164,6 +164,11 @@ Method to check if the card is valid. Always do this check, before charging the 
 #### card.getType
 This method returns an estimate of the string representation of the card type.
 
+## Testing your implementation
+You can (and should) test your implementation of the Paystack Android library in your Android app. You need the details of an
+actual debit/credit card to do this, so we provide ##_test cards_## for your use instead of using your own debit/credit cards. 
+You may find test cards on [this Paystack documentation page](https://developers.paystack.co/docs/test-cards).
+
 ## Building the example project
 
 1. Clone the repository.
