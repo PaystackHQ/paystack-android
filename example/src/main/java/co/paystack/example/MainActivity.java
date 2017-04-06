@@ -26,10 +26,10 @@ public class MainActivity extends AppCompatActivity {
 
     // To get started quickly, change this to your heroku deployment of
     // https://github.com/PaystackHQ/sample-charge-card-backend
-    String new_access_code_url = "https://infinite-peak-60063.herokuapp.com/new-access-code/";
-    String verify_url = "https://infinite-peak-60063.herokuapp.com/verify-with-paystack/";
+    String new_access_code_url = "";
+    String verify_url = "";
     // Set this to a public key that matches the secret key you supplied while creating the heroku instance
-    String paystack_public_key = "pk_live_2bf31d4aea08ab31f5d0cfd645c7e4f67025d259";
+    String paystack_public_key = "";
 
     EditText mEditCardNum;
     EditText mEditCVC;

@@ -21,9 +21,6 @@ import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-//import retrofit2.RestAdapter;
-//import retrofit2.converter.GsonConverter;
-
 /**
  * API Client Class
  * <p>
