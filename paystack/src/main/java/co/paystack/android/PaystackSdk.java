@@ -6,7 +6,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 
 import co.paystack.android.exceptions.PaystackSdkNotInitializedException;
-import co.paystack.android.model.Card;
 import co.paystack.android.model.Charge;
 import co.paystack.android.utils.Utils;
 
@@ -26,8 +25,7 @@ public final class PaystackSdk {
      * key for public key property in the AndroidManifest.xml
      */
     private static final String KEY_PUBLIC_KEY_PROP = "co.paystack.android.PublicKey";
-    @Deprecated
-    private static final String KEY_PUBLISHABLE_KEY_PROP = "co.paystack.android.PublishableKey";
+    public static Context applicationContext;
     /**
      * Flag to know if sdk has been initialized
      */
@@ -43,7 +41,7 @@ public final class PaystackSdk {
      * @param applicationContext - Application Context
      * @param initializeCallback - callback to execute after initializing
      */
-    public static synchronized void initialize(Context applicationContext, SdkInitializeCallback initializeCallback) {
+    private static synchronized void initialize(Context applicationContext, SdkInitializeCallback initializeCallback) {
         //do all the init work here
 
         //check if initialize callback is set and sdk is actually intialized
@@ -62,6 +60,7 @@ public final class PaystackSdk {
         PaystackSdk.loadFromManifest(applicationContext);
 
         sdkInitialized = true;
+        PaystackSdk.applicationContext = applicationContext;
 
         if (initializeCallback != null) {
             initializeCallback.onInitialized();
@@ -104,11 +103,6 @@ public final class PaystackSdk {
         PaystackSdk.publicKey = publicKey;
     }
 
-    @Deprecated
-    public static void setPublishableKey(String publicKey) {
-        PaystackSdk.publicKey = publicKey;
-    }
-
     private static void loadFromManifest(Context context) {
         if (context == null) {
             return;
@@ -133,36 +127,6 @@ public final class PaystackSdk {
             publicKey = applicationInfo.metaData.getString(KEY_PUBLIC_KEY_PROP);
         }
 
-        // try with publishable key
-        if (publicKey == null) {
-            publicKey = applicationInfo.metaData.getString(KEY_PUBLISHABLE_KEY_PROP);
-        }
-
-    }
-
-    /**
-     * Method for creating a token, using {@link PaystackSdk}. You won't need to create an instance
-     * of {@link Paystack} by yourself.
-     * <br>
-     * Equivalent to these two lines:
-     * <br>
-     * {@code
-     * Paystack paystack = new Paystack(PUBLIC_KEY);
-     * paystack.createToken();
-     * }
-     *
-     * @param card     - card whose token we need to create
-     * @param callback - callback to execute after creating token
-     */
-    @Deprecated
-    public static void createToken(Card card, Paystack.TokenCallback callback) {
-        performChecks();
-
-        //construct paystack object
-        Paystack paystack = new Paystack(PaystackSdk.getPublicKey());
-
-        //create token
-        paystack.createToken(card, callback);
     }
 
     private static void performChecks() {
@@ -171,8 +135,6 @@ public final class PaystackSdk {
 
         //validate public keys
         Utils.Validate.hasPublicKey();
-
-
     }
 
     public static void chargeCard(Activity activity, Charge charge, Paystack.TransactionCallback transactionCallback) {

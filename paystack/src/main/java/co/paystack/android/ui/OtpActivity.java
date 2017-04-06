@@ -2,20 +2,22 @@ package co.paystack.android.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.WindowManager;
 
 import co.paystack.android.R;
 import co.paystack.android.design.widget.PinPadView;
 
 public class OtpActivity extends Activity {
 
-    private PinPadView pinpadView;
     final OtpSingleton si = OtpSingleton.getInstance();
+    private PinPadView pinpadView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_otp);
+        setContentView(R.layout.co_paystack_android____activity_otp);
         setTitle("ENTER OTP");
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         pinpadView = (PinPadView) findViewById(R.id.pinpadView);
     }
@@ -55,6 +57,11 @@ public class OtpActivity extends Activity {
                 handleSubmit(otp);
             }
         });
+    }
+
+    public void onPause() {
+        super.onPause();
+        handleSubmit("");
     }
 
     public void handleSubmit(String otp){

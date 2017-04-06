@@ -2,38 +2,34 @@ package co.paystack.android.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-
-import co.paystack.android.design.widget.PinPadView;
+import android.view.WindowManager;
 
 import co.paystack.android.R;
+import co.paystack.android.design.widget.PinPadView;
 
 public class PinActivity extends AppCompatActivity {
 
+    final PinSingleton si = PinSingleton.getInstance();
     private PinPadView pinpadView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pin);
+        setContentView(R.layout.co_paystack_android____activity_pin);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setTitle("ENTER CARD PIN");
+
+        pinpadView = (PinPadView) findViewById(R.id.pinpadView);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        pinpadView = (PinPadView) findViewById(R.id.pinpadView);
-
         pinpadView.setOnSubmitListener(new PinPadView.OnSubmitListener() {
             @Override
             public void onCompleted(String pin) {
-                PinSingleton si = PinSingleton.getInstance();
-                synchronized (si) {
-                    si.setPin(pin);
-                    si.notify();
-
-                }
-                PinActivity.this.finish();
+                PinActivity.this.handleSubmit(pin);
             }
 
             @Override
@@ -43,4 +39,21 @@ public class PinActivity extends AppCompatActivity {
         });
 
     }
+
+    void handleSubmit(String pin) {
+        synchronized (si) {
+            si.setPin(pin);
+            si.notify();
+        }
+        finish();
+    }
+
+    public void onPause() {
+        super.onPause();
+        handleSubmit("");
+    }
+
+
+
+
 }

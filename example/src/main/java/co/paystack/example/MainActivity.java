@@ -1,10 +1,9 @@
 package co.paystack.example;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Patterns;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -12,30 +11,36 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 import co.paystack.android.Paystack;
 import co.paystack.android.PaystackSdk;
+import co.paystack.android.Transaction;
+import co.paystack.android.exceptions.ExpiredAccessCodeException;
 import co.paystack.android.model.Card;
 import co.paystack.android.model.Charge;
-import co.paystack.android.model.Token;
-import co.paystack.android.model.Transaction;
 
 public class MainActivity extends AppCompatActivity {
+
+    // To get started quickly, change this to your heroku deployment of
+    // https://github.com/PaystackHQ/sample-charge-card-backend
+    String new_access_code_url = "https://infinite-peak-60063.herokuapp.com/new-access-code/";
+    String verify_url = "https://infinite-peak-60063.herokuapp.com/verify-with-paystack/";
+    // Set this to a public key that matches the secret key you supplied while creating the heroku instance
+    String paystack_public_key = "pk_live_2bf31d4aea08ab31f5d0cfd645c7e4f67025d259";
 
     EditText mEditCardNum;
     EditText mEditCVC;
     EditText mEditExpiryMonth;
     EditText mEditExpiryYear;
 
-    TextView mTextCard;
-    TextView mTextToken;
+    TextView mTextError;
 
     Card card;
 
     ProgressDialog dialog;
-    private EditText mEditAmountInKobo;
-    private EditText mEditEmail;
     private Button mButtonPerformTransaction;
     private TextView mTextReference;
     private Charge charge;
@@ -47,17 +52,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (BuildConfig.DEBUG && (new_access_code_url.equals(""))) {
+            throw new AssertionError("Please set a url at which to get an access code before running the sample");
+        }
+        if (BuildConfig.DEBUG && (verify_url.equals(""))) {
+            throw new AssertionError("Please set a url at which to verify transactions before running the sample");
+        }
+        if (BuildConfig.DEBUG && (paystack_public_key.equals(""))) {
+            throw new AssertionError("Please set a public key before running the sample");
+        }
+
+        PaystackSdk.setPublicKey(paystack_public_key);
+
         mEditCardNum = (EditText) findViewById(R.id.edit_card_number);
         mEditCVC = (EditText) findViewById(R.id.edit_cvc);
         mEditExpiryMonth = (EditText) findViewById(R.id.edit_expiry_month);
         mEditExpiryYear = (EditText) findViewById(R.id.edit_expiry_year);
-        mEditEmail = (EditText) findViewById(R.id.edit_email);
-        mEditAmountInKobo = (EditText) findViewById(R.id.edit_amount_in_kobo);
 
         mButtonPerformTransaction = (Button) findViewById(R.id.button_perform_transaction);
 
-        mTextCard = (TextView) findViewById(R.id.textview_card);
-        mTextToken = (TextView) findViewById(R.id.textview_token);
+        mTextError = (TextView) findViewById(R.id.textview_error);
         mTextReference = (TextView) findViewById(R.id.textview_reference);
 
         //initialize sdk
@@ -67,10 +81,8 @@ public class MainActivity extends AppCompatActivity {
         mButtonPerformTransaction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 //validate form
-                validateTransactionForm();
-
+                validateCardForm();
                 //check card validity
                 if (card != null && card.isValid()) {
                     dialog = new ProgressDialog(MainActivity.this);
@@ -80,74 +92,24 @@ public class MainActivity extends AppCompatActivity {
 
                     dialog.show();
 
-                    chargeCard();
+                    try {
+                        startAFreshCharge();
+                    } catch (Exception e) {
+                        MainActivity.this.mTextError.setText(String.format("An error occured hwile charging card: %s", e.getMessage()));
                 }
+
+            }
             }
         });
     }
 
-    private void validateTransactionForm() {
-
-        validateCardForm();
-
+    private void startAFreshCharge() {
+        // initialize the charge
         charge = new Charge();
-        charge.setCard(card);
-        try {
-            charge.putCustomField("Paid Via", "Android SDK");
-            charge.putMetadata("Cart ID", Integer.toString(299390));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        // Perform transaction/initialize on our server to get an access code
+        // documentation: https://developers.paystack.co/reference#initialize-a-transaction
 
-        //validate fields
-        String email = mEditEmail.getText().toString().trim();
-
-        if (isEmpty(email)) {
-            mEditEmail.setError("Empty email");
-            return;
-        }
-
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            mEditEmail.setError("Invalid email");
-            return;
-        }
-
-        charge.setEmail(email);
-
-        String sAmount = mEditAmountInKobo.getText().toString().trim();
-        int amount = -1;
-        try {
-            amount = Integer.parseInt(sAmount);
-        } catch (Exception ignored) {
-        }
-
-        if (amount < 1) {
-            mEditExpiryMonth.setError("Invalid amount");
-            return;
-        }
-
-        charge.setAmount(amount);
-        // Remember to use a unique reference from your server each time.
-        // You may decide not to set a reference, we will provide a value
-        // in that case
-        //  charge.setReference("7073397683");
-
-        // OUR SDK is Split Payments Aware
-        // You may also set a subaccount, transaction_charge and bearer
-        // Remember that only when a subaccount is provided will the rest be used
-        // charge.setSubaccount("ACCT_azbwwp4s9jidin0iq")
-        //        .setBearer(Charge.Bearer.subaccount)
-        //        .setTransactionCharge(18);
-
-        // OUR SDK is Plans Aware, and MultiCurrency Aware
-        // You may also set a currency and plan
-        // charge.setPlan("PLN_waiagu1thcyiebp");
-        //        .addParameter("invoice_limit",7)
-        //        .setCurrency("USD");
-
-        // You can add additional parameters to the transaction
-        // Our documentation will give details on those we accept.
-        // charge.addParameter("someBetaParam","Its value");
+        new fetchAccessCodeFromServer().execute(new_access_code_url);
 
     }
 
@@ -232,43 +194,51 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void chargeCard() {
-
         transaction = null;
-        PaystackSdk.chargeCard(this, charge, new Paystack.TransactionCallback() {
+        PaystackSdk.chargeCard(MainActivity.this, charge, new Paystack.TransactionCallback() {
+            // This is called only after transaction is successful
             @Override
             public void onSuccess(Transaction transaction) {
-                // This is called only after transaction is successful
-                if ((dialog != null) && dialog.isShowing()) {
-                    dialog.dismiss();
-                }
+                dismissDialog();
 
                 MainActivity.this.transaction = transaction;
-                Toast.makeText(MainActivity.this, transaction.reference, Toast.LENGTH_LONG).show();
+                mTextError.setText(" ");
+                Toast.makeText(MainActivity.this, transaction.getReference(), Toast.LENGTH_LONG).show();
                 updateTextViews();
+                new verifyOnServer().execute(transaction.getReference());
             }
 
+            // This is called only before requesting OTP
+            // Save reference so you may send to server if
+            // error occurs with OTP
+            // No need to dismiss dialog
             @Override
             public void beforeValidate(Transaction transaction) {
-                // This is called only before requesting OTP
-                // Save reference so you may send to server if
-                // error occurs with OTP
-                // No need to dismiss dialog
                 MainActivity.this.transaction = transaction;
-                Toast.makeText(MainActivity.this, transaction.reference, Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, transaction.getReference(), Toast.LENGTH_LONG).show();
                 updateTextViews();
             }
 
             @Override
-            public void onError(Throwable error) {
-                if ((dialog != null) && dialog.isShowing()) {
-                    dialog.dismiss();
+            public void onError(Throwable error, Transaction transaction) {
+                // If an access code has expired, simply ask your server for a new one
+                // and restart the charge instead of displaying error
+                MainActivity.this.transaction = transaction;
+                if (error instanceof ExpiredAccessCodeException) {
+                    MainActivity.this.startAFreshCharge();
+                    MainActivity.this.chargeCard();
+                    return;
                 }
-                if (MainActivity.this.transaction == null) {
-                    Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
-                    mTextReference.setText(String.format("Error: %s", error.getMessage()));
+
+                dismissDialog();
+
+                if (transaction.getReference() != null) {
+                    Toast.makeText(MainActivity.this, transaction.getReference() + " concluded with error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                    mTextError.setText(String.format("%s  concluded with error: %s", transaction.getReference(), error.getMessage()));
+                    new verifyOnServer().execute(transaction.getReference());
                 } else {
-                    Toast.makeText(MainActivity.this, transaction.reference + " concluded with error: " + error.getMessage(), Toast.LENGTH_LONG).show();
-                    mTextCard.setText(String.format("%s  concluded with error: %s", transaction.reference, error.getMessage()));
+                    Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+                    mTextError.setText(String.format("Error: %s", error.getMessage()));
                 }
                 updateTextViews();
             }
@@ -276,18 +246,18 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void updateTextViews() {
-        if (transaction != null) {
-            mTextReference.setText(String.format("Reference: %s", transaction.reference));
-        } else {
-            mTextCard.setText("Unable to charge card");
-            mTextToken.setText("No transaction");
+    private void dismissDialog() {
+        if ((dialog != null) && dialog.isShowing()) {
+            dialog.dismiss();
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    private void updateTextViews() {
+        if (transaction.getReference() != null) {
+            mTextReference.setText(String.format("Reference: %s", transaction.getReference()));
+        } else {
+            mTextReference.setText("No transaction");
+        }
     }
 
     @Override
@@ -297,8 +267,78 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
     private boolean isEmpty(String s) {
         return s == null || s.length() < 1;
+    }
+
+    private class fetchAccessCodeFromServer extends AsyncTask<String, Void, String> {
+        private String error;
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if (result != null) {
+                charge.setAccessCode(result);
+                charge.setCard(card);
+                chargeCard();
+            } else {
+                MainActivity.this.mTextError.setText(String.format("There was a problem getting a new access code form the server: %s", error));
+                dismissDialog();
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... ac_url) {
+            try {
+                URL url = new URL(ac_url[0]);
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(
+                                url.openStream()));
+
+                String inputLine;
+                inputLine = in.readLine();
+                in.close();
+                return inputLine;
+            } catch (Exception e) {
+                error = e.getMessage();
+            }
+            return null;
+        }
+    }
+
+    private class verifyOnServer extends AsyncTask<String, Void, String> {
+        private String reference;
+        private String error;
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if (result != null) {
+                MainActivity.this.mTextError.setText(String.format("Gateway response: %s", result));
+
+            } else {
+                MainActivity.this.mTextError.setText(String.format("There was a problem verifying %s on the backend: %s ", this.reference, error));
+                dismissDialog();
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... reference) {
+            try {
+                this.reference = reference[0];
+                URL url = new URL(verify_url + this.reference);
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(
+                                url.openStream()));
+
+                String inputLine;
+                inputLine = in.readLine();
+                in.close();
+                return inputLine;
+            } catch (Exception e) {
+                error = e.getMessage();
+            }
+            return null;
+        }
     }
 }

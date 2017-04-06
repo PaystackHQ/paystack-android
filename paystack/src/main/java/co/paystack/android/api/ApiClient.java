@@ -51,6 +51,7 @@ public class ApiClient {
                         // Add headers so we get Android version and Paystack Library version
                         Request.Builder builder = original.newBuilder()
                                 .header("User-Agent", "Android_" + Build.VERSION.SDK_INT + "_Paystack_" + BuildConfig.VERSION_NAME)
+                                .header("X-Paystack-Build", String.valueOf(BuildConfig.VERSION_CODE))
                                 .header("Accept", "application/json")
                                 .method(original.method(), original.body());
                         Request request = builder.build();

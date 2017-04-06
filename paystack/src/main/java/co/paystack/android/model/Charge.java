@@ -13,27 +13,22 @@ import java.util.Locale;
 import co.paystack.android.exceptions.InvalidAmountException;
 import co.paystack.android.exceptions.InvalidEmailException;
 
-/**
- * Created by i on 24/08/2016.
- */
 public class Charge extends PaystackModel {
     private final String TAG = Charge.class.getSimpleName();
     private Card card;
     private String email;
+    private String access_code;
     private int amount;
     private JSONObject metadata;
     private JSONArray custom_fields;
     private boolean hasMeta = false;
     private HashMap<String, String> additionalParameters;
-
-    public void addParameter(String key, String value){
-        this.additionalParameters.put(key, value);
-    }
-
-    public HashMap<String, String> getAdditionalParameters(){
-        return additionalParameters;
-    }
-
+    private int transactionCharge;
+    private String subaccount;
+    private String reference;
+    private Bearer bearer;
+    private String currency;
+    private String plan;
     public Charge() {
         this.metadata = new JSONObject();
         this.amount = -1;
@@ -46,17 +41,22 @@ public class Charge extends PaystackModel {
         }
     }
 
-    public enum Bearer {
-        account, subaccount
+    public void addParameter(String key, String value) {
+        this.additionalParameters.put(key, value);
     }
 
-    private int transactionCharge;
-    private String subaccount;
-    private String reference;
-    private Bearer bearer;
+    public HashMap<String, String> getAdditionalParameters() {
+        return additionalParameters;
+    }
 
-    private String currency;
-    private String plan;
+    public String getAccessCode() {
+        return access_code;
+    }
+
+    public Charge setAccessCode(String access_code) {
+        this.access_code = access_code;
+        return this;
+    }
 
     public String getCurrency() {
         return currency;
@@ -165,5 +165,9 @@ public class Charge extends PaystackModel {
             throw new InvalidAmountException(amount);
         this.amount = amount;
         return this;
+    }
+
+    public enum Bearer {
+        account, subaccount
     }
 }

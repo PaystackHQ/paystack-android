@@ -12,9 +12,9 @@
         android:theme="@style/AppTheme">
 
         <!-- metadata for paystack -->
-        <meta-data
-            android:name="co.paystack.android.PublicKey"
-            android:value="pk_live_2bf31d4aea08ab31f5d0cfd645c7e4f67025d259"/>
+        <!--<meta-data-->
+        <!--android:name="co.paystack.android.PublicKey"-->
+        <!--android:value="pk_test_983fafb18046e47fbdb96b25c09daa298189cdea"/>-->
 
         <activity
             android:name=".MainActivity"

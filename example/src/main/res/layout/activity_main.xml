@@ -29,10 +29,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text=""
                     android:hint="@string/card_number"
                     android:inputType="number"
                     android:minEms="8"
+                    android:text=""
                     />
 
                 <EditText
@@ -41,10 +41,10 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:hint="@string/cvv"
-                    android:text=""
                     android:inputType="number"
                     android:maxLength="4"
-                    android:minEms="4"/>
+                    android:minEms="4"
+                    android:text=""/>
             </LinearLayout>
 
             <View
@@ -60,11 +60,11 @@
                 android:layout_below="@id/layout_card_num"
                 android:layout_toLeftOf="@id/divider_horizontal"
                 android:gravity="right"
-                android:text=""
                 android:hint="@string/mm"
                 android:inputType="number"
                 android:maxEms="3"
-                android:maxLength="2"/>
+                android:maxLength="2"
+                android:text=""/>
 
             <EditText
                 android:id="@+id/edit_expiry_year"
@@ -73,41 +73,17 @@
                 android:layout_below="@id/layout_card_num"
                 android:layout_toRightOf="@id/divider_horizontal"
                 android:gravity="left"
-                android:text=""
                 android:hint="@string/yyyy"
                 android:inputType="number"
                 android:maxEms="4"
-                android:maxLength="4"/>
-
-            <EditText
-                android:id="@+id/edit_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/edit_expiry_year"
-                android:inputType="textEmailAddress"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:gravity="center"
-                android:text="ibrahim@paystack.com"/>
-
-            <EditText
-                android:id="@+id/edit_amount_in_kobo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:gravity="center"
-                android:hint="@string/amount_in_kobo"
-                android:layout_below="@id/edit_email"
-                android:inputType="number"
-                android:digits="0123456789"
-                android:text="10000"/>
+                android:maxLength="4"
+                android:text=""/>
 
             <Button
                 android:id="@+id/button_perform_transaction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/edit_amount_in_kobo"
+                android:layout_below="@id/edit_expiry_year"
                 android:layout_centerHorizontal="true"
                 android:padding="8dp"
                 android:text="Charge card"/>
@@ -146,22 +122,12 @@
             >
 
             <TextView
-                android:id="@+id/textview_card"
+                android:id="@+id/textview_error"
                 style="@style/TextAppearance.AppCompat.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:text="@string/no_card_yet"
-                android:textColor="#ffffff"/>
-
-            <TextView
-                android:id="@+id/textview_token"
-                style="@style/TextAppearance.AppCompat.Subhead"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/textview_card"
-                android:padding="8dp"
-                android:text="    "
+                android:text=" "
                 android:textColor="#ffffff"/>
 
         </RelativeLayout>

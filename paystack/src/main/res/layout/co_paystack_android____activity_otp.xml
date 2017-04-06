@@ -1,34 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
 
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.PinActivity">
-
+    android:orientation="vertical"
+    tools:context=".ui.OtpActivity">
     <Space
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
     <co.paystack.android.design.widget.PinPadView
-        android:layout_weight="3"
         android:id="@+id/pinpadView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_weight="3"
         android:background="#292929"
-        app:pin_indicator_spacing="30dp"
-        app:prompt_text="To confirm you're the owner of this card, please enter your card pin"
-        app:prompt_textsize="15sp"
-        app:button_numeric_textsize="13sp"
+        app:auto_submit="false"
         app:button_alpha_textsize="0sp"
         app:button_drawable_size="24dp"
-        app:pin_length="4"
-        app:pin_indicator_size="13sp"
-        app:pin_indicator_stroke_width="1dp"/>
-
+        app:button_numeric_textsize="15sp"
+        app:pin_indicator_stroke_width="0dp"
+        app:pin_length="10"
+        app:place_digits_randomly="false"
+        app:prompt_text="Please enter OTP"
+        app:prompt_textsize="13sp"
+        app:vibrate_on_incomplete_submit="false"/>
 
 </LinearLayout>

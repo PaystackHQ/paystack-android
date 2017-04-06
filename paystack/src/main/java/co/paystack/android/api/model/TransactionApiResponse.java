@@ -1,10 +1,11 @@
 package co.paystack.android.api.model;
 
+import android.webkit.URLUtil;
+
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-
-import co.paystack.android.model.Transaction;
 
 /**
  * 3DS would give a redirect url at which we can conclude payment
@@ -17,15 +18,41 @@ public class TransactionApiResponse extends ApiResponse implements Serializable 
     @SerializedName("trans")
     public String trans;
 
-    @SerializedName("redirecturl")
-    public String redirecturl;
+    @SerializedName("auth")
+    public String auth;
 
-    public boolean hasValidReferenceAndTrans() {
-        return trans != null && reference != null;
+    @SerializedName("otpmessage")
+    public String otpmessage;
+
+    public static TransactionApiResponse unknownServerResponse() {
+        TransactionApiResponse t = new TransactionApiResponse();
+        t.status = "0";
+        t.message = "Unknown server response";
+        return t;
     }
 
-    public Transaction getTransaction() {
-        return new Transaction(reference);
+    public static TransactionApiResponse fromJsonString(String jsonString) {
+        try {
+            return new Gson().fromJson(jsonString, TransactionApiResponse.class);
+        } catch (Exception e) {
+            return TransactionApiResponse.unknownServerResponse();
+        }
+    }
+
+    public boolean hasValidReferenceAndTrans() {
+        return (reference != null) && (trans != null);
+    }
+
+    public boolean hasValidUrl() {
+        return otpmessage != null && URLUtil.isValidUrl(otpmessage);
+    }
+
+    public boolean hasValidOtpMessage() {
+        return otpmessage != null;
+    }
+
+    public boolean hasValidAuth() {
+        return auth != null;
     }
 
 }

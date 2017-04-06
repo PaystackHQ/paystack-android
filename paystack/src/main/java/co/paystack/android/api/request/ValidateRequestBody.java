@@ -5,24 +5,22 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.HashMap;
 
-/**
- * Created by i on 24/08/2016.
- */
 public class ValidateRequestBody extends BaseRequestBody implements Serializable {
 
-    public static final String FIELD_TRANS = "trans";
-    public static final String FIELD_TOKEN = "token";
+    private static final String FIELD_TRANS = "trans";
+    private static final String FIELD_TOKEN = "token";
 
     @SerializedName(FIELD_TRANS)
-    public String trans;
+    private String trans;
 
     @SerializedName(FIELD_TOKEN)
-    public String token;
+    private String token;
 
     public ValidateRequestBody() {
+        this.setDeviceId();
     }
 
-    public String getTrans() {
+    private String getTrans() {
         return trans;
     }
 
@@ -31,7 +29,7 @@ public class ValidateRequestBody extends BaseRequestBody implements Serializable
         return this;
     }
 
-    public String getToken() {
+    private String getToken() {
         return token;
     }
 
@@ -45,6 +43,9 @@ public class ValidateRequestBody extends BaseRequestBody implements Serializable
         HashMap<String, String> params = new HashMap<>();
         params.put(FIELD_TRANS, getTrans());
         params.put(FIELD_TOKEN, getToken());
+        if (device != null) {
+            params.put(FIELD_DEVICE, device);
+        }
         return params;
     }
 }
