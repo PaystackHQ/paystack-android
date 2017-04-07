@@ -4,6 +4,11 @@ Last updated Sep 5, 2016
 
 All notable changes to this project will be documented in this file.
 
+## Released v3.0.0 on Apr 7, 2017
+- Add access_code support (`chargeCard` will resume transaction initialized on server)
+- Transaction reference can be fetched even if an error occured
+- removed support for token flow
+
 ## Released v2.1.0 on Nov 13, 2016
 - Add metadata support.
 - HOTFIX Verve card support fully functional

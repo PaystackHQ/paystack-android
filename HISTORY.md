@@ -1,5 +1,11 @@
 # History
-Last updated Sep 5, 2016
+Last updated Apr 7, 2017
+
+## Commits on Apr 7, 2017
+- `chargeCard` now resumes a transaction initialized by server
+- Remove deprecated methods
+- Add support for SecureCode
+- Bug fixes
 
 ## Commits on Sep 5, 2016
 - Increase all connection timeout to 5 minutes.

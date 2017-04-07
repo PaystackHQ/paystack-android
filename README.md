@@ -10,8 +10,6 @@ library in your Android app so we shoulder the burden of PCI compliance by helpi
 avoid the need to send card data directly to your server. Instead, this library sends credit
 card data directly to our servers.
 
-> We have retired the createToken function. Please upgrade your existing apps and use `chargeCard` instead.
-
 ## Requirements
 - Android SDKv16 (Android 4.1 "Jelly Bean") - This is the first SDK version that includes
 `TLSv1.2` which is required by our servers. Native app support for user devices older than
@@ -24,7 +22,7 @@ You do not need to clone this repository or download the files. Just add the fol
 
 ```gradle
 dependencies {
-  compile 'co.paystack.android:paystack:2.1.2'
+  compile 'co.paystack.android:paystack:3.0.0'
 }
 ```
 
@@ -60,7 +58,7 @@ class Application{
 }
 ```
 
-Make sure to call this method in the `onCreate` method of your Fragment or Activity.
+Make sure to call this method in the `onCreate` method of your Fragment or Activity or Application.
 
 ### 2. setPublicKey
 
@@ -86,31 +84,10 @@ class Bootstrap {
 
 ### 3. chargeCard
 Charging with the PaystackSdk is quite straightforward.
+
 ```java
 class chargingActivity {
    public void performCharge(){
-       // Create a charge.
-       Charge charge = new Charge();
-       // Add card to the charge.
-       charge.setCard(new Card.Builder(cardNumber, expiryMonth, expiryYear, cvc).build());
-       // Add an email for customer
-       charge.setEmail(email);
-       // Add amount to charge.
-       // setAmount() accepts the kobo value
-       // which is: the naira value multiplied by 100.
-       charge.setAmount(amount);
-       // Remember to use a unique reference from your server each time.
-       // If you decide not to set a reference, we will provide a value
-       // in that case.
-       //        charge.setReference("7073397683");
-
-       // Our SDK is Split Payments Aware.
-       // You may also set a subaccount, transaction_charge and bearer.
-       // Remember that only when a subaccount is provided will the rest be used.
-       // charge.setSubaccount("ACCT_azbwwp4s9jidin0iq")
-       //        .setBearer(Charge.Bearer.subaccount)
-       //        .setTransactionCharge(18);
-       // Charge card
        PaystackSdk.chargeCard(activity, charge, new Paystack.TransactionCallback() {
            @Override
            public void onSuccess(Transaction transaction) {
@@ -135,16 +112,112 @@ class chargingActivity {
    }
 }
 ```
-The first argument to the PaystackSdk.chargeCard is the calling Activity object. Always
+
+#### Parameters for the chargeCard function
+- **Activity** - The first argument to the `PaystackSdk.chargeCard` is the calling Activity object. Always
 give an Activity that will stay open till the end of the transaction. The currently
 open Activity is just fine.
+- **Charge** - This object allows you provide information about the transaction to be made. Before calling 
+`chargeCard`, you should do a `charge.setCard(card)`. It can be used in either of 2 ways
+    - **Resume an initialized transaction**: If employing this flow, you would send all required parameters 
+    for the transaction from your backend to the Paystack API via the `transaction/initialize` call - 
+    documented [here](https://developers.paystack.co/reference#initialize-a-transaction).. The 
+    response of the call includes an `access_code`. This can be used to charge the card by doing 
+    `charge.setAccessCode({value from backend})`. Once an access code is set, the only other parameter
+    relevant to the transaction is the card. Others will be ignored.
+    - **Initiate a fresh transaction on Paystack**: Using the functions: `setCurrency`, `setPlan`,
+     `setSubaccount`, `setTransactionCharge`, `setAmount`, `setEmail`, `setReference`, `setBearer`,
+     `putMetadata`, `putCustomField`, you can set up a fresh transaction direct from the SDK. 
+     Documentation for these parameters are same as for `transaction/initialize`.
+- **Transaction Callback** - When an error occurs or transaction concludes successfully, we will call 
+the methods available in the callback you provided. `OnSuccess` will be called once the charge succeeds.
+`beforeValidate` is called every time the SDK needs to request user input. `OnError` is called if an 
+error occurred during processing. Some Exception types that you should watch include
+    - *ExpiredAccessCodeException*: This would be thrown if the access code has already been used to attempt a 
+    charge.
+    - *ChargeException*: This would be thrown if the charge failed. It would hold the message from 
+    the server.
 
 ### 4. Verifying the transaction
-Send the reference to your server and verify by calling our REST API. An authorization will be returned which
-will let you know if its code is reusable. You can learn more about our verify call [here](https://developers.paystack.co/docs/verifying-transactions).
+Send the reference to your backend and verify by calling our REST API. An authorization will be returned which
+will let you know if its code is reusable. You can learn more about our verify call
+ [here](https://developers.paystack.co/reference#verifying-transactions).
+ 
+Below is a sample authorization object returned along with the transaction details:
+ ```json
+    {
+      "status": true,
+      "message": "Verification successful",
+      "data": {
+        "amount": 10000,
+        "currency": "NGN",
+        "transaction_date": "2017-04-06T21:28:41.000Z",
+        "status": "success",
+        "reference": "d68rbovh4a",
+        "domain": "live",
+        "metadata": {
+          "custom_fields": [
+            {
+              "display_name": "Started From",
+              "variable_name": "started_from",
+              "value": "sample charge card backend"
+            },
+            {
+              "display_name": "Requested by",
+              "variable_name": "requested_by",
+              "value": "some person"
+            },
+            {
+              "display_name": "Server",
+              "variable_name": "server",
+              "value": "some.herokuapp.com"
+            }
+          ]
+        },
+        "gateway_response": "Approved",
+        "message": "Approved",
+        "channel": "card",
+        "ip_address": "41.31.21.11",
+        "log": null,
+        "fees": 150,
+        "authorization": {
+          "authorization_code": "AUTH_blahblah",
+          "bin": "412345",
+          "last4": "6789",
+          "exp_month": "10",
+          "exp_year": "2345",
+          "channel": "card",
+          "card_type": "mastercard debit",
+          "bank": "Some Bank",
+          "country_code": "NG",
+          "brand": "mastercard",
+          "reusable": true,
+          "signature": "SIG_IJOJidkpd0293undjd"
+        },
+        "customer": {
+          "id": 22421,
+          "first_name": "Guava",
+          "last_name": "Juice",
+          "email": "guava@juice.me",
+          "customer_code": "CUS_6t6che6w8hmt",
+          "phone": "",
+          "metadata": {},
+          "risk_action": "default"
+        },
+        "plan": null
+      }
+    }
+  ```
+ To reuse the authorization gotten from charging this customer in future, you need to do 2 tests:
+ 1. In the sample JSON above, you can conclude that the transaction was successful because `data.status`="success".
+ This means the authorization is active.
+ 2. Confirm that the authorization is reusable by checking `data.authorization.reusable` which is true in this case.
+ Once both pass, you can save the authorization code against the customer's email.
+  
 
 ### 5. Charging Returning Customers
-See details for charging returning customers [here](https://developers.paystack.co/docs/charging-returning-customers).
+To charge a returning customer, you need a code for a reusable authorization (details above about confirming this) 
+and their email. The `charge_authorization` endpoint is documented [here](https://developers.paystack.co/docs/charging-returning-customers).
 
 ### 6. Library aided card validation & utility methods
 The library provides validation methods to validate the fields of the card.
@@ -173,9 +246,24 @@ You may find test cards on [this Paystack documentation page](https://developers
 
 1. Clone the repository.
 2. Import the project either using Android Studio or Eclipse
-3. Add your public key to your AndroidManifest.xml file
-4. Build and run the project on your device or emulator
+3. Deploy a sample backend from [https://github.com/PaystackHQ/sample-charge-card-backend](https://github.com/PaystackHQ/sample-charge-card-backend)
+4. Copy the endpoints from the deployed backend to your `MainActivity.java` file. In 
+the case of `verify`, only copy up to the `/` before the `:`
+5. Add your public key to your `MainActivity.java` file
+    - Note that the public key must match the secret key,
+    else none of the transactions will be attempted
+6. Build and run the project on your device or emulator
+
+## Security
+
+If you discover any security related issues, please email support@paystack.com instead of using the issue tracker.
 
 ## Contact
 
-For more enquiries and technical questions regarding the Android PaystackSdk, please send an email to support@paystack.com
+For more enquiries and technical questions regarding the Android PaystackSdk, please post on 
+our issue tracker: [https://github.com/PaystackHQ/paystack-android/issues](https://github.com/PaystackHQ/paystack-android/issues).
+
+## Change log
+
+Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
+
