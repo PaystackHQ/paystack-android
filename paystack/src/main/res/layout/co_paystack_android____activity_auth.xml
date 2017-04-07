@@ -28,29 +28,29 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="10"
-            android:background="@android:color/background_light"
+            android:background="#292929"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginLeft="@dimen/paystack__view__margin"
+                android:layout_marginRight="@dimen/paystack__view__margin"
+                android:layout_marginTop="@dimen/paystack__view__margin"
                 android:layout_weight="1"
                 android:background="#292929"
                 android:gravity="center"
-                android:paddingLeft="@dimen/paystack__view__margin"
-                android:paddingRight="@dimen/paystack__view__margin"
-                android:paddingTop="@dimen/paystack__view__margin"
                 android:text="Please conclude challenge from your bank to authorize payment"/>
 
             <WebView
                 android:id="@+id/webView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginBottom="@dimen/paystack__view__margin"
+                android:layout_marginLeft="@dimen/paystack__view__margin"
+                android:layout_marginRight="@dimen/paystack__view__margin"
                 android:layout_weight="10"
-                android:background="#292929"
-                android:paddingBottom="@dimen/paystack__view__margin"
-                android:paddingLeft="@dimen/paystack__view__margin"
-                android:paddingRight="@dimen/paystack__view__margin"/>
+                android:background="#292929"/>
         </LinearLayout>
 
         <Space
