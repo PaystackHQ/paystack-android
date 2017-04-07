@@ -37,11 +37,11 @@ public class MainActivity extends AppCompatActivity {
     EditText mEditExpiryYear;
 
     TextView mTextError;
+    TextView mTextBackendMessage;
 
     Card card;
 
     ProgressDialog dialog;
-    private Button mButtonPerformTransaction;
     private TextView mTextReference;
     private Charge charge;
     private Transaction transaction;
@@ -69,9 +69,10 @@ public class MainActivity extends AppCompatActivity {
         mEditExpiryMonth = (EditText) findViewById(R.id.edit_expiry_month);
         mEditExpiryYear = (EditText) findViewById(R.id.edit_expiry_year);
 
-        mButtonPerformTransaction = (Button) findViewById(R.id.button_perform_transaction);
+        Button mButtonPerformTransaction = (Button) findViewById(R.id.button_perform_transaction);
 
         mTextError = (TextView) findViewById(R.id.textview_error);
+        mTextBackendMessage = (TextView) findViewById(R.id.textview_backend_message);
         mTextReference = (TextView) findViewById(R.id.textview_reference);
 
         //initialize sdk
@@ -95,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         startAFreshCharge();
                     } catch (Exception e) {
-                        MainActivity.this.mTextError.setText(String.format("An error occured hwile charging card: %s", e.getMessage()));
+                        MainActivity.this.mTextError.setText(String.format("An error occured hwile charging card: %s %s", e.getClass().getSimpleName(), e.getMessage()));
                 }
 
             }
@@ -234,11 +235,11 @@ public class MainActivity extends AppCompatActivity {
 
                 if (transaction.getReference() != null) {
                     Toast.makeText(MainActivity.this, transaction.getReference() + " concluded with error: " + error.getMessage(), Toast.LENGTH_LONG).show();
-                    mTextError.setText(String.format("%s  concluded with error: %s", transaction.getReference(), error.getMessage()));
+                    mTextError.setText(String.format("%s  concluded with error: %s %s", transaction.getReference(), error.getClass().getSimpleName(), error.getMessage()));
                     new verifyOnServer().execute(transaction.getReference());
                 } else {
                     Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
-                    mTextError.setText(String.format("Error: %s", error.getMessage()));
+                    mTextError.setText(String.format("Error: %s %s", error.getClass().getSimpleName(), error.getMessage()));
                 }
                 updateTextViews();
             }
@@ -282,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
                 charge.setCard(card);
                 chargeCard();
             } else {
-                MainActivity.this.mTextError.setText(String.format("There was a problem getting a new access code form the server: %s", error));
+                MainActivity.this.mTextBackendMessage.setText(String.format("There was a problem getting a new access code form the backend: %s", error));
                 dismissDialog();
             }
         }
@@ -300,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
                 in.close();
                 return inputLine;
             } catch (Exception e) {
-                error = e.getMessage();
+                error = e.getClass().getSimpleName() + ": " + e.getMessage();
             }
             return null;
         }
@@ -314,10 +315,10 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             if (result != null) {
-                MainActivity.this.mTextError.setText(String.format("Gateway response: %s", result));
+                MainActivity.this.mTextBackendMessage.setText(String.format("Gateway response: %s", result));
 
             } else {
-                MainActivity.this.mTextError.setText(String.format("There was a problem verifying %s on the backend: %s ", this.reference, error));
+                MainActivity.this.mTextBackendMessage.setText(String.format("There was a problem verifying %s on the backend: %s ", this.reference, error));
                 dismissDialog();
             }
         }
@@ -336,7 +337,7 @@ public class MainActivity extends AppCompatActivity {
                 in.close();
                 return inputLine;
             } catch (Exception e) {
-                error = e.getMessage();
+                error = e.getClass().getSimpleName() + ": " + e.getMessage();
             }
             return null;
         }
