@@ -29,7 +29,7 @@ public class AuthActivity extends Activity {
 
     public void handleResponse() {
         if (responseJson == null) {
-            responseJson = "{\"status\":\"4\",\"message\":\"Reaffirm Transaction Status on Server\"}";
+            responseJson = "{\"status\":\"requery\",\"message\":\"Reaffirm Transaction Status on Server\"}";
         }
         synchronized (si) {
             si.setResponseJson(responseJson);

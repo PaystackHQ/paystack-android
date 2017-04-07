@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - Add access_code support (`chargeCard` will resume transaction initialized on server)
 - Transaction reference can be fetched even if an error occured
 - removed support for token flow
+- Added support for Bank hosted authorization
 
 ## Released v2.1.0 on Nov 13, 2016
 - Add metadata support.

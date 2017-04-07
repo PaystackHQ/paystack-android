@@ -2,7 +2,7 @@ package co.paystack.android.ui;
 
 public class AuthSingleton {
     private static AuthSingleton instance = new AuthSingleton();
-    private String responseJson = "{\"status\":\"4\",\"message\":\"Reaffirm Transaction Status on Server\"}";
+    private String responseJson = "{\"status\":\"requery\",\"message\":\"Reaffirm Transaction Status on Server\"}";
     private String url = "";
 
     private AuthSingleton() {
