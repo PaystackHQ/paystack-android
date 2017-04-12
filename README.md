@@ -87,7 +87,7 @@ Charging with the PaystackSdk is quite straightforward.
 
 #### Collect card details
 
-At this time, we expect you to provide fields on your activity that collect the card details. Our `Card` class allows you collect and verify these. See Library aided calidation below.
+At this time, we expect you to provide fields on your activity that collect the card details. Our `Card` class allows you collect and verify these. See Library aided card validation below.
 
 #### Parameters for the chargeCard function
 - **Activity** - The first argument to the `PaystackSdk.chargeCard` is the calling Activity object. Always
