@@ -48,7 +48,7 @@ To prepare for use, you must ensure that your app has internet permissions by ma
 To use the Paystack Android SDK, you need to first initialize it using the `PaystackSdk` class.
 
 ```java
-class Application{
+public class App extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
@@ -85,40 +85,16 @@ class Bootstrap {
 ### 3. chargeCard
 Charging with the PaystackSdk is quite straightforward.
 
-```java
-class chargingActivity {
-   public void performCharge(){
-       PaystackSdk.chargeCard(activity, charge, new Paystack.TransactionCallback() {
-           @Override
-           public void onSuccess(Transaction transaction) {
-               // This is called only after transaction is deemed successful.
-               // Retrieve the transaction, and send its reference to your server
-               // for verification.
-           }
+#### Collect card details
 
-           @Override
-           public void beforeValidate(Transaction transaction) {
-               // This is called only before requesting OTP.
-               // Save reference so you may send to server. If
-               // error occurs with OTP, you should still verify on server.
-           }
-
-           @Override
-           public void onError(Throwable error) {
-             //handle error here
-           }
-
-       });
-   }
-}
-```
+At this time, we expect you to provide fields on your activity that collect the card details. Our `Card` class allows you collect and verify these. See Library aided card validation below.
 
 #### Parameters for the chargeCard function
 - **Activity** - The first argument to the `PaystackSdk.chargeCard` is the calling Activity object. Always
 give an Activity that will stay open till the end of the transaction. The currently
 open Activity is just fine.
 - **Charge** - This object allows you provide information about the transaction to be made. Before calling 
-`chargeCard`, you should do a `charge.setCard(card)`. It can be used in either of 2 ways
+`chargeCard`, you should do a `charge.setCard(card)`. The charge can then be used in either of 2 ways
     - **Resume an initialized transaction**: If employing this flow, you would send all required parameters 
     for the transaction from your backend to the Paystack API via the `transaction/initialize` call - 
     documented [here](https://developers.paystack.co/reference#initialize-a-transaction).. The 
@@ -138,6 +114,36 @@ error occurred during processing. Some Exception types that you should watch inc
     - *ChargeException*: This would be thrown if the charge failed. It would hold the message from 
     the server.
 
+```java
+public class MainActivity extends AppCompatActivity {
+  
+  // This is the subroutine you will call after creating the charge
+  // adding a card and setting the access_code
+   public void performCharge(){
+       PaystackSdk.chargeCard(MainActivity.this, charge, new Paystack.TransactionCallback() {
+           @Override
+           public void onSuccess(Transaction transaction) {
+               // This is called only after transaction is deemed successful.
+               // Retrieve the transaction, and send its reference to your server
+               // for verification.
+           }
+
+           @Override
+           public void beforeValidate(Transaction transaction) {
+               // This is called only before requesting OTP.
+               // Save reference so you may send to server. If
+               // error occurs with OTP, you should still verify on server.
+           }
+
+           @Override
+           public void onError(Throwable error, Transaction transaction) {
+             //handle error here
+           }
+
+       });
+   }
+}
+```
 ### 4. Verifying the transaction
 Send the reference to your backend and verify by calling our REST API. An authorization will be returned which
 will let you know if its code is reusable. You can learn more about our verify call
