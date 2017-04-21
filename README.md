@@ -10,6 +10,24 @@ library in your Android app so we shoulder the burden of PCI compliance by helpi
 avoid the need to send card data directly to your server. Instead, this library sends credit
 card data directly to our servers.
 
+## Summarized flow
+
+1 Time to pay (user has provided card details on your app)
+
+2 OPTION 1: Backend starts transaction (recommended)
+
+a. App prompts backed to initialize a transaction, backend returns `access_code`.
+
+b. Provide `access_code` and card details to our SDK's `chargeCard` function via `Charge` object
+
+2 OPTION 2: App starts transaction
+
+a. Provide transaction parameters and card details to our SDK's `chargeCard` function via `Charge` object
+
+3 SDK will prompt user for PIN, OTP or Bank authentication as required
+
+4 Once successful, we will send event to your webhook url and call onSuccess callback
+
 ## Requirements
 - Android SDKv16 (Android 4.1 "Jelly Bean") - This is the first SDK version that includes
 `TLSv1.2` which is required by our servers. Native app support for user devices older than
@@ -60,7 +78,7 @@ public class App extends Application{
 
 Make sure to call this method in the `onCreate` method of your Fragment or Activity or Application.
 
-### 2. setPublicKey
+### 2. Set your Public Key
 
 Before you can charge a card with the `PaystackSdk` class, you need to set your public key. The library provides two approaches,
 
@@ -73,6 +91,8 @@ Before you can charge a card with the `PaystackSdk` class, you need to set your 
 ```
 
 #### b. Set the public key by code
+
+This can be done anytime in your code. Just be sure to initialize before calling `chargeCard`.
 
 ```java
 class Bootstrap {
@@ -144,6 +164,12 @@ public class MainActivity extends AppCompatActivity {
    }
 }
 ```
+
+Note that once `chargeCard` is called, the SDK _may_ prompt the user to provide their PIN, an OTP or conclude Bank Authentication. These 
+are currently being managed entirely by the SDK. Your app will only be notified via the `beforeValidate` function of the
+callback when OTP or Bank Authentication is about to start.
+
+
 ### 4. Verifying the transaction
 Send the reference to your backend and verify by calling our REST API. An authorization will be returned which
 will let you know if its code is reusable. You can learn more about our verify call
@@ -219,11 +245,9 @@ Below is a sample authorization object returned along with the transaction detai
  This means the authorization is active.
  2. Confirm that the authorization is reusable by checking `data.authorization.reusable` which is true in this case.
  Once both pass, you can save the authorization code against the customer's email.
-  
 
-### 5. Charging Returning Customers
-To charge a returning customer, you need a code for a reusable authorization (details above about confirming this) 
-and their email. The `charge_authorization` endpoint is documented [here](https://developers.paystack.co/docs/charging-returning-customers).
+### 5. Charging a card authorization from your server in future
+To charge an authorization saved from concluding chargeCard, you need its authorization code and the custmer's email. The `charge_authorization` endpoint is documented [here](https://developers.paystack.co/docs/charging-returning-customers).
 
 ### 6. Library aided card validation & utility methods
 The library provides validation methods to validate the fields of the card.
@@ -247,6 +271,17 @@ This method returns an estimate of the string representation of the card type.
 You can (and should) test your implementation of the Paystack Android library in your Android app. You need the details of an
 actual debit/credit card to do this, so we provide ##_test cards_## for your use instead of using your own debit/credit cards. 
 You may find test cards on [this Paystack documentation page](https://developers.paystack.co/docs/test-cards).
+
+To try out the OTP flow, we have provided a test "verve" card:
+
+```
+50666 66666 66666 6666
+CVV: 123
+PIN: 1234
+TOKEN: 123456
+```
+
+Remember to use all test cards only with test keys. Also note that all bank issued cards will be declined in test mode.
 
 ## Building the example project
 
