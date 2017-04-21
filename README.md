@@ -16,7 +16,7 @@ card data directly to our servers.
 
 2 OPTION 1: Backend starts transaction (recommended)
 
-a. App prompts backed to initialize a transaction, backend returns `access_code`.
+a. App prompts backend to initialize a transaction, backend returns `access_code`.
 
 b. Provide `access_code` and card details to our SDK's `chargeCard` function via `Charge` object
 
@@ -101,18 +101,35 @@ class Bootstrap {
     }
 }
 ```
+### 3. Collect and validate card details
 
-### 3. chargeCard
+At this time, we expect you to provide fields on your activity that collect the card details. Our `Card` class allows you collect and verify these. The library provides validation methods to validate the fields of the card.
+
+#### card.validNumber
+This method helps to perform a check if the card number is valid.
+
+#### card.validCVC
+Method that checks if the card security code is valid.
+
+#### card.validExpiryDate
+Method checks if the expiry date (combination of year and month) is valid.
+
+#### card.isValid
+Method to check if the card is valid. Always do this check, before charging the card.
+
+#### card.getType
+This method returns an estimate of the string representation of the card type.
+
+
+### 4. chargeCard
 Charging with the PaystackSdk is quite straightforward.
-
-#### Collect card details
-
-At this time, we expect you to provide fields on your activity that collect the card details. Our `Card` class allows you collect and verify these. See Library aided card validation below.
 
 #### Parameters for the chargeCard function
 - **Activity** - The first argument to the `PaystackSdk.chargeCard` is the calling Activity object. Always
 give an Activity that will stay open till the end of the transaction. The currently
 open Activity is just fine.
+
+
 - **Charge** - This object allows you provide information about the transaction to be made. Before calling 
 `chargeCard`, you should do a `charge.setCard(card)`. The charge can then be used in either of 2 ways
     - **Resume an initialized transaction**: If employing this flow, you would send all required parameters 
@@ -125,14 +142,16 @@ open Activity is just fine.
      `setSubaccount`, `setTransactionCharge`, `setAmount`, `setEmail`, `setReference`, `setBearer`,
      `putMetadata`, `putCustomField`, you can set up a fresh transaction direct from the SDK. 
      Documentation for these parameters are same as for `transaction/initialize`.
+
+
 - **Transaction Callback** - When an error occurs or transaction concludes successfully, we will call 
-the methods available in the callback you provided. `OnSuccess` will be called once the charge succeeds.
-`beforeValidate` is called every time the SDK needs to request user input. `OnError` is called if an 
-error occurred during processing. Some Exception types that you should watch include
-    - *ExpiredAccessCodeException*: This would be thrown if the access code has already been used to attempt a 
-    charge.
-    - *ChargeException*: This would be thrown if the charge failed. It would hold the message from 
-    the server.
+the methods available in the callback you provided. 
+    - `OnSuccess` will be called once the charge succeeds.
+    - `beforeValidate` is called every time the SDK needs to request user input. This function currently only allows the app know that the SDK is requesting further user input. 
+    - `OnError` is called if an error occurred during processing. Some Exception types that you should watch include
+        - *ExpiredAccessCodeException*: This would be thrown if the access code has already been used to attempt a charge.
+        - *ChargeException*: This would be thrown if the charge failed. It would hold the message from the server.
+
 
 ```java
 public class MainActivity extends AppCompatActivity {
@@ -170,7 +189,7 @@ are currently being managed entirely by the SDK. Your app will only be notified 
 callback when OTP or Bank Authentication is about to start.
 
 
-### 4. Verifying the transaction
+### 5. Verifying the transaction
 Send the reference to your backend and verify by calling our REST API. An authorization will be returned which
 will let you know if its code is reusable. You can learn more about our verify call
  [here](https://developers.paystack.co/reference#verifying-transactions).
@@ -246,26 +265,8 @@ Below is a sample authorization object returned along with the transaction detai
  2. Confirm that the authorization is reusable by checking `data.authorization.reusable` which is true in this case.
  Once both pass, you can save the authorization code against the customer's email.
 
-### 5. Charging a card authorization from your server in future
+### 6. Charging a card authorization from your server in future
 To charge an authorization saved from concluding chargeCard, you need its authorization code and the custmer's email. The `charge_authorization` endpoint is documented [here](https://developers.paystack.co/docs/charging-returning-customers).
-
-### 6. Library aided card validation & utility methods
-The library provides validation methods to validate the fields of the card.
-
-#### card.validNumber
-This method helps to perform a check if the card number is valid.
-
-#### card.validCVC
-Method that checks if the card security code is valid.
-
-#### card.validExpiryDate
-Method checks if the expiry date (combination of year and month) is valid.
-
-#### card.isValid
-Method to check if the card is valid. Always do this check, before charging the card.
-
-#### card.getType
-This method returns an estimate of the string representation of the card type.
 
 ## Testing your implementation
 You can (and should) test your implementation of the Paystack Android library in your Android app. You need the details of an
