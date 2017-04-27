@@ -276,7 +276,7 @@ You may find test cards on [this Paystack documentation page](https://developers
 To try out the OTP flow, we have provided a test "verve" card:
 
 ```
-50666 66666 66666 6666
+50606 66666 66666 6666
 CVV: 123
 PIN: 1234
 TOKEN: 123456
