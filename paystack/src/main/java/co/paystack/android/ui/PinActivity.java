@@ -20,12 +20,10 @@ public class PinActivity extends AppCompatActivity {
         setTitle("ENTER CARD PIN");
 
         pinpadView = (PinPadView) findViewById(R.id.pinpadView);
+        setup();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
+    protected void setup() {
         pinpadView.setOnSubmitListener(new PinPadView.OnSubmitListener() {
             @Override
             public void onCompleted(String pin) {
@@ -48,8 +46,9 @@ public class PinActivity extends AppCompatActivity {
         finish();
     }
 
-    public void onPause() {
-        super.onPause();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         handleSubmit("");
     }
 

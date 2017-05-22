@@ -20,11 +20,10 @@ public class OtpActivity extends Activity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         pinpadView = (PinPadView) findViewById(R.id.pinpadView);
+        setup();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    protected void setup() {
 
 
         pinpadView.setPromptText(si.getOtpMessage());
@@ -59,8 +58,8 @@ public class OtpActivity extends Activity {
         });
     }
 
-    public void onPause() {
-        super.onPause();
+    public void onDestroy() {
+        super.onDestroy();
         handleSubmit("");
     }
 

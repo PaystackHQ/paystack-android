@@ -25,6 +25,7 @@ public class AuthActivity extends Activity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         webView = (WebView) findViewById(R.id.webView);
+        setup();
     }
 
     public void handleResponse() {
@@ -38,9 +39,7 @@ public class AuthActivity extends Activity {
         finish();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    protected void setup() {
         setContentView(R.layout.co_paystack_android____activity_auth);
 
         webView = (WebView) findViewById(R.id.webView);
@@ -101,8 +100,8 @@ public class AuthActivity extends Activity {
         webView.loadUrl(si.getUrl());
     }
 
-    public void onPause() {
-        super.onPause();
+    public void onDestroy() {
+        super.onDestroy();
         if (webView != null) {
             webView.stopLoading();
             webView.removeJavascriptInterface("INTERFACE");
