@@ -16,7 +16,7 @@ card data directly to our servers.
 
 2 OPTION 1: Backend starts transaction (recommended)
 
-a. App prompts backend to initialize a transaction, backend returns `access_code`.
+a. App prompts backend to initialize a transaction, backend returns `access_code`. Backend will use this endpoint: https://developers.paystack.co/reference#initialize-a-transaction
 
 b. Provide `access_code` and card details to our SDK's `chargeCard` function via `Charge` object
 
