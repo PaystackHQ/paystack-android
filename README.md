@@ -298,21 +298,21 @@ the case of `verify`, only copy up to the `/` before the `:`
 
 ## FAQs
 
-**Is authorization_code (https://developers.paystack.co/reference#charging-returning-customers) the same as the access_code)? **
+### Is authorization_code (https://developers.paystack.co/reference#charging-returning-customers) the same as the access_code)?
 
-_No_
+No
 
-**Where do I get an access_code? **
+### Where do I get an access_code?
 
-_Initialize a transaction : https://developers.paystack.co/reference#initialize-a-transaction _
+Initialize a transaction : https://developers.paystack.co/reference#initialize-a-transaction 
 
-**Where do I get an authorization_code? **
+### Where do I get an authorization_code?
 
-_Verify a successful transaction : https://developers.paystack.co/reference#verify-transaction _
+Verify a successful transaction : https://developers.paystack.co/reference#verify-transaction 
 
-**If I’m trying to use the Android SDK to charge someone who we’ve previously charged, can I use the authorization_code? **
+### If I’m trying to use the Android SDK to charge someone who we’ve previously charged, can I use the authorization_code?
 
-_You don't need the SDK to charge an authorization code. It doesn't even know of its existence. Rather, use our charge endpoint: https://developers.paystack.co/reference#charge _
+You don't need the SDK to charge an authorization code. It doesn't even know of its existence. Rather, use our charge endpoint: https://developers.paystack.co/reference#charge 
 
 ## Security
 
