@@ -296,6 +296,24 @@ the case of `verify`, only copy up to the `/` before the `:`
     else none of the transactions will be attempted
 6. Build and run the project on your device or emulator
 
+## FAQs
+
+**Is authorization_code (https://developers.paystack.co/reference#charging-returning-customers) the same as the access_code)? **
+
+_No_
+
+**Where do I get an access_code? **
+
+_Initialize a transaction : https://developers.paystack.co/reference#initialize-a-transaction _
+
+**Where do I get an authorization_code? **
+
+_Verify a successful transaction : https://developers.paystack.co/reference#verify-transaction _
+
+**If I’m trying to use the Android SDK to charge someone who we’ve previously charged, can I use the authorization_code? **
+
+_You don't need the SDK to charge an authorization code. It doesn't even know of its existence. Rather, use our charge endpoint: https://developers.paystack.co/reference#charge _
+
 ## Security
 
 If you discover any security related issues, please email support@paystack.com instead of using the issue tracker.
