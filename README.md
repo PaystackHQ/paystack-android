@@ -288,7 +288,7 @@ Remember to use all test cards only with test keys. Also note that all bank issu
 
 1. Clone the repository.
 2. Import the project either using Android Studio or Eclipse
-3. Deploy a sample backend from [https://github.com/PaystackHQ/sample-charge-card-backend](https://github.com/PaystackHQ/sample-charge-card-backend)
+3. Deploy a sample backend from [PaystackJS-Sample-Backend (PHP)](https://github.com/PaystackHQ/PaystackJS-Sample-code) or [Sample charge card backend (NodeJS heroku single click deploy)](https://github.com/PaystackHQ/sample-charge-card-backend)
 4. Copy the endpoints from the deployed backend to your `MainActivity.java` file. In 
 the case of `verify`, only copy up to the `/` before the `:`
 5. Add your public key to your `MainActivity.java` file
