@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
 }
 ```
 
-Note that once `chargeCard` is called, the SDK _may_ prompt the user to provide their PIN, an OTP or conclude Bank Authentication. These 
+Note that once `chargeCard` is called, depending on settings agreed with Paystack's Customer Success team, the SDK _may_ prompt the user to provide their PIN, an OTP or conclude Bank Authentication. These 
 are currently being managed entirely by the SDK. Your app will only be notified via the `beforeValidate` function of the
 callback when OTP or Bank Authentication is about to start.
 
@@ -312,7 +312,7 @@ Verify a successful transaction : https://developers.paystack.co/reference#verif
 
 ### If I’m trying to use the Android SDK to charge someone who we’ve previously charged, can I use the authorization_code?
 
-You don't need the SDK to charge an authorization code. It doesn't even know of its existence. Rather, use our charge endpoint: https://developers.paystack.co/reference#charge 
+You don't need the SDK to charge an authorization code. It doesn't even know of its existence. Rather, use our charge endpoint: https://developers.paystack.co/reference#charge-authorization 
 
 ## Security
 
