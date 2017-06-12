@@ -10,10 +10,6 @@ library in your Android app so we shoulder the burden of PCI compliance by helpi
 avoid the need to send card data directly to your server. Instead, this library sends credit
 card data directly to our servers.
 
-# IMPORTANT! FRAUD RISK NOTICE
-
-Our charge card flow does not do a challenge by default. To ensure we challenge the user before concluding a transaction initiated, please set `enforce_otp` to true when starting the transaction.
-
 ## Summarized flow
 
 1 Time to pay (user has provided card details on your app)
