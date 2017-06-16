@@ -530,7 +530,7 @@ public class Card extends PaystackModel implements Serializable {
         static final String PATTERN_DINERS_CLUB = "^3(?:0[0-5]|[68][0-9])[0-9]{4,}$";
         static final String PATTERN_DISCOVER = "^6(?:011|5[0-9]{2})[0-9]{3,}$";
         static final String PATTERN_JCB = "^(?:2131|1800|35[0-9]{3})[0-9]{3,}$";
-        static final String PATTERN_VERVE = "^506[0-9]{6,}$";
+        static final String PATTERN_VERVE = "^((506(0|1))|(507(8|9))|(6500))[0-9]{12,}$";
 
         public abstract boolean matches(String card);
 

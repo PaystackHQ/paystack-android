@@ -195,7 +195,7 @@ class TransactionManager {
                 new AuthAsyncTask().execute();
                 return;
             }
-            if (transactionApiResponse.hasValidAuth() && (transactionApiResponse.auth.equalsIgnoreCase("PIN") || transactionApiResponse.auth.equalsIgnoreCase("phone")) && transactionApiResponse.hasValidOtpMessage()) {
+            if (transactionApiResponse.hasValidAuth() && (transactionApiResponse.auth.equalsIgnoreCase("otp") || transactionApiResponse.auth.equalsIgnoreCase("phone")) && transactionApiResponse.hasValidOtpMessage()) {
                 transactionCallback.beforeValidate(transaction);
                 validateRequestBody.setTrans(transaction.getId());
                 osi.setOtpMessage(transactionApiResponse.otpmessage);
