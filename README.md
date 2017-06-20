@@ -16,7 +16,7 @@ card data directly to our servers.
 
 2 OPTION 1: Backend starts transaction (recommended)
 
-a. App prompts backend to initialize a transaction, backend returns `access_code`.
+a. App prompts backend to initialize a transaction, backend returns `access_code`. Backend will use this endpoint: https://developers.paystack.co/reference#initialize-a-transaction
 
 b. Provide `access_code` and card details to our SDK's `chargeCard` function via `Charge` object
 
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
 }
 ```
 
-Note that once `chargeCard` is called, the SDK _may_ prompt the user to provide their PIN, an OTP or conclude Bank Authentication. These 
+Note that once `chargeCard` is called, depending on settings agreed with Paystack's Customer Success team, the SDK _may_ prompt the user to provide their PIN, an OTP or conclude Bank Authentication. These 
 are currently being managed entirely by the SDK. Your app will only be notified via the `beforeValidate` function of the
 callback when OTP or Bank Authentication is about to start.
 
@@ -288,13 +288,31 @@ Remember to use all test cards only with test keys. Also note that all bank issu
 
 1. Clone the repository.
 2. Import the project either using Android Studio or Eclipse
-3. Deploy a sample backend from [https://github.com/PaystackHQ/sample-charge-card-backend](https://github.com/PaystackHQ/sample-charge-card-backend)
+3. Deploy a sample backend from [PaystackJS-Sample-Backend (PHP)](https://github.com/PaystackHQ/PaystackJS-Sample-code) or [Sample charge card backend (NodeJS heroku single click deploy)](https://github.com/PaystackHQ/sample-charge-card-backend)
 4. Copy the endpoints from the deployed backend to your `MainActivity.java` file. In 
 the case of `verify`, only copy up to the `/` before the `:`
 5. Add your public key to your `MainActivity.java` file
     - Note that the public key must match the secret key,
     else none of the transactions will be attempted
 6. Build and run the project on your device or emulator
+
+## FAQs
+
+### Is authorization_code (https://developers.paystack.co/reference#charging-returning-customers) the same as the access_code)?
+
+No
+
+### Where do I get an access_code?
+
+Initialize a transaction : https://developers.paystack.co/reference#initialize-a-transaction 
+
+### Where do I get an authorization_code?
+
+Verify a successful transaction : https://developers.paystack.co/reference#verify-transaction 
+
+### If I’m trying to use the Android SDK to charge someone who we’ve previously charged, can I use the authorization_code?
+
+You don't need the SDK to charge an authorization code. It doesn't even know of its existence. Rather, use our charge endpoint: https://developers.paystack.co/reference#charge-authorization 
 
 ## Security
 
