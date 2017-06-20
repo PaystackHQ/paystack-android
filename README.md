@@ -40,7 +40,7 @@ You do not need to clone this repository or download the files. Just add the fol
 
 ```gradle
 dependencies {
-  compile 'co.paystack.android:paystack:3.0.4'
+  compile 'co.paystack.android:paystack:3.0.5'
 }
 ```
 

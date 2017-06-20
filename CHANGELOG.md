@@ -3,6 +3,9 @@ Last updated Sep 5, 2016
 (from http://keepachangelog.com/)
 
 All notable changes to this project will be documented in this file.
+## Released v3.0.5 on Jun 20, 2017
+- Fixed a bug that made some verve cards get bounced by the validator
+- Other minor bug fixes
 
 ## Released v3.0.1 on Apr 7, 2017
 - Add access_code support (`chargeCard` will resume transaction initialized on server)
