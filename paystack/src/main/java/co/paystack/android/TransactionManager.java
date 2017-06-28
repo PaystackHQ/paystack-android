@@ -19,9 +19,12 @@ import co.paystack.android.api.service.ApiService;
 import co.paystack.android.exceptions.ChargeException;
 import co.paystack.android.exceptions.ExpiredAccessCodeException;
 import co.paystack.android.exceptions.ProcessingException;
+import co.paystack.android.model.Card;
 import co.paystack.android.model.Charge;
 import co.paystack.android.ui.AuthActivity;
 import co.paystack.android.ui.AuthSingleton;
+import co.paystack.android.ui.CardActivity;
+import co.paystack.android.ui.CardSingleton;
 import co.paystack.android.ui.OtpActivity;
 import co.paystack.android.ui.OtpSingleton;
 import co.paystack.android.ui.PinActivity;
@@ -38,6 +41,7 @@ class TransactionManager {
     private final Activity activity;
     private final Transaction transaction;
     private final Paystack.TransactionCallback transactionCallback;
+    private final CardSingleton cns = CardSingleton.getInstance();
     private final PinSingleton psi = PinSingleton.getInstance();
     private final OtpSingleton osi = OtpSingleton.getInstance();
     private final AuthSingleton asi = AuthSingleton.getInstance();
@@ -93,8 +97,10 @@ class TransactionManager {
 
     void chargeCard() {
         try {
-            initiate();
-            sendChargeToServer();
+            if (validateCard(charge.getCard())){
+                initiate();
+                sendChargeToServer();
+            }
         } catch (Exception ce) {
             Log.e(LOG_TAG, ce.getMessage(), ce);
             if (!(ce instanceof ProcessingException)) {
@@ -143,6 +149,15 @@ class TransactionManager {
     private void reQueryChargeOnServer() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
         Call<TransactionApiResponse> call = apiService.requeryTransaction(transaction.getId());
         call.enqueue(serverCallback);
+    }
+
+    private boolean validateCard(Card card) {
+        if (card == null || card.getNumber().length() < 10) {
+            new CardAsyncTask().execute();
+            return false;
+        }
+
+        return true;
     }
 
     private void initiateChargeOnServer() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
@@ -233,6 +248,45 @@ class TransactionManager {
 
     private void setProcessingOn() {
         TransactionManager.PROCESSING = true;
+    }
+
+    private class CardAsyncTask extends AsyncTask<Void, Void, Card> {
+
+        @Override
+        protected Card doInBackground(Void... params) {
+            Intent i = new Intent(activity, CardActivity.class);
+            activity.startActivity(i);
+
+            synchronized (cns) {
+                try {
+                    cns.wait();
+                } catch (InterruptedException e) {
+                    notifyProcessingError(new Exception("Card entry Interrupted"));
+                }
+            }
+            return cns.getCard();
+        }
+
+        @Override
+        protected void onPostExecute(Card cns) {
+            super.onPostExecute(cns);
+            if (cns != null) {
+                charge.setCard(cns);
+                try {
+                    TransactionManager.this.initiate();
+                    TransactionManager.this.sendChargeToServer();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (KeyStoreException e) {
+                    e.printStackTrace();
+                } catch (KeyManagementException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                notifyProcessingError(new Exception("Please add card number"));
+            }
+        }
     }
 
     private class PinAsyncTask extends AsyncTask<Void, Void, String> {

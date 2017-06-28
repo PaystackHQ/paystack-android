@@ -12,6 +12,9 @@
         <activity
             android:name=".ui.AuthActivity"
             android:theme="@style/Paystack.Dialog.OtpEntry"/>
+        <activity
+            android:name=".ui.CardActivity"
+            android:theme="@style/Paystack.Dialog.OtpEntry"/>
     </application>
 
 </manifest>
