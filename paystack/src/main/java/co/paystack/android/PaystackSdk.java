@@ -138,6 +138,10 @@ public final class PaystackSdk {
     }
 
     public static void chargeCard(Activity activity, Charge charge, Paystack.TransactionCallback transactionCallback) {
+        if (BuildConfig.DEBUG && (activity == null)) {
+            throw new AssertionError("activity must not be null");
+        }
+
         performChecks();
 
         //construct paystack object
