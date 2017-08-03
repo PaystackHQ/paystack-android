@@ -445,7 +445,7 @@ public class Card extends PaystackModel implements Serializable {
         }
 
         public Builder setNumber(String number) {
-            this.number = number;
+            this.number = StringUtils.normalizeCardNumber(number);
             if (number.length() == 4) {
                 last4digits = number;
             } else if (number.length() > 4) {
