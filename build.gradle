@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.1'
+        classpath 'com.android.tools.build:gradle:2.3.3'
         classpath 'org.robolectric:robolectric-gradle-plugin:1.1.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
@@ -21,12 +21,12 @@ allprojects {
 }
 
 ext {
-    compileSdkVersion = 25
+    compileSdkVersion = 26
     minSdkVersion = 16
-    targetSdkVersion = 25
+    targetSdkVersion = 26
     versionCode = 16
 
-    buildToolsVersion = "25.0.1"
-    supportLibraryVersion = "25.3.1"
+    buildToolsVersion = "26.0.0"
+    supportLibraryVersion = "26.+"
     versionName = "3.0.5"
 }
