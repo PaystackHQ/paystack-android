@@ -60,4 +60,14 @@ public class StringUtils {
             throw new CardException("Invalid card details: Card number is empty or null");
         }
     }
+
+
+    /**
+     * Method to remove non-numeric characters from card number
+     * @param card_number - String of card number
+     * @return card number with numeric characters only
+     */
+    public static String normalizeCardNumber(String card_number) {
+        return card_number.replaceAll( "[^\\d]", "" );
+    }
 }
