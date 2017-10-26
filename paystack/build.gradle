@@ -30,7 +30,7 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.7.0'
     compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
 
-    compile 'co.paystack.android.design.widget:pinpad:1.0'
+    compile 'co.paystack.android.design.widget:pinpad:1.0.1'
 }
 
 ext {
