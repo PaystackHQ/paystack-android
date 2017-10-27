@@ -3,6 +3,14 @@ Last updated Sep 5, 2016
 (from http://keepachangelog.com/)
 
 All notable changes to this project will be documented in this file.
+
+## Released v3.0.7 on Oct 27, 2017
+- Invalid card details will force us to show a popup that allows the user correct their card entry
+- Updated all dependencies
+- In debug mode, an assertion has been added to force the developer to choose either remote or local
+transaction initialization exclusively.
+- Added utility method to strip card of all non-numeric characters
+
 ## Released v3.0.5 on Jun 20, 2017
 - Fixed a bug that made some verve cards get bounced by the validator
 - Other minor bug fixes

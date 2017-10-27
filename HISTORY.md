@@ -1,6 +1,17 @@
 # History
 Last updated Apr 7, 2017
 
+## Commits on Oct 27, 2017
+- Invalid card details will force us to show a popup that allows the user correct their card entry
+- Updated all dependencies
+- In debug mode, an assertion has been added to force the developer to choose either remote or local
+transaction initialization exclusively.
+- Added utility method to strip card of all non-numeric characters
+
+## Commits on Jun 20, 2017
+- Fixed a bug that made some verve cards get bounced by the validator
+- Other minor bug fixes
+
 ## Commits on Apr 7, 2017
 - `chargeCard` now resumes a transaction initialized by server
 - Remove deprecated methods
