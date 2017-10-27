@@ -19,7 +19,7 @@ public class OtpActivity extends Activity {
         setTitle("ENTER OTP");
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        pinpadView = (PinPadView) findViewById(R.id.pinpadView);
+        pinpadView = findViewById(R.id.pinpadView);
         setup();
     }
 

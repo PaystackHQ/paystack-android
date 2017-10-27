@@ -19,7 +19,7 @@ public class PinActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setTitle("ENTER CARD PIN");
 
-        pinpadView = (PinPadView) findViewById(R.id.pinpadView);
+        pinpadView = findViewById(R.id.pinpadView);
         setup();
     }
 

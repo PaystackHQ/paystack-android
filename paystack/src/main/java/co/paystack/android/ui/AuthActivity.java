@@ -24,7 +24,7 @@ public class AuthActivity extends Activity {
         setTitle("Authorize your card");
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        webView = (WebView) findViewById(R.id.webView);
+        webView = findViewById(R.id.webView);
         setup();
     }
 
@@ -42,7 +42,7 @@ public class AuthActivity extends Activity {
     protected void setup() {
         setContentView(R.layout.co_paystack_android____activity_auth);
 
-        webView = (WebView) findViewById(R.id.webView);
+        webView = findViewById(R.id.webView);
         webView.setKeepScreenOn(true);
 
         abstract class AuthResponseJI {

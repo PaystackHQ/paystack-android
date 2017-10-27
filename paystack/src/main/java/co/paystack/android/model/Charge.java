@@ -10,6 +10,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Locale;
 
+import co.paystack.android.BuildConfig;
+import co.paystack.android.Paystack;
+import co.paystack.android.exceptions.ChargeException;
 import co.paystack.android.exceptions.InvalidAmountException;
 import co.paystack.android.exceptions.InvalidEmailException;
 
@@ -29,6 +32,22 @@ public class Charge extends PaystackModel {
     private Bearer bearer;
     private String currency;
     private String plan;
+
+    private boolean localStarted = false;
+    private boolean remoteStarted = false;
+
+    private void beforeLocalSet(String fieldName){
+        if(remoteStarted && BuildConfig.DEBUG){
+            throw new ChargeException("You can not set " + fieldName + " after specifying an access code");
+        }
+        localStarted = true;
+    }
+    private void beforeRemoteSet(){
+        if(localStarted && BuildConfig.DEBUG){
+            throw new ChargeException("You can not set access code when providing transaction parameters in app");
+        }
+        remoteStarted = true;
+    }
     public Charge() {
         this.metadata = new JSONObject();
         this.amount = -1;
@@ -42,6 +61,7 @@ public class Charge extends PaystackModel {
     }
 
     public void addParameter(String key, String value) {
+        beforeLocalSet(key);
         this.additionalParameters.put(key, value);
     }
 
@@ -54,6 +74,7 @@ public class Charge extends PaystackModel {
     }
 
     public Charge setAccessCode(String access_code) {
+        beforeRemoteSet();
         this.access_code = access_code;
         return this;
     }
@@ -63,6 +84,7 @@ public class Charge extends PaystackModel {
     }
 
     public Charge setCurrency(String currency) {
+        beforeLocalSet("currency");
         this.currency = currency;
         return this;
     }
@@ -72,6 +94,7 @@ public class Charge extends PaystackModel {
     }
 
     public Charge setPlan(String plan) {
+        beforeLocalSet("plan");
         this.plan = plan;
         return this;
     }
@@ -81,6 +104,7 @@ public class Charge extends PaystackModel {
     }
 
     public Charge setTransactionCharge(int transactionCharge) {
+        beforeLocalSet("transaction charge");
         this.transactionCharge = transactionCharge;
         return this;
     }
@@ -90,6 +114,7 @@ public class Charge extends PaystackModel {
     }
 
     public Charge setSubaccount(String subaccount) {
+        beforeLocalSet("subaccount");
         this.subaccount = subaccount;
         return this;
     }
@@ -99,6 +124,7 @@ public class Charge extends PaystackModel {
     }
 
     public Charge setReference(String reference) {
+        beforeLocalSet("reference");
         this.reference = reference;
         return this;
     }
@@ -108,6 +134,7 @@ public class Charge extends PaystackModel {
     }
 
     public Charge setBearer(Bearer bearer) {
+        beforeLocalSet("bearer");
         this.bearer = bearer;
         return this;
     }
@@ -122,12 +149,14 @@ public class Charge extends PaystackModel {
     }
 
     public Charge putMetadata(String name, String value) throws JSONException{
+        beforeLocalSet("metadata");
         this.metadata.put(name, value);
         this.hasMeta = true;
         return this;
     }
 
     public Charge putCustomField(String displayName, String value) throws JSONException{
+        beforeLocalSet("custom field");
         JSONObject customObj = new JSONObject();
         customObj.put("value", value);
         customObj.put("display_name", displayName);
@@ -149,6 +178,7 @@ public class Charge extends PaystackModel {
     }
 
     public Charge setEmail(String email) {
+        beforeLocalSet("email");
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             throw new InvalidEmailException(email);
         }
@@ -161,6 +191,7 @@ public class Charge extends PaystackModel {
     }
 
     public Charge setAmount(int amount) throws InvalidAmountException {
+        beforeLocalSet("amount");
         if (amount <= 0)
             throw new InvalidAmountException(amount);
         this.amount = amount;

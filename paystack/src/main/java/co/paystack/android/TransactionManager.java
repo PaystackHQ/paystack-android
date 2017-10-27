@@ -16,6 +16,7 @@ import co.paystack.android.api.model.TransactionApiResponse;
 import co.paystack.android.api.request.ChargeRequestBody;
 import co.paystack.android.api.request.ValidateRequestBody;
 import co.paystack.android.api.service.ApiService;
+import co.paystack.android.exceptions.CardException;
 import co.paystack.android.exceptions.ChargeException;
 import co.paystack.android.exceptions.ExpiredAccessCodeException;
 import co.paystack.android.exceptions.ProcessingException;
@@ -72,9 +73,6 @@ class TransactionManager {
         if (BuildConfig.DEBUG && (charge.getCard() == null)) {
             throw new AssertionError("please add a card to the charge before calling chargeCard");
         }
-        if (BuildConfig.DEBUG && !(charge.getCard().isValid())) {
-            throw new AssertionError("only a valid card can be charged");
-        }
         if (BuildConfig.DEBUG && (transactionCallback == null)) {
             throw new AssertionError("transactionCallback must not be null");
         }
@@ -97,7 +95,13 @@ class TransactionManager {
 
     void chargeCard() {
         try {
-            if (validateCard(charge.getCard())){
+            if (charge.getCard() == null || !charge.getCard().isValid()) {
+                final CardSingleton si = CardSingleton.getInstance();
+                synchronized (si){
+                    si.setCard(charge.getCard());
+                }
+                new CardAsyncTask().execute();
+            } else {
                 initiate();
                 sendChargeToServer();
             }
@@ -149,15 +153,6 @@ class TransactionManager {
     private void reQueryChargeOnServer() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
         Call<TransactionApiResponse> call = apiService.requeryTransaction(transaction.getId());
         call.enqueue(serverCallback);
-    }
-
-    private boolean validateCard(Card card) {
-        if (card == null || card.getNumber().length() < 10) {
-            new CardAsyncTask().execute();
-            return false;
-        }
-
-        return true;
     }
 
     private void initiateChargeOnServer() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
@@ -270,21 +265,11 @@ class TransactionManager {
         @Override
         protected void onPostExecute(Card cns) {
             super.onPostExecute(cns);
-            if (cns != null) {
-                charge.setCard(cns);
-                try {
-                    TransactionManager.this.initiate();
-                    TransactionManager.this.sendChargeToServer();
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                } catch (KeyStoreException e) {
-                    e.printStackTrace();
-                } catch (KeyManagementException e) {
-                    e.printStackTrace();
-                }
-
+            if (cns == null || !cns.isValid()) {
+                notifyProcessingError(new CardException("Invalid card parameters"));
             } else {
-                notifyProcessingError(new Exception("Please add card number"));
+                charge.setCard(cns);
+                TransactionManager.this.chargeCard();
             }
         }
     }
