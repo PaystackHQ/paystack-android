@@ -1,8 +1,11 @@
 # Change Log
-Last updated Sep 5, 2016
+Last updated Nov 4, 2017
 (from http://keepachangelog.com/)
 
 All notable changes to this project will be documented in this file.
+
+## Released v3.0.8 on Nov 4, 2017
+- Resolved issue that caused build to fail when using AAPT2
 
 ## Released v3.0.7 on Oct 27, 2017
 - Invalid card details will force us to show a popup that allows the user correct their card entry

@@ -1,5 +1,8 @@
 # History
-Last updated Apr 7, 2017
+Last updated Nov 4, 2017
+
+## Commits on Nov 4, 2017
+- Resolve issue that caused build to fail when using AAPT2
 
 ## Commits on Oct 27, 2017
 - Invalid card details will force us to show a popup that allows the user correct their card entry

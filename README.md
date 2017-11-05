@@ -40,7 +40,7 @@ You do not need to clone this repository or download the files. Just add the fol
 
 ```gradle
 dependencies {
-  compile 'co.paystack.android:paystack:3.0.7'
+    compile 'co.paystack.android:paystack:3.0.9'
 }
 ```
 
@@ -48,8 +48,8 @@ dependencies {
 To use this library with Eclipse, you need to:
 
 1. Clone the repository.
-2. Import the **Paystack** folder into your [Eclipse](http://help.eclipse.org/juno/topic/org.eclipse.platform.doc.user/tasks/tasks-importproject.htm) project
-3. In your project settings, add the **Paystack** project under the Libraries section of the Android category.
+2. Import the **paystack** folder into your [Eclipse](http://help.eclipse.org/juno/topic/org.eclipse.platform.doc.user/tasks/tasks-importproject.htm) project
+3. In your project settings, add the **paystack** project under the Libraries section of the Android category.
 
 ## Usage
 
