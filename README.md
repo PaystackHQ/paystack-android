@@ -117,10 +117,29 @@ Method checks if the expiry date (combination of year and month) is valid.
 #### card.isValid
 Method to check if the card is valid. Always do this check, before charging the card.
 
+
 #### card.getType
 This method returns an estimate of the string representation of the card type.
 
+```java
+public class MainActivity extends AppCompatActivity {
 
+  // This sets up the card and check for validity
+  // This is a test card from paystack
+   String cardNumber = "4084084084084081";
+   int expiryMonth = 11; //any month in the future
+   int expiryYear = 18; // any year in the future. '2018' would work also! 
+   String cvv = "408";  // cvv of the test card
+   
+   Card card = new Card(cardNumber, expiryMonth, expiryYear, cvv);
+    if (card.isValid()) {
+       // charge card
+    } else {
+      //do something
+    }
+}
+```
+  
 ### 4. chargeCard
 Charging with the PaystackSdk is quite straightforward.
 
@@ -155,10 +174,15 @@ the methods available in the callback you provided.
 
 ```java
 public class MainActivity extends AppCompatActivity {
-  
+
+
   // This is the subroutine you will call after creating the charge
   // adding a card and setting the access_code
    public void performCharge(){
+         //create a Charge object
+         Charge charge = new Charge(); 
+         charge.setCard(card); //sets the card to charge
+   
        PaystackSdk.chargeCard(MainActivity.this, charge, new Paystack.TransactionCallback() {
            @Override
            public void onSuccess(Transaction transaction) {
