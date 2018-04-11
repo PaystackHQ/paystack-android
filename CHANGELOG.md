@@ -1,8 +1,11 @@
 # Change Log
-Last updated Nov 4, 2017
+Last updated Apr 10, 2018
 (from http://keepachangelog.com/)
 
 All notable changes to this project will be documented in this file.
+
+## Released v3.0.10 on Apr 10, 2018
+- Allow adding JSONObject to metadata
 
 ## Released v3.0.8 on Nov 4, 2017
 - Resolved issue that caused build to fail when using AAPT2

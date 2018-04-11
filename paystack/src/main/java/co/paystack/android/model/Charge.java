@@ -155,6 +155,13 @@ public class Charge extends PaystackModel {
         return this;
     }
 
+    public Charge putMetadata(String name, JSONObject value) throws JSONException{
+        beforeLocalSet("metadata");
+        this.metadata.put(name, value);
+        this.hasMeta = true;
+        return this;
+    }
+
     public Charge putCustomField(String displayName, String value) throws JSONException{
         beforeLocalSet("custom field");
         JSONObject customObj = new JSONObject();
