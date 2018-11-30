@@ -544,7 +544,7 @@ public class Card extends PaystackModel implements Serializable {
     }
 
     /**
-     * Private clsas for VISA card
+     * Private class for VISA card
      */
     private static class Visa extends CardType {
         @Override

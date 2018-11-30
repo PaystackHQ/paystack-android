@@ -2,10 +2,16 @@ package co.paystack.android;
 
 import android.app.Activity;
 
+import java.util.List;
+
+import co.paystack.android.api.print.PrinterTemplate;
 import co.paystack.android.exceptions.AuthenticationException;
 import co.paystack.android.exceptions.PaystackSdkNotInitializedException;
 import co.paystack.android.model.Charge;
 import co.paystack.android.model.PaystackModel;
+import co.paystack.android.model.Purchase;
+import co.paystack.android.model.Receipt;
+import co.paystack.android.model.ReceiptHeader;
 import co.paystack.android.utils.Utils;
 
 /**
@@ -19,6 +25,7 @@ import co.paystack.android.utils.Utils;
 public class Paystack extends PaystackModel {
 
     private String publicKey;
+    private PrinterTemplate printerTemplate;
 
     /**
      * Constructor.
@@ -64,7 +71,8 @@ public class Paystack extends PaystackModel {
             //validate public key
             validatePublicKey(publicKey);
 
-            TransactionManager transactionManager = new TransactionManager(activity, charge, transactionCallback);
+            TransactionManager transactionManager = new TransactionManager(activity,
+                    charge, transactionCallback);
 
             transactionManager.chargeCard();
 
@@ -73,6 +81,7 @@ public class Paystack extends PaystackModel {
             transactionCallback.onError(ae, null);
         }
     }
+
 
     private interface BaseCallback {
     }

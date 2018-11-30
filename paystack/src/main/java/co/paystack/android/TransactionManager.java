@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.security.KeyManagementException;
@@ -22,6 +23,7 @@ import co.paystack.android.exceptions.ExpiredAccessCodeException;
 import co.paystack.android.exceptions.ProcessingException;
 import co.paystack.android.model.Card;
 import co.paystack.android.model.Charge;
+import co.paystack.android.model.Receipt;
 import co.paystack.android.ui.AuthActivity;
 import co.paystack.android.ui.AuthSingleton;
 import co.paystack.android.ui.CardActivity;
@@ -36,6 +38,7 @@ import retrofit2.Response;
 
 class TransactionManager {
 
+    private Receipt mReceipt;
     private static final String LOG_TAG = TransactionManager.class.getSimpleName();
     private static boolean PROCESSING = false;
     private final Charge charge;
@@ -63,7 +66,8 @@ class TransactionManager {
         }
     };
 
-    TransactionManager(Activity activity, Charge charge, Paystack.TransactionCallback transactionCallback) {
+    TransactionManager(Activity activity, Charge charge,
+                       Paystack.TransactionCallback transactionCallback) {
         if (BuildConfig.DEBUG && (activity == null)) {
             throw new AssertionError("activity must not be null");
         }
@@ -161,6 +165,10 @@ class TransactionManager {
         call.enqueue(serverCallback);
     }
 
+    private void generateReceipt(){
+
+    }
+
     private void handleApiResponse(TransactionApiResponse transactionApiResponse) {
         if (transactionApiResponse == null) {
             transactionApiResponse = TransactionApiResponse.unknownServerResponse();
@@ -169,6 +177,7 @@ class TransactionManager {
 
         if (transactionApiResponse.status.equalsIgnoreCase("1") || transactionApiResponse.status.equalsIgnoreCase("success")) {
             setProcessingOff();
+
             transactionCallback.onSuccess(transaction);
             return;
         }

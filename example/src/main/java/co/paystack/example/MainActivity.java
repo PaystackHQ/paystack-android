@@ -16,14 +16,23 @@ import org.json.JSONException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import co.paystack.android.Paystack;
 import co.paystack.android.PaystackSdk;
 import co.paystack.android.Transaction;
+import co.paystack.android.api.print.PrinterTemplate;
 import co.paystack.android.exceptions.ExpiredAccessCodeException;
 import co.paystack.android.model.Card;
 import co.paystack.android.model.Charge;
+import co.paystack.android.model.Purchase;
+import co.paystack.android.model.Receipt;
+import co.paystack.android.model.ReceiptHeader;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,6 +65,27 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Receipt receipt = new Receipt().getInstance(this);
+        List<Purchase> purchases = new ArrayList<>();
+        Purchase pur = new Purchase();
+        pur.setItem("Eba");
+        pur.setQuantity("1");
+        pur.setSubTotal(12000);
+        purchases.add(pur);
+        ReceiptHeader header = new ReceiptHeader("Eba And Amala",
+                "2 Yaba Road, US.", "Michael@gmail.com", "08123456789");
+        receipt.addTransactionDate(new Date("2 May, 2019"))
+                .addTax(100)
+                .addCardType("Master Card")
+                .addTransactionStatus("Success")
+                .addReciptHeader(header)
+                .addCompanyName("Paystack")
+                .addCardType("Debit MasterCard")
+                .addCardNo("1203338298182981")
+                .addPurchases(purchases);
+        PrinterTemplate pt = receipt.create(this);
+        pt.printPayslip("Hello World", receipt);
 
         if (BuildConfig.DEBUG && (backend_url.equals(""))) {
             throw new AssertionError("Please set a backend url before running the sample");
@@ -106,6 +136,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+        long doublePayment = 1099;
+        NumberFormat n = NumberFormat.getCurrencyInstance(Locale.US);
+        String s = n.format(doublePayment / 100.0);
     }
 
     private void startAFreshCharge(boolean local) {
@@ -181,6 +216,8 @@ public class MainActivity extends AppCompatActivity {
         if ((dialog != null) && dialog.isShowing()) {
             dialog.dismiss();
         }
+
+
         dialog = null;
     }
 

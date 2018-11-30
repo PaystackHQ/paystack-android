@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import co.paystack.android.BuildConfig;
@@ -35,6 +36,7 @@ public class Charge extends PaystackModel {
 
     private boolean localStarted = false;
     private boolean remoteStarted = false;
+
 
     private void beforeLocalSet(String fieldName){
         if(remoteStarted && BuildConfig.DEBUG){

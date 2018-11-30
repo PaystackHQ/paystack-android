@@ -4,6 +4,9 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import co.paystack.android.PaystackSdk;
 import co.paystack.android.exceptions.PaystackSdkNotInitializedException;
 
@@ -61,5 +64,11 @@ public class Utils {
         throw new NullPointerException("Argument '" + name + "' cannot be null");
       }
     }
+  }
+
+  public static String formatCurrency(int amount){
+    Locale local = new Locale("yor", "NG");
+    NumberFormat n = NumberFormat.getCurrencyInstance(local);
+    return n.format(amount / 100.0);
   }
 }
