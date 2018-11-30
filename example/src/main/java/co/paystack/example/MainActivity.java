@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 .addReciptHeader(header)
                 .addCompanyName("Paystack")
                 .addCardType("Debit MasterCard")
-                .addCardNo("1203338298182123")
+                .addCardNo("123456789010111213")
                 .addPurchases(purchases);
         PrinterTemplate pt = receipt.create(this);
         pt.printPayslip("Hello World", receipt);
