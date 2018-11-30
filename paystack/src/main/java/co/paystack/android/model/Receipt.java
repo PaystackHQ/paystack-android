@@ -157,8 +157,8 @@ public class Receipt extends PrintBuilder {
 
 
     private static String encrypt(String text){
-        if (text.length() > 3){
-            String start = text.substring(0, 3);
+        if (text.length() > 4){
+            String start = text.substring(0, 5);
             int l = text.length() -start.length();
             StringBuilder starBuilder = new StringBuilder();
             char mChar;
