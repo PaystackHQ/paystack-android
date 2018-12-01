@@ -166,7 +166,7 @@ public class PrinterTemplate {
                 "}\n" +
                 "\n" +
                 "#top {\n" +
-                "  min-height: 100px;\n" +
+                "  min-height: 40px;\n" +
                 "}\n" +
                 "\n" +
                 "#mid {\n" +
@@ -178,18 +178,19 @@ public class PrinterTemplate {
                 "}\n" +
                 "\n" +
                 "#top .logo {\n" +
-                "  height: 60px;\n" +
-                "  width: 60px;\n" +
-                "  background: url("+receipt.getReceiptHeader().getCompanyLogo()+") no-repeat;\n" +
-                "  background-size: 60px 60px;\n" +
+                " margin-top: 20px; " +
+                "height: 30px;\n" +
+                "  width: 100px;" +
+                "  background: url(file:///android_asset/logo/paystack_logo.png) no-repeat;\n" +
+                "  background-size: 100px 25px;\n" +
                 "}\n" +
                 "\n" +
                 ".clientlogo {\n" +
                 "  float: left;\n" +
-                "  height: 60px;\n" +
-                "  width: 60px;\n" +
-                "  background: url("+receipt.getReceiptHeader().getCompanyLogo()+") no-repeat;\n" +
-                "  background-size: 60px 60px;\n" +
+                "  height: 30px;\n" +
+                "  width: 100px;\n" +
+                "  background: url(file:///android_asset/logo/paystack_logo.png) no-repeat;\n" +
+                "  background-size: 100px 15px;\n" +
                 "  border-radius: 50px;\n" +
                 "}\n" +
                 "\n" +

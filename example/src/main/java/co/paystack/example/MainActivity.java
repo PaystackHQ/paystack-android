@@ -211,8 +211,7 @@ public class MainActivity extends AppCompatActivity {
         purchase.setQuantity("10");
         purchase.setCardName("Debit MasterCard");
         purchase.setCardNumber("1000121212212121");
-
-        PrinterTemplate.init(this).print(new ReceiptHeader("Nipco", "30 Ikeja street, Lagos state",
+        PrinterTemplate.init(this).print(new ReceiptHeader("DevMike Co.", "30 Ikeja street, Lagos state",
                 "myemail.com", "08123456778", ""), purchase.build(), "success");
 
         PaystackSdk.chargeCard(MainActivity.this, charge, new Paystack.TransactionCallback() {
