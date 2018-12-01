@@ -20,11 +20,7 @@ public class Receipt extends PrintBuilder {
 
     //Purchase details
     private List<Purchase> purchases;
-    private int tax;
     private int total;
-    private String companyLogo;
-    private String footerText;
-    private String cardType;
     private PrinterTemplate printerTemp;
 
     private Date transactionDate;
@@ -32,10 +28,6 @@ public class Receipt extends PrintBuilder {
     private String transactionStatus;
 
     private ReceiptHeader receiptHeader;
-
-    private String cardNo;
-
-    private String companyName;
 
     public Receipt(){}
 
@@ -45,31 +37,11 @@ public class Receipt extends PrintBuilder {
                    String transactionStatus){
         this.purchases =purchases;
         this.receiptHeader = receiptHeader;
-        this.tax =tax;
         this.total = total;
-        this.footerText =footerText;
-        this.cardType = cardType;
         this.transactionDate = transactionDate;
         this.transactionStatus = transactionStatus;
     }
 
-    public Receipt addCompanyName(String companyName) {
-        this.companyName = companyName;
-        return this;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public Receipt addCompanyLogo(String companyLogo){
-        this.companyLogo = companyLogo;
-        return this;
-    }
-
-    public String getCompanyLogo() {
-        return TextUtils.isEmpty(companyLogo) ? "":companyLogo;
-    }
 
     public ReceiptHeader getReceiptHeader() {
         return receiptHeader;
@@ -78,15 +50,6 @@ public class Receipt extends PrintBuilder {
     public Receipt addReciptHeader(@Nullable ReceiptHeader receiptHeader) {
         this.receiptHeader = receiptHeader;
         return this;
-    }
-
-    public Receipt addFooterText(@Nullable String footerText) {
-        this.footerText = footerText;
-        return this;
-    }
-
-    public String getFooterText() {
-        return footerText;
     }
 
 
@@ -110,14 +73,7 @@ public class Receipt extends PrintBuilder {
         return this;
     }
 
-    public String getCardType() {
-        return cardType;
-    }
 
-    public Receipt addCardType(String cardType) {
-        this.cardType = cardType;
-        return this;
-    }
 
     public Receipt addTransactionStatus(String transactionStatus) {
         this.transactionStatus = transactionStatus;
@@ -128,15 +84,6 @@ public class Receipt extends PrintBuilder {
         return transactionStatus.toUpperCase();
     }
 
-    public int getTax() {
-        return tax;
-    }
-
-    public Receipt addTax(int tax) {
-        this.tax = tax;
-        return this;
-    }
-
     public int getTotal() {
         return total;
     }
@@ -144,38 +91,6 @@ public class Receipt extends PrintBuilder {
     public Receipt setTotal(int total) {
         this.total = total;
         return this;
-    }
-
-    public Receipt addCardNo(String cardNo){
-        this.cardNo =cardNo;
-        return this;
-    }
-
-    public String getCardNo() {
-        return TextUtils.isEmpty(cardNo)? "N/A":encrypt(cardNo);
-    }
-
-
-    private static String encrypt(String text){
-        if (text.length() > 4){
-            String start = text.substring(0, 5);
-            int l = text.length() -start.length();
-            StringBuilder starBuilder = new StringBuilder();
-            char mChar;
-            if(l >-1){
-                for(int i=start.length(); i < text.length(); i++){
-                    if(i < text.length()-2){
-                        mChar ='*';
-                    }else{
-                        mChar =text.charAt(i);
-                    }
-                    starBuilder.append(String.valueOf(mChar));
-                }
-            }
-
-            return start.concat(starBuilder.toString());
-        }
-        return text;
     }
 
 

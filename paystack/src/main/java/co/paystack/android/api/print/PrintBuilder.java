@@ -3,6 +3,7 @@ package co.paystack.android.api.print;
 import android.content.Context;
 import android.support.annotation.RequiresApi;
 
+import co.paystack.android.PaystackSdk;
 import co.paystack.android.model.Receipt;
 
 /**
@@ -14,22 +15,17 @@ public class PrintBuilder{
     private Context mContext;
     private PrinterTemplate printerTemp;
 
-    public Receipt getInstance(Context context){
-        return new PrintBuilder().setContext(context).getReceipt();
+
+
+    public PrintBuilder(){
+
     }
 
-    public PrintBuilder setContext(Context context){
-        this.mContext =context;
-        return this;
-    }
 
     public Receipt getReceipt(){
         return new Receipt();
     }
 
-    public PrinterTemplate create(Context mContext){
-        return new PrinterTemplate(mContext);
-    }
 
 
 }

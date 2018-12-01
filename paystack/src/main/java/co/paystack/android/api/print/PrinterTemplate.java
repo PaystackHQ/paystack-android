@@ -17,6 +17,7 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import java.text.NumberFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -24,6 +25,7 @@ import java.util.Set;
 
 import co.paystack.android.model.Purchase;
 import co.paystack.android.model.Receipt;
+import co.paystack.android.model.ReceiptHeader;
 
 import static android.os.Build.VERSION_CODES.KITKAT;
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -41,6 +43,9 @@ public class PrinterTemplate {
     private Context mContext;
     private int defaultTotal = 0;
     public static final String TAG = PrinterTemplate.class.getSimpleName();
+    private int transactionCharge;
+    private String cardName;
+    private String cardNumber;
 
     public PrinterTemplate(Context mContext){
         templateBuilder = new StringBuilder();
@@ -52,22 +57,42 @@ public class PrinterTemplate {
     private StringBuilder getPurchases(List<Purchase> purchases){
         StringBuilder sBuilder = new StringBuilder();
         for (Purchase purchase : purchases){
-            defaultTotal += purchase.getSubTotal();
+            this.defaultTotal += purchase.getAmount();
+            this.transactionCharge += purchase.getTransactionCharge();
+            this.cardName = purchase.getName();
+            this.cardNumber = purchase.getCardNumber();
             sBuilder.append("\t<tr class=\"service\">\n" +
                     "\t<td class=\"tableitem\"><p class=\"itemtext\">"+purchase.getItem()+"</p></td>\n" +
                     "\t<td class=\"tableitem\"><p class=\"itemtext\">"+purchase.getQuantity()+"</p></td>\n" +
                     "\t<td class=\"tableitem\"><p class=\"itemtext\">"
-                    +formatCurrency(purchase.getSubTotal() >0?purchase.getSubTotal() :defaultTotal)+"</p></td>\n" +
+                    +formatCurrency(purchase.getAmount() >0?purchase.getAmount() :defaultTotal)+"</p></td>\n" +
                     "\t</tr>\n");
         }
 
         return sBuilder;
     }
 
+
+    public static PrinterTemplate init(Context context){
+        return new PrinterTemplate(context);
+    }
+
+    @RequiresApi(19)
+    public void print(ReceiptHeader header, List<Purchase> purchases, String paymentStatus) {
+
+        Receipt receipt = new Receipt();
+        receipt.addTransactionDate(new Date(System.currentTimeMillis()))
+                .addTransactionStatus(paymentStatus)
+                .addReciptHeader(header)
+                .addPurchases(purchases);
+        printPayslip("Hello World", receipt);
+    }
+
+
     private String getHeader(Receipt receipt){
         return "   <div id=\"mid\">\n" +
                 "      <div class=\"info\">\n" +
-                "        <h2 class=\"tocenter\">Marchant Name</h2>\n" +
+                "        <h2 class=\"tocenter\">Marchant Info</h2>\n" +
                 "        <p> \n" +
                 "            Address : "+receipt.getReceiptHeader().getAddress()+"</br>\n" +
                 "            Email   : "+receipt.getReceiptHeader().getEmail()+"</br>\n" +
@@ -155,7 +180,7 @@ public class PrinterTemplate {
                 "#top .logo {\n" +
                 "  height: 60px;\n" +
                 "  width: 60px;\n" +
-                "  background: url("+receipt.getCompanyLogo()+") no-repeat;\n" +
+                "  background: url("+receipt.getReceiptHeader().getCompanyLogo()+") no-repeat;\n" +
                 "  background-size: 60px 60px;\n" +
                 "}\n" +
                 "\n" +
@@ -163,7 +188,7 @@ public class PrinterTemplate {
                 "  float: left;\n" +
                 "  height: 60px;\n" +
                 "  width: 60px;\n" +
-                "  background: url("+receipt.getCompanyLogo()+") no-repeat;\n" +
+                "  background: url("+receipt.getReceiptHeader().getCompanyLogo()+") no-repeat;\n" +
                 "  background-size: 60px 60px;\n" +
                 "  border-radius: 50px;\n" +
                 "}\n" +
@@ -231,7 +256,7 @@ public class PrinterTemplate {
                 "    <center id=\"top\">\n" +
                 "      <div class=\"logo\"></div>\n" +
                 "      <div class=\"info\"> \n" +
-                "        <h2>"+receipt.getCompanyName()+"</h2>\n" +
+                "        <h2>"+receipt.getReceiptHeader().getBusinessName()+"</h2>\n" +
                 "      </div><!--End Info-->\n" +
                 "    </center><!--End InvoiceTop-->\n" +
                 "    \n" + getHeader(receipt)+
@@ -252,7 +277,7 @@ public class PrinterTemplate {
                 "\n" +  getPurchases(receipt.getPurchases())+
                 "\t\t\t\t\t\t\t<tr class=\"tabletitle\">\n" +
                 "\t\t\t\t\t\t\t\t<td></td>\n" +
-                "\t\t\t\t\t\t\t\t<td class=\"Rate\"><h2>tax</h2></td>\n" + getAsHtml(receipt.getTax())+
+                "\t\t\t\t\t\t\t\t<td class=\"Rate\"><h2>tax</h2></td>\n" + getAsHtml(transactionCharge)+
                 "\t\t\t\t\t\t\t</tr>\n" +
                 "\n" +
                 "\t\t\t\t\t\t\t<tr class=\"tabletitle\">\n" +
@@ -265,8 +290,8 @@ public class PrinterTemplate {
                 "\n" +
                 "\n" +
                 "      <div class=\"info\">\n" +
-                "        <div class=\"cardtype\">"+receipt.getCardType()+"</div>\n" +
-                "        <div class=\"cardno\"> \n" +receipt.getCardNo() +
+                "        <div class=\"cardtype\">"+cardName+"</div>\n" +
+                "        <div class=\"cardno\"> \n" +cardNumber +
                 "        </div> <p> \n" +
                 "            Transaction date : "+receipt.getTransactionDate()+"</br>\n" +
                 "            Reference code   : 12345</br>\n" +
@@ -287,7 +312,7 @@ public class PrinterTemplate {
 
 
     @RequiresApi(19)
-    public void printPayslip(final String slipName, Receipt receipt) {
+    private void printPayslip(final String slipName, Receipt receipt) {
 
         // Generate an HTML document on the fly:;
         mWebView.loadDataWithBaseURL(null, getFormattedReceipt(receipt)

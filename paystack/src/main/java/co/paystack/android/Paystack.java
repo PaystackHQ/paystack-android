@@ -25,7 +25,6 @@ import co.paystack.android.utils.Utils;
 public class Paystack extends PaystackModel {
 
     private String publicKey;
-    private PrinterTemplate printerTemplate;
 
     /**
      * Constructor.

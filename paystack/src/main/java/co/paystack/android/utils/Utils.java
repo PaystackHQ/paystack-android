@@ -71,4 +71,28 @@ public class Utils {
     NumberFormat n = NumberFormat.getCurrencyInstance(local);
     return n.format(amount / 100.0);
   }
+
+
+    public static String encrypt(String text){
+        if (text.length() > 4){
+            String start = text.substring(0, 5);
+            int l = text.length() -start.length();
+            StringBuilder starBuilder = new StringBuilder();
+            char mChar;
+            if(l >-1){
+                for(int i=start.length(); i < text.length(); i++){
+                    if(i < text.length()-2){
+                        mChar ='*';
+                    }else{
+                        mChar =text.charAt(i);
+                    }
+                    starBuilder.append(String.valueOf(mChar));
+                }
+            }
+
+            return start.concat(starBuilder.toString());
+        }
+        return text;
+    }
+
 }

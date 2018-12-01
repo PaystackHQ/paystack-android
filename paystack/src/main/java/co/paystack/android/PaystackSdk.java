@@ -4,9 +4,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.support.annotation.RequiresApi;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import co.paystack.android.api.print.PrinterTemplate;
 import co.paystack.android.exceptions.PaystackSdkNotInitializedException;
 import co.paystack.android.model.Charge;
+import co.paystack.android.model.Purchase;
+import co.paystack.android.model.Receipt;
+import co.paystack.android.model.ReceiptHeader;
 import co.paystack.android.utils.Utils;
 
 /**
@@ -26,6 +35,8 @@ public final class PaystackSdk {
      */
     private static final String KEY_PUBLIC_KEY_PROP = "co.paystack.android.PublicKey";
     public static Context applicationContext;
+    private static Charge charge;
+
     /**
      * Flag to know if sdk has been initialized
      */
@@ -141,7 +152,8 @@ public final class PaystackSdk {
         if (BuildConfig.DEBUG && (activity == null)) {
             throw new AssertionError("activity must not be null");
         }
-
+        //Initialize print class
+        PaystackSdk.charge = charge;
         performChecks();
 
         //construct paystack object
@@ -154,5 +166,6 @@ public final class PaystackSdk {
     public interface SdkInitializeCallback {
         void onInitialized();
     }
+
 
 }

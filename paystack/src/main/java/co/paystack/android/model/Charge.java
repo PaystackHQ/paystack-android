@@ -22,7 +22,7 @@ public class Charge extends PaystackModel {
     private Card card;
     private String email;
     private String access_code;
-    private int amount;
+    protected int amount;
     private JSONObject metadata;
     private JSONArray custom_fields;
     private boolean hasMeta = false;
@@ -44,6 +44,7 @@ public class Charge extends PaystackModel {
         }
         localStarted = true;
     }
+
     private void beforeRemoteSet(){
         if(localStarted && BuildConfig.DEBUG){
             throw new ChargeException("You can not set access code when providing transaction parameters in app");

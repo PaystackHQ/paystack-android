@@ -1,6 +1,7 @@
 package co.paystack.android.model;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 /**
  * Created by Oluwagbenga on 29,November,2018
@@ -13,13 +14,30 @@ public class ReceiptHeader {
     private String address;
     private String email;
     private String phone;
+    private String businessLogo;
 
     public ReceiptHeader(@Nullable String businessName, @Nullable String address,
-                         @Nullable String email, @Nullable String phone){
+                         @Nullable String email, @Nullable String phone, @Nullable String businessLogo){
         this.address = address;
         this.businessName = businessName;
         this.email = email;
         this.phone = phone;
+        this.businessLogo = businessLogo;
+    }
+
+    private ReceiptHeader(){}
+
+    public static ReceiptHeader getInstance(){
+        return new ReceiptHeader();
+    }
+
+
+    public void setCompanyLogo(String businessLogo){
+        this.businessLogo = businessLogo;
+    }
+
+    public String getCompanyLogo() {
+        return TextUtils.isEmpty(businessLogo) ? "":businessLogo;
     }
 
     public String getEmail() {

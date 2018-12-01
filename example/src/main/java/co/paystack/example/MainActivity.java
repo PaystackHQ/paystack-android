@@ -66,26 +66,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Receipt receipt = new Receipt().getInstance(this);
-        List<Purchase> purchases = new ArrayList<>();
-        Purchase pur = new Purchase();
-        pur.setItem("Eba");
-        pur.setQuantity("1");
-        pur.setSubTotal(12000);
-        purchases.add(pur);
-        ReceiptHeader header = new ReceiptHeader("Eba And Amala",
-                "2 Yaba Road, US.", "Michael@gmail.com", "08123456789");
-        receipt.addTransactionDate(new Date("2 May, 2019"))
-                .addTax(100)
-                .addCardType("Master Card")
-                .addTransactionStatus("Success")
-                .addReciptHeader(header)
-                .addCompanyName("Paystack")
-                .addCardType("Debit MasterCard")
-                .addCardNo("123456789010111213")
-                .addPurchases(purchases);
-        PrinterTemplate pt = receipt.create(this);
-        pt.printPayslip("Hello World", receipt);
 
         if (BuildConfig.DEBUG && (backend_url.equals(""))) {
             throw new AssertionError("Please set a backend url before running the sample");
@@ -156,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
             // Set transaction params directly in app (note that these params
             // are only used if an access_code is not set. In debug mode,
             // setting them after setting an access code would throw an exception
-
             charge.setAmount(2000);
             charge.setEmail("help@paystack.co");
             charge.setReference("ChargedFromAndroid_" + Calendar.getInstance().getTimeInMillis());
@@ -187,6 +166,8 @@ public class MainActivity extends AppCompatActivity {
         String cvc = mEditCVC.getText().toString().trim();
         //update the cvc field of the card
         card.setCvc(cvc);
+
+        card.setName("Debit MasterCard");
 
         //validate expiry month;
         String sMonth = mEditExpiryMonth.getText().toString().trim();
@@ -223,6 +204,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void chargeCard() {
         transaction = null;
+
+        Purchase purchase = new Purchase();
+        purchase.setAmount(100);
+        purchase.setItem("Domain Name");
+        purchase.setQuantity("10");
+        purchase.setCardName("Debit MasterCard");
+        purchase.setCardNumber("1000121212212121");
+
+        PrinterTemplate.init(this).print(new ReceiptHeader("Nipco", "30 Ikeja street, Lagos state",
+                "myemail.com", "08123456778", ""), purchase.build(), "success");
+
         PaystackSdk.chargeCard(MainActivity.this, charge, new Paystack.TransactionCallback() {
             // This is called only after transaction is successful
             @Override
