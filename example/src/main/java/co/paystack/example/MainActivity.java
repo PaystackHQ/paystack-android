@@ -1,7 +1,9 @@
 package co.paystack.example;
 
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -116,11 +118,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-
-        long doublePayment = 1099;
-        NumberFormat n = NumberFormat.getCurrencyInstance(Locale.US);
-        String s = n.format(doublePayment / 100.0);
     }
 
     private void startAFreshCharge(boolean local) {
@@ -204,15 +201,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void chargeCard() {
         transaction = null;
-
-        Purchase purchase = new Purchase();
-        purchase.setAmount(100);
-        purchase.setItem("Domain Name");
-        purchase.setQuantity("10");
-        purchase.setCardName("Debit MasterCard");
-        purchase.setCardNumber("1000121212212121");
-        PrinterTemplate.init(this).print(new ReceiptHeader("DevMike Co.", "30 Ikeja street, Lagos state",
-                "myemail.com", "08123456778", ""), purchase.build(), "success");
 
         PaystackSdk.chargeCard(MainActivity.this, charge, new Paystack.TransactionCallback() {
             // This is called only after transaction is successful
@@ -338,6 +326,24 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.mTextBackendMessage.setText(String.format("There was a problem verifying %s on the backend: %s ", this.reference, error));
                 dismissDialog();
             }
+
+            if (Build.VERSION.SDK_INT >= 19) {
+                //Generate receipt after transaction has been completed
+                Purchase purchase = new Purchase();
+                purchase.setAmount(10000); //This is calculated in kobo.
+                purchase.setItem("Domain Name");
+                purchase.setQuantity("10");
+                purchase.setCardName("Debit MasterCard");
+                purchase.setTransactionCharge(1000);
+                purchase.setTransactionMessage("Thanks for patronizing us. We look forward to doing more DEMO for you.");
+                purchase.setTransactionStatus(result == null ? Purchase.FAILED : Purchase.SUCCESS);// Tells user if its successful or not
+                purchase.setCardNumber(mEditCardNum.getText().toString());
+                PrinterTemplate.init(MainActivity.this).print(new ReceiptHeader("DevMike Co.",
+                        "30 Ikeja street, Lagos state",
+                        "devmike@jadebyte.com", "08123456778"), purchase.build());
+            }
+
+
         }
 
         @Override

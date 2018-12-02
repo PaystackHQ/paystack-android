@@ -9,9 +9,6 @@ import co.paystack.android.exceptions.AuthenticationException;
 import co.paystack.android.exceptions.PaystackSdkNotInitializedException;
 import co.paystack.android.model.Charge;
 import co.paystack.android.model.PaystackModel;
-import co.paystack.android.model.Purchase;
-import co.paystack.android.model.Receipt;
-import co.paystack.android.model.ReceiptHeader;
 import co.paystack.android.utils.Utils;
 
 /**

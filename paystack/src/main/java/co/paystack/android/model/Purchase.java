@@ -18,10 +18,34 @@ public class Purchase extends Charge{
     private String quantity;
     private String name;
     private String cardNumber;
+    private String transactionStatus;
+    private String transactionMessage;
     private List<Purchase> purchases;
+
+    public static final String SUCCESS ="success";
+    public static final String FAILED = "failed";
+
 
     public Purchase(){
         purchases = new ArrayList<>();
+    }
+
+    public String getTransactionMessage(){
+        return transactionMessage;
+    }
+
+    public Purchase setTransactionMessage(String transactionMessage){
+        this.transactionMessage = transactionMessage;
+        return this;
+    }
+
+    public String getTransactionStatus() {
+        return transactionStatus;
+    }
+
+    public Purchase setTransactionStatus(String status){
+        this.transactionStatus = status;
+        return this;
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)

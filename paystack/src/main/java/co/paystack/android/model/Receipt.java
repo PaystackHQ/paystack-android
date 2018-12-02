@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import java.text.NumberFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -16,38 +15,29 @@ import co.paystack.android.api.print.PrinterTemplate;
 /**
  * Created by Oluwagbenga on 29,November,2018
  */
-public class Receipt extends PrintBuilder {
+public class Receipt{
 
     //Purchase details
     private List<Purchase> purchases;
-    private int total;
     private PrinterTemplate printerTemp;
 
-    private Date transactionDate;
-
-    private String transactionStatus;
+    private String transactionDate;
 
     private ReceiptHeader receiptHeader;
 
     public Receipt(){}
 
-    public Receipt(List<Purchase> purchases, ReceiptHeader receiptHeader,
-                   int tax, int total,
-                   String footerText, String cardType, Date transactionDate,
-                   String transactionStatus){
+    public Receipt(List<Purchase> purchases, ReceiptHeader receiptHeader, String transactionDate){
         this.purchases =purchases;
         this.receiptHeader = receiptHeader;
-        this.total = total;
         this.transactionDate = transactionDate;
-        this.transactionStatus = transactionStatus;
     }
-
 
     public ReceiptHeader getReceiptHeader() {
         return receiptHeader;
     }
 
-    public Receipt addReciptHeader(@Nullable ReceiptHeader receiptHeader) {
+    public Receipt addReceiptHeader(@Nullable ReceiptHeader receiptHeader) {
         this.receiptHeader = receiptHeader;
         return this;
     }
@@ -64,34 +54,15 @@ public class Receipt extends PrintBuilder {
     }
 
 
-    public Date getTransactionDate() {
+    public String getTransactionDate() {
         return transactionDate;
     }
 
-    public Receipt addTransactionDate(Date transactionDate) {
+    public Receipt addTransactionDate(String transactionDate) {
         this.transactionDate = transactionDate;
         return this;
     }
 
-
-
-    public Receipt addTransactionStatus(String transactionStatus) {
-        this.transactionStatus = transactionStatus;
-        return this;
-    }
-
-    public String getTransactionStatus() {
-        return transactionStatus.toUpperCase();
-    }
-
-    public int getTotal() {
-        return total;
-    }
-
-    public Receipt setTotal(int total) {
-        this.total = total;
-        return this;
-    }
 
 
 }

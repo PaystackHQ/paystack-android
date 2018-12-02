@@ -14,15 +14,13 @@ public class ReceiptHeader {
     private String address;
     private String email;
     private String phone;
-    private String businessLogo;
 
     public ReceiptHeader(@Nullable String businessName, @Nullable String address,
-                         @Nullable String email, @Nullable String phone, @Nullable String businessLogo){
+                         @Nullable String email, @Nullable String phone){
         this.address = address;
         this.businessName = businessName;
         this.email = email;
         this.phone = phone;
-        this.businessLogo = businessLogo;
     }
 
     private ReceiptHeader(){}
@@ -32,13 +30,13 @@ public class ReceiptHeader {
     }
 
 
-    public void setCompanyLogo(String businessLogo){
+    /*public void setCompanyLogo(String businessLogo){
         this.businessLogo = businessLogo;
     }
 
     public String getCompanyLogo() {
         return TextUtils.isEmpty(businessLogo) ? "":businessLogo;
-    }
+    }*/
 
     public String getEmail() {
         return email;

@@ -1,22 +1,19 @@
 package co.paystack.android.api.print;
 
-import android.annotation.TargetApi;
-import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.os.Build;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
-import android.print.PrintJob;
 import android.print.PrintManager;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.RestrictTo;
-import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -36,9 +33,7 @@ import static co.paystack.android.utils.Utils.formatCurrency;
  */
 public class PrinterTemplate {
 
-    private String template;
     private StringBuilder templateBuilder;
-    private List<Purchase> purchases;
     private WebView mWebView;
     private Context mContext;
     private int defaultTotal = 0;
@@ -46,7 +41,10 @@ public class PrinterTemplate {
     private int transactionCharge;
     private String cardName;
     private String cardNumber;
+    private String transactionStatus;
+    private String receiptMsg;
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     public PrinterTemplate(Context mContext){
         templateBuilder = new StringBuilder();
         mWebView = new WebView(mContext);
@@ -61,6 +59,8 @@ public class PrinterTemplate {
             this.transactionCharge += purchase.getTransactionCharge();
             this.cardName = purchase.getName();
             this.cardNumber = purchase.getCardNumber();
+            this.transactionStatus = purchase.getTransactionStatus();
+            this.receiptMsg = purchase.getTransactionMessage();
             sBuilder.append("\t<tr class=\"service\">\n" +
                     "\t<td class=\"tableitem\"><p class=\"itemtext\">"+purchase.getItem()+"</p></td>\n" +
                     "\t<td class=\"tableitem\"><p class=\"itemtext\">"+purchase.getQuantity()+"</p></td>\n" +
@@ -78,14 +78,15 @@ public class PrinterTemplate {
     }
 
     @RequiresApi(19)
-    public void print(ReceiptHeader header, List<Purchase> purchases, String paymentStatus) {
+    public void print(ReceiptHeader header, List<Purchase> purchases) {
 
         Receipt receipt = new Receipt();
-        receipt.addTransactionDate(new Date(System.currentTimeMillis()))
-                .addTransactionStatus(paymentStatus)
-                .addReciptHeader(header)
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yy", Locale.US);
+        String date =sdf.format(new Date(System.currentTimeMillis()));
+        receipt.addTransactionDate(date)
+                .addReceiptHeader(header)
                 .addPurchases(purchases);
-        printPayslip("Hello World", receipt);
+        printPayslip( receipt);
     }
 
 
@@ -283,7 +284,7 @@ public class PrinterTemplate {
                 "\n" +
                 "\t\t\t\t\t\t\t<tr class=\"tabletitle\">\n" +
                 "\t\t\t\t\t\t\t\t<td></td>\n" +
-                "\t\t\t\t\t\t\t\t<td class=\"Rate\"><h2>Total</h2></td>\n" +getAsHtml(receipt.getTotal() > 0?receipt.getTotal() : defaultTotal) +
+                "\t\t\t\t\t\t\t\t<td class=\"Rate\"><h2>Total</h2></td>\n" +getAsHtml(defaultTotal +transactionCharge) +
                 "\t\t\t\t\t\t\t</tr>\n" +
                 "\n" +
                 "\t\t\t\t\t\t</table>\n" +
@@ -302,9 +303,11 @@ public class PrinterTemplate {
                 "    \n" +
                 "      <div class=\"info\">\n" +
                 "       \n" +
-                "        <h2 class=\"tocenter\">"+receipt.getTransactionStatus()+"</h2>\n" +
+                "        <h2 class=\"tocenter\">"+transactionStatus+"</h2>\n" +
                 "      </div>\n" +
-                "    \n" +
+                "  \n" +
+                "<div id=\"legalcopy\"><p class=\"legal\">\n" +receiptMsg+ "\t</p>\n" +
+                "\t</div>" +
                 "</div><!--End InvoiceBot-->\n" +
                 "  </div><!--End Invoice-->\n" +
                 "</body>\n" +
@@ -313,7 +316,7 @@ public class PrinterTemplate {
 
 
     @RequiresApi(19)
-    private void printPayslip(final String slipName, Receipt receipt) {
+    private void printPayslip(Receipt receipt) {
 
         // Generate an HTML document on the fly:;
         mWebView.loadDataWithBaseURL(null, getFormattedReceipt(receipt)
@@ -327,7 +330,9 @@ public class PrinterTemplate {
             @Override
             public void onPageFinished(WebView view, String url) {
                 Log.i(TAG, "page finished loading " + url);
-                createWebPrintJob(view, mContext, slipName);
+                SimpleDateFormat sdf = new SimpleDateFormat("ss_mm_h", Locale.US);
+                createWebPrintJob(view, mContext, "Paystack_Receipt_"
+                        .concat(sdf.format(new Date(System.currentTimeMillis()))));
                 mWebView = null;
             }
 
