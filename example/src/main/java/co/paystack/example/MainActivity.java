@@ -333,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
                 purchase.setAmount(10000); //This is calculated in kobo.
                 purchase.setItem("Domain Name");
                 purchase.setQuantity("10");
-                purchase.setCardName("Debit MasterCard");
+                purchase.setCardName(charge.getCard().getName());
                 purchase.setTransactionCharge(1000);
                 purchase.setTransactionMessage("Thanks for patronizing us. We look forward to doing more DEMO for you.");
                 purchase.setTransactionStatus(result == null ? Purchase.FAILED : Purchase.SUCCESS);// Tells user if its successful or not
