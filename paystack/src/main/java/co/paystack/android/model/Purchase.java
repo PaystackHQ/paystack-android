@@ -70,7 +70,7 @@ public class Purchase extends Charge{
         return this;
     }
 
-    public String getName() {
+    public String getCardName() {
         return name;
     }
 

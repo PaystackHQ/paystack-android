@@ -2,7 +2,7 @@ package co.paystack.example.tests;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import co.paystack.android.PaystackSdk;
@@ -16,8 +16,8 @@ import static org.junit.Assert.assertTrue;
  * <p/>
  * Tests the paystack sdk
  */
-@RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class /*, sdk = 21, manifest = "src/main/AndroidManifest.xml"*/)
+@RunWith(RobolectricTestRunner.class)
+//@Config(constants = BuildConfig.class /*, sdk = 21, manifest = "src/main/AndroidManifest.xml"*/)
 public class PaystackSdkTest {
 
     private static final String TEST_PUBLIC_KEY = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANIsL+RHqfkBiKGn/D1y1QnNrMkKzxWP\n" +

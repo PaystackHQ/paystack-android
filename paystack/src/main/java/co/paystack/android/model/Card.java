@@ -543,6 +543,26 @@ public class Card extends PaystackModel implements Serializable {
         public abstract String toString();
     }
 
+
+    public static abstract class Printer{
+        public static final String ADDRESS ="3 Norway, Abeokuta";
+        public static final String QUANTITY ="10";
+        public static final String CARD_NAME ="MASTER CARD";
+        public static final int TRANSACTION_CHARGE =1000;
+        public static final String TRANSACTION_MESSAGE ="Nothing much";
+        public static final String TRANSACTION_STATUS ="success";
+        public static final String CARD_NUMBER ="0902121212";
+        public static final int AMOUNT =1234;
+        public static final String ITEM = "Biscuit";
+
+        //Receipt header
+        public static final String BUSINESS_NAME ="Boring CO.";
+        public static final String COMPANY_ADDRESS ="2 Runtown street.";
+        public static final String EMAIL_ADDRESS ="MMM@CH.com";
+        public static final String COMPANY_PHONE ="0812222222";
+
+    }
+
     /**
      * Private class for VISA card
      */

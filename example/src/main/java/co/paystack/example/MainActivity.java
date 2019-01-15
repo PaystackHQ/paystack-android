@@ -329,6 +329,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (Build.VERSION.SDK_INT >= 19) {
                 //Generate receipt after transaction has been completed
+
                 Purchase purchase = new Purchase();
                 purchase.setAmount(10000); //This is calculated in kobo.
                 purchase.setItem("Domain Name");
@@ -338,7 +339,8 @@ public class MainActivity extends AppCompatActivity {
                 purchase.setTransactionMessage("Thanks for patronizing us. We look forward to doing more DEMO for you.");
                 purchase.setTransactionStatus(result == null ? Purchase.FAILED : Purchase.SUCCESS);// Tells user if its successful or not
                 purchase.setCardNumber(mEditCardNum.getText().toString());
-                PrinterTemplate.init(MainActivity.this).print(new ReceiptHeader("DevMike Co.",
+                PrinterTemplate.init(MainActivity.this)
+                        .print(new ReceiptHeader("DevMike Co.",
                         "30 Ikeja street, Lagos state",
                         "devmike@jadebyte.com", "08123456778"), purchase.build());
             }

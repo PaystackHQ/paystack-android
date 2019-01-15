@@ -57,7 +57,7 @@ public class PrinterTemplate {
         for (Purchase purchase : purchases){
             this.defaultTotal += purchase.getAmount();
             this.transactionCharge += purchase.getTransactionCharge();
-            this.cardName = purchase.getName();
+            this.cardName = purchase.getCardName();
             this.cardNumber = purchase.getCardNumber();
             this.transactionStatus = purchase.getTransactionStatus();
             this.receiptMsg = purchase.getTransactionMessage();

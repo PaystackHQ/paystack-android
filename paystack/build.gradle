@@ -13,6 +13,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
+        testOptions.unitTests.includeAndroidResources = true
     }
     buildTypes {
         release {

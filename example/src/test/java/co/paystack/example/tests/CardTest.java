@@ -3,7 +3,8 @@ package co.paystack.example.tests;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.Calendar;
@@ -18,8 +19,8 @@ import static org.junit.Assert.assertTrue;
  * Test the card class
  */
 
-@RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class /*, sdk = 21, manifest = "src/main/AndroidManifest.xml"*/)
+@RunWith(RobolectricTestRunner.class)
+//@Config(constants = BuildConfig.class /*, sdk = 21, manifest = "src/main/AndroidManifest.xml"*/)
 public class CardTest {
 
     private static final int YEAR = Calendar.getInstance().get(Calendar.YEAR);
