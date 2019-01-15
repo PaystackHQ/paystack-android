@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import co.paystack.android.exceptions.PrinterException;
 import co.paystack.android.model.Purchase;
 import co.paystack.android.model.Receipt;
 import co.paystack.android.model.ReceiptHeader;
@@ -44,7 +45,7 @@ public class PrinterTemplate {
     private String transactionStatus;
     private String receiptMsg;
 
-    @RestrictTo(RestrictTo.Scope.LIBRARY)
+   // @RestrictTo(RestrictTo.Scope.LIBRARY)
     public PrinterTemplate(Context mContext){
         templateBuilder = new StringBuilder();
         mWebView = new WebView(mContext);
@@ -73,13 +74,17 @@ public class PrinterTemplate {
     }
 
 
-    public static PrinterTemplate init(Context context){
+    public static PrinterTemplate with(Context context){
         return new PrinterTemplate(context);
     }
 
     @RequiresApi(19)
     public void print(ReceiptHeader header, List<Purchase> purchases) {
-
+        if (purchases == null || purchases.isEmpty()){
+            //Throw an exception if the purchase is empty
+            throw new PrinterException("Purchase cannot be empty. Add some parameter to " +
+                    "the Purchase model.");
+        }
         Receipt receipt = new Receipt();
         SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yy", Locale.US);
         String date =sdf.format(new Date(System.currentTimeMillis()));
@@ -329,7 +334,7 @@ public class PrinterTemplate {
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                Log.i(TAG, "page finished loading " + url);
+                //Log.i(TAG, "Setting up " + url);
                 SimpleDateFormat sdf = new SimpleDateFormat("ss_mm_h", Locale.US);
                 createWebPrintJob(view, mContext, "Paystack_Receipt_"
                         .concat(sdf.format(new Date(System.currentTimeMillis()))));

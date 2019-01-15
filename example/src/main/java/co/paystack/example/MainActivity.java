@@ -339,7 +339,7 @@ public class MainActivity extends AppCompatActivity {
                 purchase.setTransactionMessage("Thanks for patronizing us. We look forward to doing more DEMO for you.");
                 purchase.setTransactionStatus(result == null ? Purchase.FAILED : Purchase.SUCCESS);// Tells user if its successful or not
                 purchase.setCardNumber(mEditCardNum.getText().toString());
-                PrinterTemplate.init(MainActivity.this)
+                PrinterTemplate.with(MainActivity.this)
                         .print(new ReceiptHeader("DevMike Co.",
                         "30 Ikeja street, Lagos state",
                         "devmike@jadebyte.com", "08123456778"), purchase.build());
