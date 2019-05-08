@@ -1,8 +1,14 @@
 # Change Log
-Last updated Apr 10, 2018
+Last updated May 05, 2018
 (from http://keepachangelog.com/)
 
 All notable changes to this project will be documented in this file.
+
+## Released v3.0.12 on May 08, 2019
+- Update dependencies
+
+## Released v3.0.11 on May 05, 2018
+- fix - Handle auth=pin
 
 ## Released v3.0.10 on Apr 10, 2018
 - Allow adding JSONObject to metadata
