@@ -176,7 +176,7 @@ class TransactionManager {
             return;
         }
 
-        if (transactionApiResponse.status.equalsIgnoreCase("2")) {
+        if (transactionApiResponse.status.equalsIgnoreCase("2") || (transactionApiResponse.hasValidAuth() && (transactionApiResponse.auth.equalsIgnoreCase("pin")))) {
             new PinAsyncTask().execute();
             return;
         }
