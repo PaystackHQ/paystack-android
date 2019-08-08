@@ -40,6 +40,7 @@ You do not need to clone this repository or download the files. Just add the fol
 
 ```gradle
 dependencies {
+    implementation 'co.paystack.android.design.widget:pinpad:1.0.1'
     implementation 'co.paystack.android:paystack:3.0.12'
 }
 ```
