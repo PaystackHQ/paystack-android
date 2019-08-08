@@ -12,21 +12,20 @@ card data directly to our servers.
 
 ## Summarized flow
 
-1 Time to pay (user has provided card details on your app)
+1. Time to pay (user has provided card details on your app)
 
-2 OPTION 1: Backend starts transaction (recommended)
+2. Start the transaction
+    - OPTION 1: Backend starts transaction (recommended)
+        - App prompts your backend to initialize a transaction
+        - your backend returns `access_code` we return when it calls: https://developers.paystack.co/reference#initialize-a-transaction
+        - App provides the `access_code` and card details to our SDK's `chargeCard` function via `Charge` object
 
-a. App prompts backend to initialize a transaction, backend returns `access_code`. Backend will use this endpoint: https://developers.paystack.co/reference#initialize-a-transaction
+    - OPTION 2: App starts transaction
+        - Provide transaction parameters and card details to our SDK's `chargeCard` function via `Charge` object
 
-b. Provide `access_code` and card details to our SDK's `chargeCard` function via `Charge` object
+3. SDK will prompt user for PIN, OTP or Bank authentication as required
 
-2 OPTION 2: App starts transaction
-
-a. Provide transaction parameters and card details to our SDK's `chargeCard` function via `Charge` object
-
-3 SDK will prompt user for PIN, OTP or Bank authentication as required
-
-4 Once successful, we will send event to your webhook url and call onSuccess callback
+4. Once successful, we will send an event to your webhook url and call `onSuccess` callback. Give value via webhook.
 
 ## Requirements
 - Android SDKv16 (Android 4.1 "Jelly Bean") - This is the first SDK version that includes
