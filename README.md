@@ -40,7 +40,8 @@ You do not need to clone this repository or download the files. Just add the fol
 
 ```gradle
 dependencies {
-  compile 'co.paystack.android:paystack:3.0.5'
+    implementation 'co.paystack.android.design.widget:pinpad:1.0.1'
+    implementation 'co.paystack.android:paystack:3.0.12'
 }
 ```
 
@@ -48,8 +49,8 @@ dependencies {
 To use this library with Eclipse, you need to:
 
 1. Clone the repository.
-2. Import the **Paystack** folder into your [Eclipse](http://help.eclipse.org/juno/topic/org.eclipse.platform.doc.user/tasks/tasks-importproject.htm) project
-3. In your project settings, add the **Paystack** project under the Libraries section of the Android category.
+2. Import the **paystack** folder into your [Eclipse](http://help.eclipse.org/juno/topic/org.eclipse.platform.doc.user/tasks/tasks-importproject.htm) project
+3. In your project settings, add the **paystack** project under the Libraries section of the Android category.
 
 ## Usage
 
@@ -117,10 +118,29 @@ Method checks if the expiry date (combination of year and month) is valid.
 #### card.isValid
 Method to check if the card is valid. Always do this check, before charging the card.
 
+
 #### card.getType
 This method returns an estimate of the string representation of the card type.
 
+```java
+public class MainActivity extends AppCompatActivity {
 
+  // This sets up the card and check for validity
+  // This is a test card from paystack
+   String cardNumber = "4084084084084081";
+   int expiryMonth = 11; //any month in the future
+   int expiryYear = 18; // any year in the future. '2018' would work also! 
+   String cvv = "408";  // cvv of the test card
+   
+   Card card = new Card(cardNumber, expiryMonth, expiryYear, cvv);
+    if (card.isValid()) {
+       // charge card
+    } else {
+      //do something
+    }
+}
+```
+  
 ### 4. chargeCard
 Charging with the PaystackSdk is quite straightforward.
 
@@ -155,10 +175,15 @@ the methods available in the callback you provided.
 
 ```java
 public class MainActivity extends AppCompatActivity {
-  
+
+
   // This is the subroutine you will call after creating the charge
   // adding a card and setting the access_code
    public void performCharge(){
+         //create a Charge object
+         Charge charge = new Charge(); 
+         charge.setCard(card); //sets the card to charge
+   
        PaystackSdk.chargeCard(MainActivity.this, charge, new Paystack.TransactionCallback() {
            @Override
            public void onSuccess(Transaction transaction) {

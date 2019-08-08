@@ -28,6 +28,10 @@ public class CardUtils {
     return hasYearPassed(year) || normalizeYear(year) == now.get(Calendar.YEAR) && month < (now.get(Calendar.MONTH) + 1);
   }
 
+  public static boolean isValidMonth(int month){
+      return (month > 0) && (month < 13);
+  }
+
   public static boolean hasYearPassed(int year) {
     int normalized = normalizeYear(year);
     Calendar now = Calendar.getInstance();
@@ -41,7 +45,7 @@ public class CardUtils {
    * @param month - Non-zero based index for month
    * @return true if the card has expired.
    */
-  public static boolean isExpired(int year, int month) {
+  public static boolean isNotExpired(int year, int month) {
     //check if year && month have passed
     return !hasYearPassed(year) && !hasMonthPassed(year, month);
   }

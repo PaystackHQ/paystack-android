@@ -190,11 +190,16 @@ public class Card extends PaystackModel implements Serializable {
      * @return True if card is valid, false otherwise
      */
     public boolean isValid() {
-        //if it has a cvc, validate number, validate expiry date and validate cvc
-        if (cvc != null) {
-            return validNumber() && validExpiryDate() && validCVC();
+        if (cvc == null) {
+            return false;
+        } else if (number == null) {
+            return false;
+        } else if (expiryMonth == null) {
+            return false;
+        } else if (expiryYear == null) {
+            return false;
         } else {
-            return validNumber() && validExpiryDate();
+            return validNumber() && validExpiryDate() && validCVC();
         }
     }
 
@@ -287,7 +292,7 @@ public class Card extends PaystackModel implements Serializable {
      */
     public boolean validExpiryDate() {
         //validate month and year
-        return !(expiryMonth == null || expiryYear == null) && CardUtils.isExpired(expiryYear, expiryMonth);
+        return !(expiryMonth == null || expiryYear == null) && CardUtils.isNotExpired(expiryYear, expiryMonth) && CardUtils.isValidMonth(expiryMonth);
 
     }
 
@@ -445,14 +450,14 @@ public class Card extends PaystackModel implements Serializable {
         }
 
         public Builder setNumber(String number) {
-            this.number = number;
+            this.number = StringUtils.normalizeCardNumber(number);
             if (number.length() == 4) {
                 last4digits = number;
             } else if (number.length() > 4) {
                 last4digits = number.substring(number.length() - 4);
             } else {
                 // whatever is appropriate in this case
-                throw new IllegalArgumentException("number has less than 4 characters!");
+                last4digits = number;
             }
             return this;
         }
@@ -524,13 +529,13 @@ public class Card extends PaystackModel implements Serializable {
         public static final int MAX_LENGTH_AMERICAN_EXPRESS = 15;
         public static final int MAX_LENGTH_DINERS_CLUB = 14;
         //source of these regex patterns http://stackoverflow.com/questions/72768/how-do-you-detect-credit-card-type-based-on-number
-        static final String PATTERN_VISA = "^4[0-9]{6,}$";
-        static final String PATTERN_MASTERCARD = "^5[1-5][0-9]{5,}$";
-        static final String PATTERN_AMERICAN_EXPRESS = "^3[47][0-9]{5,}$";
-        static final String PATTERN_DINERS_CLUB = "^3(?:0[0-5]|[68][0-9])[0-9]{4,}$";
-        static final String PATTERN_DISCOVER = "^6(?:011|5[0-9]{2})[0-9]{3,}$";
-        static final String PATTERN_JCB = "^(?:2131|1800|35[0-9]{3})[0-9]{3,}$";
-        static final String PATTERN_VERVE = "^((506(0|1))|(507(8|9))|(6500))[0-9]{12,}$";
+        public static final String PATTERN_VISA = "^4[0-9]{12}(?:[0-9]{3})?$";
+        public static final String PATTERN_MASTERCARD = "^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$";
+        public static final String PATTERN_AMERICAN_EXPRESS = "^3[47][0-9]{13}$";
+        public static final String PATTERN_DINERS_CLUB = "^3(?:0[0-5]|[68][0-9])[0-9]{11}$";
+        public static final String PATTERN_DISCOVER = "^6(?:011|5[0-9]{2})[0-9]{12}$";
+        public static final String PATTERN_JCB = "^(?:2131|1800|35[0-9]{3})[0-9]{11}$";
+        public static final String PATTERN_VERVE = "^((506(0|1))|(507(8|9))|(6500))[0-9]{12,15}$";
 
         public abstract boolean matches(String card);
 
