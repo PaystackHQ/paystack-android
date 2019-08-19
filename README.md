@@ -15,13 +15,10 @@ card data directly to our servers.
 1. Time to pay (user has provided card details on your app)
 
 2. Start the transaction
-    - OPTION 1: Backend starts transaction (recommended)
-        - App prompts your backend to initialize a transaction
-        - your backend returns `access_code` we return when it calls: https://developers.paystack.co/reference#initialize-a-transaction
-        - App provides the `access_code` and card details to our SDK's `chargeCard` function via `Charge` object
+    - App prompts your backend to initialize a transaction
+    - your backend returns `access_code` we return when it calls: https://developers.paystack.co/reference#initialize-a-transaction
+    - App provides the `access_code` and card details to our SDK's `chargeCard` function via `Charge` object
 
-    - OPTION 2: App starts transaction
-        - Provide transaction parameters and card details to our SDK's `chargeCard` function via `Charge` object
 
 3. SDK will prompt user for PIN, OTP or Bank authentication as required
 
