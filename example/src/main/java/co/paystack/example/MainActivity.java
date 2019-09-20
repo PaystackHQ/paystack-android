@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
             // setting them after setting an access code would throw an exception
 
             charge.setAmount(2000);
-            charge.setEmail("help@paystack.co");
+            charge.setEmail("customer@email.com");
             charge.setReference("ChargedFromAndroid_" + Calendar.getInstance().getTimeInMillis());
             try {
                 charge.putCustomField("Charged From", "Android SDK");
