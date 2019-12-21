@@ -167,7 +167,7 @@ public class Charge extends PaystackModel {
         JSONObject customObj = new JSONObject();
         customObj.put("value", value);
         customObj.put("display_name", displayName);
-        customObj.put("variable_name", displayName.toLowerCase(Locale.getDefault()).replaceAll("[^a-z0-9 ]","_"));
+        customObj.put("variable_name", displayName.toLowerCase(Locale.getDefault()).replaceAll("[^a-z0-9]","_"));
         this.custom_fields.put(customObj);
         this.hasMeta = true;
         return this;
