@@ -20,17 +20,22 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     api 'com.google.code.gson:gson:2.8.5'
-    api 'com.squareup.retrofit2:retrofit:2.5.0'
+    api 'com.squareup.retrofit2:retrofit:2.6.2'
     api 'com.squareup.retrofit2:converter-gson:2.5.0'
-    api 'com.squareup.okhttp3:okhttp:3.14.1'
+    api 'com.squareup.okhttp3:okhttp:3.14.6'
     api "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
 
-    api 'co.paystack.android.design.widget:pinpad:1.0.1'
+    api 'co.paystack.android.design.widget:pinpad:1.0.2'
 }
 
 ext {
