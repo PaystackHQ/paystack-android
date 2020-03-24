@@ -1,5 +1,5 @@
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/cz.jirutka.rsql/rsql-parser/badge.svg?style=plastic)](https://maven-badges.herokuapp.com/maven-central/cz.jirutka.rsql/rsql-parser)
 [![API](https://img.shields.io/badge/API-16%2B-blue.svg?style=plastic)](https://android-arsenal.com/api?level=16)
-
 
 
 
@@ -37,7 +37,7 @@ You do not need to clone this repository or download the files. Just add the fol
 ```gradle
 dependencies {
     implementation 'co.paystack.android.design.widget:pinpad:1.0.2'
-    implementation 'co.paystack.android:paystack:3.0.14'
+    implementation 'co.paystack.android:paystack:3.0.15'
 }
 ```
 

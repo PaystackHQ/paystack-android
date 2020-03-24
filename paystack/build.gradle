@@ -28,14 +28,14 @@ android {
 }
 
 dependencies {
-    api fileTree(dir: 'libs', include: ['*.jar'])
-    api 'com.google.code.gson:gson:2.8.5'
-    api 'com.squareup.retrofit2:retrofit:2.6.2'
-    api 'com.squareup.retrofit2:converter-gson:2.5.0'
-    api 'com.squareup.okhttp3:okhttp:3.14.6'
-    api "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.2'
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.14.6'
+    implementation "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
 
-    api 'co.paystack.android.design.widget:pinpad:1.0.2'
+    implementation 'co.paystack.android.design.widget:pinpad:1.0.2'
 }
 
 ext {
