@@ -25,12 +25,12 @@ android {
 }
 
 dependencies {
-    api "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
-    api fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.13-beta-2'
     testImplementation 'org.assertj:assertj-core:3.12.2'
     testImplementation 'org.robolectric:robolectric:4.3-alpha-2'
     testImplementation 'org.mockito:mockito-core:1.10.19'
-    api project(':paystack')
-//    api "co.paystack.android:paystack:$rootProject.ext.versionName"
+    implementation project(':paystack')
+//    implementation "co.paystack.android:paystack:$rootProject.ext.versionName"
 }
