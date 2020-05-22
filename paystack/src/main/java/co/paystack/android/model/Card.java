@@ -308,6 +308,11 @@ public class Card extends PaystackModel implements Serializable {
         return number;
     }
 
+    public void setNumber(String number) {
+        this.name = StringUtils.normalizeCardNumber(number);
+        this.last4digits = CardUtils.retrieveLast4Digits(number);
+    }
+
     public String getCvc() {
         return cvc;
     }
@@ -451,14 +456,7 @@ public class Card extends PaystackModel implements Serializable {
 
         public Builder setNumber(String number) {
             this.number = StringUtils.normalizeCardNumber(number);
-            if (number.length() == 4) {
-                last4digits = number;
-            } else if (number.length() > 4) {
-                last4digits = number.substring(number.length() - 4);
-            } else {
-                // whatever is appropriate in this case
-                last4digits = number;
-            }
+            last4digits = CardUtils.retrieveLast4Digits(number);
             return this;
         }
 
