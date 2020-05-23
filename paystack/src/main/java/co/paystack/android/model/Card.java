@@ -309,7 +309,7 @@ public class Card extends PaystackModel implements Serializable {
     }
 
     public void setNumber(String number) {
-        this.name = StringUtils.normalizeCardNumber(number);
+        this.number = StringUtils.normalizeCardNumber(number);
         this.last4digits = CardUtils.retrieveLast4Digits(number);
     }
 
