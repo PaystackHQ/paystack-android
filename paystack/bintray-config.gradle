@@ -36,7 +36,7 @@ bintray {
         repo = bintrayRepo
         name = bintrayName
         desc = libraryDescription
-        publish = false
+        publish = true
         publicDownloadNumbers = true
         version {
             desc = libraryDescription
