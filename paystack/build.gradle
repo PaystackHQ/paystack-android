@@ -43,17 +43,19 @@ project.afterEvaluate {
         publications {
             library(MavenPublication) {
                 setGroupId 'co.paystack.android'
-                setArtifactId 'paystack-android'
+                setArtifactId 'paystack'
                 version android.defaultConfig.versionName
                 artifact bundleReleaseAar
 
                 pom.withXml {
                     def dependenciesNode = asNode().appendNode('dependencies')
                     configurations.implementation.allDependencies.each {
-                        def dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', it.group)
-                        dependencyNode.appendNode('artifactId', it.name)
-                        dependencyNode.appendNode('version', it.version)
+                        if (it.name != 'unspecified') {
+                            def dependencyNode = dependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', it.group)
+                            dependencyNode.appendNode('artifactId', it.name)
+                            dependencyNode.appendNode('version', it.version)
+                        }
                     }
                 }
             }
@@ -88,6 +90,5 @@ ext {
     licenseUrl = 'https://raw.githubusercontent.com/PaystackHQ/paystack-android/master/LICENSE.txt'
     allLicenses = ["Apache-2.0"]
 }
-
 apply from: 'https://raw.githubusercontent.com/ibrahimlawal/JCenter/master/installv1.gradle'
-apply from: 'https://raw.githubusercontent.com/ibrahimlawal/JCenter/master/bintrayv1.gradle'
+apply from: "$rootProject.projectDir/paystack/bintray-config.gradle"
