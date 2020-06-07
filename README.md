@@ -1,5 +1,5 @@
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/co.paystack.android/paystack-android/badge.svg)](https://maven-badges.herokuapp.com/maven-central/co.paystack.android/paystack-android)
-[![API](https://img.shields.io/badge/API-16%2B-blue.svg?style=plastic)](https://android-arsenal.com/api?level=16)
+[ ![Download](https://api.bintray.com/packages/paystack/maven/paystack-android/images/download.svg) ](https://bintray.com/paystack/maven/paystack-android/_latestVersion)
+[![Min API](https://img.shields.io/badge/API-16%2B-blue.svg?style=plastic)](https://android-arsenal.com/api?level=16)
 
 
 
