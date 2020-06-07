@@ -37,10 +37,11 @@ You do not need to clone this repository or download the files. Just add the fol
 
 ```gradle
 dependencies {
-    implementation 'co.paystack.android.design.widget:pinpad:1.0.4'
-    implementation 'co.paystack.android:paystack:3.0.17'
+    implementation 'co.paystack.android:paystack:3.0.18'
 }
 ```
+From version `3.0.18`, the Pinpad library comes as part of this library and does not need to be explicitly included in your dependencies.
+
 
 ### Eclipse
 To use this library with Eclipse, you need to:
@@ -59,7 +60,7 @@ To prepare for use, you must ensure that your app has internet permissions by ma
 <uses-permission android:name="android.permission.INTERNET" />
 ```
 
-### 1. initializeSdk
+### 1. Initialize SDK
 
 To use the Paystack Android SDK, you need to first initialize it using the `PaystackSdk` class.
 
