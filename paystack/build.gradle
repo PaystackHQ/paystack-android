@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: "com.jfrog.bintray"
 apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -30,11 +31,36 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.squareup.retrofit2:retrofit:2.6.2'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.14.6'
+    implementation 'com.squareup.okhttp3:okhttp:3.14.9'
     implementation "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
     implementation 'co.paystack.android.design.widget:pinpad:1.0.4'
+}
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            library(MavenPublication) {
+                setGroupId 'co.paystack.android'
+                setArtifactId 'paystack'
+                version android.defaultConfig.versionName
+                artifact bundleReleaseAar
+
+                pom.withXml {
+                    def dependenciesNode = asNode().appendNode('dependencies')
+                    configurations.implementation.allDependencies.each {
+                        if (it.name != 'unspecified') {
+                            def dependencyNode = dependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', it.group)
+                            dependencyNode.appendNode('artifactId', it.name)
+                            dependencyNode.appendNode('version', it.version)
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 ext {
@@ -64,6 +90,5 @@ ext {
     licenseUrl = 'https://raw.githubusercontent.com/PaystackHQ/paystack-android/master/LICENSE.txt'
     allLicenses = ["Apache-2.0"]
 }
-
 apply from: 'https://raw.githubusercontent.com/ibrahimlawal/JCenter/master/installv1.gradle'
-apply from: 'https://raw.githubusercontent.com/ibrahimlawal/JCenter/master/bintrayv1.gradle'
+apply from: "$rootProject.projectDir/paystack/bintray-config.gradle"
