@@ -12,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeUnit;
 
 import co.paystack.android.BuildConfig;
+import co.paystack.android.api.converter.WrappedResponseConverter;
 import co.paystack.android.api.service.ApiService;
 import co.paystack.android.api.utils.TLSSocketFactory;
 import okhttp3.Interceptor;
@@ -65,6 +66,7 @@ public class ApiClient {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(API_URL)
                 .client(okHttpClient)
+                .addConverterFactory(new WrappedResponseConverter.Factory())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
