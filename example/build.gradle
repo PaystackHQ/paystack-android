@@ -1,5 +1,12 @@
 apply plugin: 'com.android.application'
-//apply plugin: 'org.robolectric'
+
+Properties secrets = new Properties()
+try {
+    secrets.load(file('secrets.properties').newDataInputStream())
+} catch(IOException e) {
+    def message = "Could not load secrets.properties file. Check that it exists. You can copy and rename secrets_example.properties"
+    throw new IOException(message, e)
+}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -11,6 +18,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
+
+        buildConfigField("String", "PAYSTACK_PUBLIC_KEY", "\"${secrets.getProperty("paystack.publicKey")}\"")
     }
     buildTypes {
         release {
