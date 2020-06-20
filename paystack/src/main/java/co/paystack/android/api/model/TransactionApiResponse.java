@@ -24,6 +24,9 @@ public class TransactionApiResponse extends ApiResponse implements Serializable 
     @SerializedName("otpmessage")
     public String otpmessage;
 
+    @SerializedName("countryCode")
+    public String avsCountryCode; // Country code for Address Verification on supported international cards
+
     public static TransactionApiResponse unknownServerResponse() {
         TransactionApiResponse t = new TransactionApiResponse();
         t.status = "0";

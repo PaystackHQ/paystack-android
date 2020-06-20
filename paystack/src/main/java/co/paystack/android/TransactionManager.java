@@ -22,6 +22,9 @@ import co.paystack.android.exceptions.ExpiredAccessCodeException;
 import co.paystack.android.exceptions.ProcessingException;
 import co.paystack.android.model.Card;
 import co.paystack.android.model.Charge;
+import co.paystack.android.ui.AddressHolder;
+import co.paystack.android.ui.AddressHolder.Address;
+import co.paystack.android.ui.AddressVerificationActivity;
 import co.paystack.android.ui.AuthActivity;
 import co.paystack.android.ui.AuthSingleton;
 import co.paystack.android.ui.CardActivity;
@@ -46,6 +49,7 @@ class TransactionManager {
     private final PinSingleton psi = PinSingleton.getInstance();
     private final OtpSingleton osi = OtpSingleton.getInstance();
     private final AuthSingleton asi = AuthSingleton.getInstance();
+    private final AddressHolder addressHolder = AddressHolder.getInstance();
     private ChargeRequestBody chargeRequestBody;
     private ValidateRequestBody validateRequestBody;
     private ApiService apiService;
@@ -173,9 +177,16 @@ class TransactionManager {
             return;
         }
 
-        if (transactionApiResponse.status.equalsIgnoreCase("2") || (transactionApiResponse.hasValidAuth() && (transactionApiResponse.auth.equalsIgnoreCase("pin")))) {
-            new PinAsyncTask().execute();
-            return;
+        if (transactionApiResponse.status.equalsIgnoreCase("2") || (transactionApiResponse.hasValidAuth())) {
+            if (transactionApiResponse.auth.equalsIgnoreCase("pin")) {
+                new PinAsyncTask().execute();
+                return;
+            }
+
+            if (transactionApiResponse.auth.equalsIgnoreCase("avs")) {
+                new AddressVerificationAsyncTask().execute(transactionApiResponse.avsCountryCode);
+                return;
+            }
         }
 
         if (transactionApiResponse.status.equalsIgnoreCase("3") && transactionApiResponse.hasValidReferenceAndTrans()) {
@@ -362,4 +373,33 @@ class TransactionManager {
         }
     }
 
+
+    private class AddressVerificationAsyncTask extends AsyncTask<String, Void, Address> {
+
+
+        @Override
+        protected Address doInBackground(String... params) {
+            Intent i = new Intent(activity, AddressVerificationActivity.class);
+            i.putExtra(AddressVerificationActivity.EXTRA_COUNTRY_CODE, params[0]);
+            activity.startActivity(i);
+            synchronized (AddressHolder.getLock()) {
+                try {
+                    AddressHolder.getLock().wait();
+                } catch (InterruptedException e) {
+                    return null;
+                }
+            }
+
+            return addressHolder.getAddress();
+        }
+
+        @Override
+        protected void onPostExecute(Address address) {
+            super.onPostExecute(address);
+
+            if (address != null) {
+                Log.e("AVS_ADDRESS", address.toString());
+            }
+        }
+    }
 }
