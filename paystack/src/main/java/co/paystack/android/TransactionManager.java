@@ -374,6 +374,14 @@ class TransactionManager {
     }
 
 
+    private void chargeWithAvs(Address address) {
+        HashMap<String, String> fields = address.toHashMap();
+        fields.put("reference", transaction.getReference());
+
+        Call<TransactionApiResponse> call = apiService.submitCardAddress(fields);
+        call.enqueue(serverCallback);
+    }
+
     private class AddressVerificationAsyncTask extends AsyncTask<String, Void, Address> {
 
 
@@ -386,7 +394,7 @@ class TransactionManager {
                 try {
                     AddressHolder.getLock().wait();
                 } catch (InterruptedException e) {
-                    return null;
+                    notifyProcessingError(new Exception("Address entry Interrupted"));
                 }
             }
 
@@ -399,6 +407,10 @@ class TransactionManager {
 
             if (address != null) {
                 Log.e("AVS_ADDRESS", address.toString());
+                chargeWithAvs(address);
+
+            } else {
+                notifyProcessingError(new Exception("No address provided"));
             }
         }
     }

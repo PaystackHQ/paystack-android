@@ -26,5 +26,8 @@ public interface ApiService {
     @GET("/requery/{trans}")
     Call<TransactionApiResponse> requeryTransaction(@Path("trans") String trans);
 
+    @FormUrlEncoded
+    @POST("/charge/submit_address")
+    Call<TransactionApiResponse> submitCardAddress(@FieldMap HashMap<String, String> fields);
 
 }

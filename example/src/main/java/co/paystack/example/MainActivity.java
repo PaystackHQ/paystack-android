@@ -127,7 +127,8 @@ public class MainActivity extends AppCompatActivity {
             // are only used if an access_code is not set. In debug mode,
             // setting them after setting an access code would throw an exception
 
-            charge.setAmount(2000);
+            charge.setAmount(100);
+            charge.setCurrency("USD");
             charge.setEmail("customer@email.com");
             charge.setReference("ChargedFromAndroid_" + Calendar.getInstance().getTimeInMillis());
             try {

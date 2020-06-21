@@ -1,5 +1,7 @@
 package co.paystack.android.ui;
 
+import java.util.HashMap;
+
 public class AddressHolder {
     private static AddressHolder instance = new AddressHolder();
     private static Object lock = new Object();
@@ -30,6 +32,10 @@ public class AddressHolder {
         private String city = "";
         private String street = "";
 
+        public static String FIELD_STREET = "street";
+        public static String FIELD_CITY = "city";
+        public static String FIELD_ZIP_CODE = "zip_code";
+        public static String FIELD_STATE = "state";
 
         public String getState() {
             return state;
@@ -71,6 +77,15 @@ public class AddressHolder {
                     ", city='" + city + '\'' +
                     ", street='" + street + '\'' +
                     '}';
+        }
+
+        public HashMap<String, String> toHashMap() {
+            HashMap<String, String> params = new HashMap<>();
+            params.put(FIELD_STATE, this.state);
+            params.put(FIELD_ZIP_CODE, this.zipCode);
+            params.put(FIELD_CITY, this.city);
+            params.put(FIELD_STREET, this.street);
+            return params;
         }
     }
 
