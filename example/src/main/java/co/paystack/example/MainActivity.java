@@ -71,10 +71,10 @@ public class MainActivity extends AppCompatActivity {
         mEditExpiryMonth = findViewById(R.id.edit_expiry_month);
         mEditExpiryYear = findViewById(R.id.edit_expiry_year);
 
-        mEditCardNum.setText("5532321256740024");
-        mEditCVC.setText("131");
+        mEditCardNum.setText("4767718269808731");
+        mEditCVC.setText("314");
         mEditExpiryMonth.setText("06");
-        mEditExpiryYear.setText("2023");
+        mEditExpiryYear.setText("2026");
 
         Button mButtonPerformTransaction = findViewById(R.id.button_perform_transaction);
         Button mButtonPerformLocalTransaction = findViewById(R.id.button_perform_local_transaction);
@@ -127,8 +127,7 @@ public class MainActivity extends AppCompatActivity {
             // are only used if an access_code is not set. In debug mode,
             // setting them after setting an access code would throw an exception
 
-            charge.setAmount(100);
-            charge.setCurrency("USD");
+            charge.setAmount(10000);
             charge.setEmail("customer@email.com");
             charge.setReference("ChargedFromAndroid_" + Calendar.getInstance().getTimeInMillis());
             try {

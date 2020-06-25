@@ -376,7 +376,7 @@ class TransactionManager {
 
     private void chargeWithAvs(Address address) {
         HashMap<String, String> fields = address.toHashMap();
-        fields.put("reference", transaction.getReference());
+        fields.put("trans", transaction.getId());
 
         Call<TransactionApiResponse> call = apiService.submitCardAddress(fields);
         call.enqueue(serverCallback);

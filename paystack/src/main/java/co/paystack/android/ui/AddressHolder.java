@@ -32,7 +32,7 @@ public class AddressHolder {
         private String city = "";
         private String street = "";
 
-        public static String FIELD_STREET = "street";
+        public static String FIELD_ADDRESS = "address";
         public static String FIELD_CITY = "city";
         public static String FIELD_ZIP_CODE = "zip_code";
         public static String FIELD_STATE = "state";
@@ -84,7 +84,7 @@ public class AddressHolder {
             params.put(FIELD_STATE, this.state);
             params.put(FIELD_ZIP_CODE, this.zipCode);
             params.put(FIELD_CITY, this.city);
-            params.put(FIELD_STREET, this.street);
+            params.put(FIELD_ADDRESS, this.street);
             return params;
         }
     }

@@ -56,8 +56,9 @@ class AddressVerificationActivity : AppCompatActivity(), CoroutineScope {
         setContentView(R.layout.co_paystack_android____activity_avs)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setup(intent.getStringExtra(EXTRA_COUNTRY_CODE)!!)
-
-
+        etStreet.setText("201 Spear Street")
+        etCity.setText("San Francisco")
+        etZipCode.setText("94015")
         findViewById<Button>(R.id.btnConfirm).setOnClickListener {
             val address = AddressHolder.Address()
             address.street = etStreet.text.toString()
