@@ -3,6 +3,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="action_mobile_money">Mobile Money</string>
     <string name="card_number">Card number</string>
     <string name="cvv">CVV</string>
     <string name="mm">MM</string>
