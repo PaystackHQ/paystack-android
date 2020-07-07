@@ -101,7 +101,7 @@ class TransactionManager {
         try {
             if (charge.getCard() == null || !charge.getCard().isValid()) {
                 final CardSingleton si = CardSingleton.getInstance();
-                synchronized (si){
+                synchronized (si) {
                     si.setCard(charge.getCard());
                 }
                 new CardAsyncTask().execute();
@@ -125,7 +125,6 @@ class TransactionManager {
             Log.e(LOG_TAG, ce.getMessage(), ce);
             notifyProcessingError(ce);
         }
-
     }
 
     private void validate() {
@@ -146,6 +145,19 @@ class TransactionManager {
             notifyProcessingError(ce);
         }
 
+    }
+
+
+    private void chargeWithAvs(Address address) {
+        HashMap<String, String> fields = address.toHashMap();
+        fields.put("trans", transaction.getId());
+        try {
+            Call<TransactionApiResponse> call = apiService.submitCardAddress(fields);
+            call.enqueue(serverCallback);
+        } catch (Exception e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+            notifyProcessingError(e);
+        }
     }
 
     private void validateChargeOnServer() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
@@ -177,16 +189,14 @@ class TransactionManager {
             return;
         }
 
-        if (transactionApiResponse.status.equalsIgnoreCase("2") || (transactionApiResponse.hasValidAuth())) {
-            if (transactionApiResponse.auth.equalsIgnoreCase("pin")) {
-                new PinAsyncTask().execute();
-                return;
-            }
+        if (transactionApiResponse.status.equalsIgnoreCase("2") && transactionApiResponse.auth.equalsIgnoreCase("avs")) {
+            new AddressVerificationAsyncTask().execute(transactionApiResponse.avsCountryCode);
+            return;
+        }
 
-            if (transactionApiResponse.auth.equalsIgnoreCase("avs")) {
-                new AddressVerificationAsyncTask().execute(transactionApiResponse.avsCountryCode);
-                return;
-            }
+        if (transactionApiResponse.status.equalsIgnoreCase("2") || (transactionApiResponse.hasValidAuth() && (transactionApiResponse.auth.equalsIgnoreCase("pin")))) {
+            new PinAsyncTask().execute();
+            return;
         }
 
         if (transactionApiResponse.status.equalsIgnoreCase("3") && transactionApiResponse.hasValidReferenceAndTrans()) {
@@ -371,15 +381,6 @@ class TransactionManager {
             TransactionApiResponse transactionApiResponse = TransactionApiResponse.fromJsonString(responseJson);
             handleApiResponse(transactionApiResponse);
         }
-    }
-
-
-    private void chargeWithAvs(Address address) {
-        HashMap<String, String> fields = address.toHashMap();
-        fields.put("trans", transaction.getId());
-
-        Call<TransactionApiResponse> call = apiService.submitCardAddress(fields);
-        call.enqueue(serverCallback);
     }
 
     private class AddressVerificationAsyncTask extends AsyncTask<String, Void, Address> {
