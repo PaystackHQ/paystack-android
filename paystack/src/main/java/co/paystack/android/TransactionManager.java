@@ -181,6 +181,12 @@ class TransactionManager {
         if (transactionApiResponse == null) {
             transactionApiResponse = TransactionApiResponse.unknownServerResponse();
         }
+
+        // The AVS charge endpoint sends an "errors" object when address verification fails
+        if (transactionApiResponse.hasErrors) {
+            notifyProcessingError(new ChargeException(transactionApiResponse.message));
+            return;
+        }
         transaction.loadFromResponse(transactionApiResponse);
 
         if (transactionApiResponse.status.equalsIgnoreCase("1") || transactionApiResponse.status.equalsIgnoreCase("success")) {
