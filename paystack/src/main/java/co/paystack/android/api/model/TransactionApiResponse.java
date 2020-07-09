@@ -38,7 +38,10 @@ public class TransactionApiResponse extends ApiResponse implements Serializable 
         try {
             return new Gson().fromJson(jsonString, TransactionApiResponse.class);
         } catch (Exception e) {
-            return TransactionApiResponse.unknownServerResponse();
+            TransactionApiResponse t = new TransactionApiResponse();
+            t.status = "0";
+            t.message = e.getMessage();
+            return t;
         }
     }
 
