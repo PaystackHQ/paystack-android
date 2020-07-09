@@ -22,6 +22,9 @@ import co.paystack.android.exceptions.ExpiredAccessCodeException;
 import co.paystack.android.exceptions.ProcessingException;
 import co.paystack.android.model.Card;
 import co.paystack.android.model.Charge;
+import co.paystack.android.ui.AddressHolder;
+import co.paystack.android.ui.AddressHolder.Address;
+import co.paystack.android.ui.AddressVerificationActivity;
 import co.paystack.android.ui.AuthActivity;
 import co.paystack.android.ui.AuthSingleton;
 import co.paystack.android.ui.CardActivity;
@@ -46,6 +49,7 @@ class TransactionManager {
     private final PinSingleton psi = PinSingleton.getInstance();
     private final OtpSingleton osi = OtpSingleton.getInstance();
     private final AuthSingleton asi = AuthSingleton.getInstance();
+    private final AddressHolder addressHolder = AddressHolder.getInstance();
     private ChargeRequestBody chargeRequestBody;
     private ValidateRequestBody validateRequestBody;
     private ApiService apiService;
@@ -97,7 +101,7 @@ class TransactionManager {
         try {
             if (charge.getCard() == null || !charge.getCard().isValid()) {
                 final CardSingleton si = CardSingleton.getInstance();
-                synchronized (si){
+                synchronized (si) {
                     si.setCard(charge.getCard());
                 }
                 new CardAsyncTask().execute();
@@ -121,7 +125,6 @@ class TransactionManager {
             Log.e(LOG_TAG, ce.getMessage(), ce);
             notifyProcessingError(ce);
         }
-
     }
 
     private void validate() {
@@ -142,6 +145,19 @@ class TransactionManager {
             notifyProcessingError(ce);
         }
 
+    }
+
+
+    private void chargeWithAvs(Address address) {
+        HashMap<String, String> fields = address.toHashMap();
+        fields.put("trans", transaction.getId());
+        try {
+            Call<TransactionApiResponse> call = apiService.submitCardAddress(fields);
+            call.enqueue(serverCallback);
+        } catch (Exception e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+            notifyProcessingError(e);
+        }
     }
 
     private void validateChargeOnServer() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
@@ -165,11 +181,22 @@ class TransactionManager {
         if (transactionApiResponse == null) {
             transactionApiResponse = TransactionApiResponse.unknownServerResponse();
         }
+
+        // The AVS charge endpoint sends an "errors" object when address verification fails
+        if (transactionApiResponse.hasErrors) {
+            notifyProcessingError(new ChargeException(transactionApiResponse.message));
+            return;
+        }
         transaction.loadFromResponse(transactionApiResponse);
 
         if (transactionApiResponse.status.equalsIgnoreCase("1") || transactionApiResponse.status.equalsIgnoreCase("success")) {
             setProcessingOff();
             transactionCallback.onSuccess(transaction);
+            return;
+        }
+
+        if (transactionApiResponse.status.equalsIgnoreCase("2") && transactionApiResponse.auth.equalsIgnoreCase("avs")) {
+            new AddressVerificationAsyncTask().execute(transactionApiResponse.avsCountryCode);
             return;
         }
 
@@ -362,4 +389,36 @@ class TransactionManager {
         }
     }
 
+    private class AddressVerificationAsyncTask extends AsyncTask<String, Void, Address> {
+
+
+        @Override
+        protected Address doInBackground(String... params) {
+            Intent i = new Intent(activity, AddressVerificationActivity.class);
+            i.putExtra(AddressVerificationActivity.EXTRA_COUNTRY_CODE, params[0]);
+            activity.startActivity(i);
+            synchronized (AddressHolder.getLock()) {
+                try {
+                    AddressHolder.getLock().wait();
+                } catch (InterruptedException e) {
+                    notifyProcessingError(new Exception("Address entry Interrupted"));
+                }
+            }
+
+            return addressHolder.getAddress();
+        }
+
+        @Override
+        protected void onPostExecute(Address address) {
+            super.onPostExecute(address);
+
+            if (address != null) {
+                Log.e("AVS_ADDRESS", address.toString());
+                chargeWithAvs(address);
+
+            } else {
+                notifyProcessingError(new Exception("No address provided"));
+            }
+        }
+    }
 }

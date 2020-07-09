@@ -13,4 +13,6 @@ public class ApiResponse extends BaseApiModel {
     @SerializedName("message")
     public String message;
 
+    @SerializedName("errors")
+    public boolean hasErrors = false;
 }

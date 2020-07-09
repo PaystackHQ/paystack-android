@@ -1,1 +1,9 @@
-<resources></resources>
+<resources>
+    <string name="pstk__street_address">Street address</string>
+    <string name="pstk__city">City</string>
+    <string name="pstk__zip_code">Zip code</string>
+    <string name="pstk__state">State</string>
+    <string name="pstk__confirm">Confirm</string>
+    <string name="retry">Retry</string>
+    <string name="pstk__avs_state_loading_error">Failed to load states for address verification</string>
+</resources>

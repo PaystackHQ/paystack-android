@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="co.paystack.android">
+    package="co.paystack.android">
 
     <application>
         <activity
             android:name=".ui.PinActivity"
-            android:theme="@style/Paystack.Dialog.PinEntry"/>
+            android:theme="@style/Paystack.Dialog.PinEntry" />
         <activity
             android:name=".ui.OtpActivity"
             android:theme="@style/Paystack.Dialog.OtpEntry" />
         <activity
             android:name=".ui.AuthActivity"
-            android:theme="@style/Paystack.Dialog.OtpEntry"/>
+            android:theme="@style/Paystack.Dialog.OtpEntry" />
         <activity
             android:name=".ui.CardActivity"
-            android:theme="@style/Paystack.Dialog.CardEntry"/>
+            android:theme="@style/Paystack.Dialog.CardEntry" />
+        <activity
+            android:name=".ui.AddressVerificationActivity"
+            android:theme="@style/Paystack.Dialog" />
     </application>
 
 </manifest>
