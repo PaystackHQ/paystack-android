@@ -195,7 +195,7 @@ class TransactionManager {
             return;
         }
 
-        if (transactionApiResponse.status.equalsIgnoreCase("2") && transactionApiResponse.auth.equalsIgnoreCase("avs")) {
+        if (transactionApiResponse.status.equalsIgnoreCase("2") && transactionApiResponse.hasValidAuth() && transactionApiResponse.auth.equalsIgnoreCase("avs")) {
             new AddressVerificationAsyncTask().execute(transactionApiResponse.avsCountryCode);
             return;
         }
