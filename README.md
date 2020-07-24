@@ -16,9 +16,9 @@ card data directly to our servers.
 1. Time to pay (user has provided card details on your app)
 
 2. Start the transaction
-    - App prompts your backend to initialize a transaction
-    - your backend returns `access_code` we return when it calls: https://developers.paystack.co/reference#initialize-a-transaction
-    - App provides the `access_code` and card details to our SDK's `chargeCard` function via `Charge` object
+   - App prompts your backend to initialize a transaction
+   - your backend returns `access_code` we return when it calls: https://developers.paystack.co/reference#initialize-a-transaction
+   - App provides the `access_code` and card details to our SDK's `chargeCard` function via `Charge` object
 
 
 3. SDK will prompt user for PIN, OTP or Bank authentication as required
@@ -26,13 +26,15 @@ card data directly to our servers.
 4. Once successful, we will send an event to your webhook url and call `onSuccess` callback. Give value via webhook.
 
 ## Requirements
+
 - Android SDKv16 (Android 4.1 "Jelly Bean") - This is the first SDK version that includes
-`TLSv1.2` which is required by our servers. Native app support for user devices older than
-API 16 will not be available.
+  `TLSv1.2` which is required by our servers. Native app support for user devices older than
+  API 16 will not be available.
 
 ## Installation
 
 ### Android Studio (using Gradle)
+
 You do not need to clone this repository or download the files. Just add the following lines to your app's `build.gradle`:
 
 ```gradle
@@ -40,10 +42,12 @@ dependencies {
     implementation 'co.paystack.android:paystack:3.0.18'
 }
 ```
+
 From version `3.0.18`, the Pinpad library comes as part of this library and does not need to be explicitly included in your dependencies.
 
 
 ### Eclipse
+
 To use this library with Eclipse, you need to:
 
 1. Clone the repository.
@@ -60,7 +64,7 @@ To prepare for use, you must ensure that your app has internet permissions by ma
 <uses-permission android:name="android.permission.INTERNET" />
 ```
 
-### 1. Initialize SDK
+### 1. Initialize SDK (Java)
 
 To use the Paystack Android SDK, you need to first initialize it using the `PaystackSdk` class.
 
@@ -71,6 +75,22 @@ public class App extends Application{
         super.onCreate();
 
         PaystackSdk.initialize(getApplicationContext());
+    }
+}
+```
+
+Make sure to call this method in the `onCreate` method of your Fragment or Activity or Application.
+
+### 1.1 Initialize SDK (Kotlin)
+
+To use the Paystack Android SDK, you need to first initialize it using the `PaystackSdk` class.
+
+```kotlin
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        PaystackSdk.initialize(applicationContext)
     }
 }
 ```
@@ -89,7 +109,7 @@ Before you can charge a card with the `PaystackSdk` class, you need to set your 
     android:value="your public key obtained from: https://dashboard.paystack.co/#/settings/developer"/>
 ```
 
-#### b. Set the public key by code
+#### b. Set the public key by code (Java)
 
 This can be done anytime in your code. Just be sure to initialize before calling `chargeCard`.
 
@@ -100,25 +120,46 @@ class Bootstrap {
     }
 }
 ```
+
+#### b. Set the public key by code (Kotlin)
+
+This can be done anytime in your code. Just be sure to initialize before calling `chargeCard`.
+
+```kotlin
+internal object Bootstrap {
+        fun setPaystackKey(publicKey: String?) {
+            PaystackSdk.setPublicKey(publicKey)
+        }
+```
+
+### 
+
 ### 3. Collect and validate card details
 
 At this time, we expect you to provide fields on your activity that collect the card details. Our `Card` class allows you collect and verify these. The library provides validation methods to validate the fields of the card.
 
 #### card.validNumber
+
 This method helps to perform a check if the card number is valid.
 
 #### card.validCVC
+
 Method that checks if the card security code is valid.
 
 #### card.validExpiryDate
+
 Method checks if the expiry date (combination of year and month) is valid.
 
 #### card.isValid
+
 Method to check if the card is valid. Always do this check, before charging the card.
 
 
 #### card.getType
+
 This method returns an estimate of the string representation of the card type.
+
+<h3>Java</h3>
 
 ```java
 public class MainActivity extends AppCompatActivity {
@@ -138,37 +179,68 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 ```
-  
+
+
+
+<h3>Kotlin</h3>
+
+```kotlin
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // This sets up the card and check for validity
+        // This is a test card from paystack
+        val cardNumber = "4084084084084081"
+        val expiryMonth = 11 //any month in the future
+        val expiryYear = 18 // any year in the future. '2018' would work also!
+        val cvv = "408" // cvv of the test card
+
+        val card = Card(cardNumber, expiryMonth, expiryYear, cvv)
+        if (card.isValid) {
+            // charge card
+        } else {
+            //do something
+        }
+    }
+```
+
+
+
 ### 4. chargeCard
+
 Charging with the PaystackSdk is quite straightforward.
 
 #### Parameters for the chargeCard function
+
 - **Activity** - The first argument to the `PaystackSdk.chargeCard` is the calling Activity object. Always
-give an Activity that will stay open till the end of the transaction. The currently
-open Activity is just fine.
+  give an Activity that will stay open till the end of the transaction. The currently
+  open Activity is just fine.
 
 
 - **Charge** - This object allows you provide information about the transaction to be made. Before calling 
-`chargeCard`, you should do a `charge.setCard(card)`. The charge can then be used in either of 2 ways
+  `chargeCard`, you should do a `charge.setCard(card)`. The charge can then be used in either of 2 ways
     - **Resume an initialized transaction**: If employing this flow, you would send all required parameters 
-    for the transaction from your backend to the Paystack API via the `transaction/initialize` call - 
-    documented [here](https://developers.paystack.co/reference#initialize-a-transaction).. The 
-    response of the call includes an `access_code`. This can be used to charge the card by doing 
-    `charge.setAccessCode({value from backend})`. Once an access code is set, the only other parameter
-    relevant to the transaction is the card. Others will be ignored.
+      for the transaction from your backend to the Paystack API via the `transaction/initialize` call - 
+        documented [here](https://developers.paystack.co/reference#initialize-a-transaction).. The 
+        response of the call includes an `access_code`. This can be used to charge the card by doing 
+        `charge.setAccessCode({value from backend})`. Once an access code is set, the only other parameter
+        relevant to the transaction is the card. Others will be ignored.
     - **Initiate a fresh transaction on Paystack**: Using the functions: `setCurrency`, `setPlan`,
-     `setSubaccount`, `setTransactionCharge`, `setAmount`, `setEmail`, `setReference`, `setBearer`,
-     `putMetadata`, `putCustomField`, you can set up a fresh transaction direct from the SDK. 
-     Documentation for these parameters are same as for `transaction/initialize`.
+      `setSubaccount`, `setTransactionCharge`, `setAmount`, `setEmail`, `setReference`, `setBearer`,
+         `putMetadata`, `putCustomField`, you can set up a fresh transaction direct from the SDK. 
+         Documentation for these parameters are same as for `transaction/initialize`.
 
 
 - **Transaction Callback** - When an error occurs or transaction concludes successfully, we will call 
-the methods available in the callback you provided. 
+  the methods available in the callback you provided. 
     - `OnSuccess` will be called once the charge succeeds.
     - `beforeValidate` is called every time the SDK needs to request user input. This function currently only allows the app know that the SDK is requesting further user input. 
     - `OnError` is called if an error occurred during processing. Some Exception types that you should watch include
-        - *ExpiredAccessCodeException*: This would be thrown if the access code has already been used to attempt a charge.
-        - *ChargeException*: This would be thrown if the charge failed. It would hold the message from the server.
+      - *ExpiredAccessCodeException*: This would be thrown if the access code has already been used to attempt a charge.
+      - *ChargeException*: This would be thrown if the charge failed. It would hold the message from the server.
+
+<h3>Java</h3>
 
 
 ```java
@@ -207,17 +279,64 @@ public class MainActivity extends AppCompatActivity {
 }
 ```
 
+<h3>Kotlin</h3>
+
+```kotlin
+ class MainActivity : AppCompatActivity() {
+     
+    private lateinit var card: Card
+    private lateinit var transactionCallback: TransactionCallback
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+     
+    fun performCharge(){
+        //create a Charge object
+        val charge = Charge()
+        charge.card = card //sets the card to charge
+
+        PaystackSdk.chargeCard(this, charge, transactionCallback.apply {
+            @Override
+            fun onSuccess(transaction: Transaction) {
+                // This is called only after transaction is deemed successful.
+                // Retrieve the transaction, and send its reference to your server
+                // for verification.
+            }
+
+            @Override
+            fun beforeValidate(transaction: Transaction) {
+                // This is called only before requesting OTP.
+                // Save reference so you may send to server. If
+                // error occurs with OTP, you should still verify on server.
+            }
+
+            @Override
+            fun onError(throwable: Throwable, transaction: Transaction) {
+                //handle error here
+            }
+
+        })
+    }
+
+}
+```
+
+
+
 Note that once `chargeCard` is called, depending on settings agreed with Paystack's Customer Success team, the SDK _may_ prompt the user to provide their PIN, an OTP or conclude Bank Authentication. These 
 are currently being managed entirely by the SDK. Your app will only be notified via the `beforeValidate` function of the
 callback when OTP or Bank Authentication is about to start.
 
 
 ### 5. Verifying the transaction
+
 Send the reference to your backend and verify by calling our REST API. An authorization will be returned which
 will let you know if its code is reusable. You can learn more about our verify call
  [here](https://developers.paystack.co/reference#verifying-transactions).
- 
+
 Below is a sample authorization object returned along with the transaction details:
+
  ```json
     {
       "status": true,
@@ -281,17 +400,21 @@ Below is a sample authorization object returned along with the transaction detai
         "plan": null
       }
     }
-  ```
+ ```
+
  To reuse the authorization gotten from charging this customer in future, you need to do 2 tests:
- 1. In the sample JSON above, you can conclude that the transaction was successful because `data.status`="success".
- This means the authorization is active.
- 2. Confirm that the authorization is reusable by checking `data.authorization.reusable` which is true in this case.
- Once both pass, you can save the authorization code against the customer's email.
+
+  1. In the sample JSON above, you can conclude that the transaction was successful because `data.status`="success".
+     This means the authorization is active.
+  2. Confirm that the authorization is reusable by checking `data.authorization.reusable` which is true in this case.
+     Once both pass, you can save the authorization code against the customer's email.
 
 ### 6. Charging a card authorization from your server in future
+
 To charge an authorization saved from concluding chargeCard, you need its authorization code and the custmer's email. The `charge_authorization` endpoint is documented [here](https://developers.paystack.co/docs/charging-returning-customers).
 
 ## Testing your implementation
+
 You can (and should) test your implementation of the Paystack Android library in your Android app. You need the details of an
 actual debit/credit card to do this, so we provide ##_test cards_## for your use instead of using your own debit/credit cards. 
 You may find test cards on [this Paystack documentation page](https://developers.paystack.co/docs/test-cards).
@@ -312,11 +435,11 @@ Remember to use all test cards only with test keys. Also note that all bank issu
 1. Clone the repository.
 2. Import the project either using Android Studio or Eclipse
 3. Deploy a sample backend from [PaystackJS-Sample-Backend (PHP)](https://github.com/PaystackHQ/PaystackJS-Sample-code) or [Sample charge card backend (NodeJS heroku single click deploy)](https://github.com/PaystackHQ/sample-charge-card-backend)
-4. Copy the endpoints from the deployed backend to your `MainActivity.java` file. In 
-the case of `verify`, only copy up to the `/` before the `:`
-5. Add your public key to your `MainActivity.java` file
-    - Note that the public key must match the secret key,
-    else none of the transactions will be attempted
+4. Copy the endpoints from the deployed backend to your `MainActivity.java` or `MainActivity.kt` file. In 
+   the case of `verify`, only copy up to the `/` before the `:`
+5. Add your public key to your `MainActivity.java` or `MainActivity.kt` file
+   - Note that the public key must match the secret key,
+     else none of the transactions will be attempted
 6. Build and run the project on your device or emulator
 
 ## FAQs
