@@ -13,17 +13,17 @@ card data directly to our servers.
 
 ## Summarized flow
 
-1. Time to pay (user has provided card details on your app)
+1. Collect user's card details
 
-2. Start the transaction
+2. Initialize the transaction
     - App prompts your backend to initialize a transaction
-    - your backend returns `access_code` we return when it calls: https://developers.paystack.co/reference#initialize-a-transaction
+    - Your backend returns `access_code` we return when it calls the [Initialize Transaction](https://paystack.com/docs/api/#transaction-initialize) endpoint
     - App provides the `access_code` and card details to our SDK's `chargeCard` function via `Charge` object
 
 
-3. SDK will prompt user for PIN, OTP or Bank authentication as required
+3. SDK prompts user for PIN, OTP or Bank authentication as required
 
-4. Once successful, we will send an event to your webhook url and call `onSuccess` callback. Give value via webhook.
+4. Once successful, we'll send an event to your webhook URL and call `onSuccess` callback. You should give value via webhook.
 
 ## Requirements
 - Android SDKv16 (Android 4.1 "Jelly Bean") - This is the first SDK version that includes
@@ -37,10 +37,10 @@ You do not need to clone this repository or download the files. Just add the fol
 
 ```gradle
 dependencies {
-    implementation 'co.paystack.android:paystack:3.0.18'
+    implementation 'co.paystack.android:paystack:3.1.2'
 }
 ```
-From version `3.0.18`, the Pinpad library comes as part of this library and does not need to be explicitly included in your dependencies.
+>From version `3.0.18`, the Pinpad library comes as part of this library and does not need to be explicitly included in your dependencies.
 
 
 ### Eclipse
@@ -52,7 +52,7 @@ To use this library with Eclipse, you need to:
 
 ## Usage
 
-### 0. Prepare for use
+### 0) Prepare for use
 
 To prepare for use, you must ensure that your app has internet permissions by making sure the `uses-permission` line below is present in the AndroidManifest.xml.
 
@@ -60,7 +60,7 @@ To prepare for use, you must ensure that your app has internet permissions by ma
 <uses-permission android:name="android.permission.INTERNET" />
 ```
 
-### 1. Initialize SDK
+### 1) Initialize SDK
 
 To use the Paystack Android SDK, you need to first initialize it using the `PaystackSdk` class.
 
@@ -77,19 +77,20 @@ public class App extends Application{
 
 Make sure to call this method in the `onCreate` method of your Fragment or Activity or Application.
 
-### 2. Set your Public Key
+### 2) Set your Public Key
 
-Before you can charge a card with the `PaystackSdk` class, you need to set your public key. The library provides two approaches,
+Before you can charge a card with the `PaystackSdk` class, you need to set your public key. The library provides two approaches:
 
-#### a. Add the following lines to the `<application></application>` tag of your AndroidManifest.xml
+#### a) Add the following lines to the `<application></application>` tag of your AndroidManifest.xml
 
 ```xml
 <meta-data
     android:name="co.paystack.android.PublicKey"
-    android:value="your public key obtained from: https://dashboard.paystack.co/#/settings/developer"/>
+    android:value="pk_your_public_key"/>
 ```
+> You can obtain your public key from your [Paystack dashboard](https://dashboard.paystack.co/#/settings/developer).
 
-#### b. Set the public key by code
+#### b) Set the public key by code
 
 This can be done anytime in your code. Just be sure to initialize before calling `chargeCard`.
 
@@ -100,7 +101,7 @@ class Bootstrap {
     }
 }
 ```
-### 3. Collect and validate card details
+### 3) Collect and validate card details
 
 At this time, we expect you to provide fields on your activity that collect the card details. Our `Card` class allows you collect and verify these. The library provides validation methods to validate the fields of the card.
 
@@ -139,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
 }
 ```
   
-### 4. chargeCard
+### 4) Charge Card
 Charging with the PaystackSdk is quite straightforward.
 
 #### Parameters for the chargeCard function
@@ -152,13 +153,13 @@ open Activity is just fine.
 `chargeCard`, you should do a `charge.setCard(card)`. The charge can then be used in either of 2 ways
     - **Resume an initialized transaction**: If employing this flow, you would send all required parameters 
     for the transaction from your backend to the Paystack API via the `transaction/initialize` call - 
-    documented [here](https://developers.paystack.co/reference#initialize-a-transaction).. The 
+    documented [here](https://paystack.com/docs/api/#transaction-initialize). The
     response of the call includes an `access_code`. This can be used to charge the card by doing 
     `charge.setAccessCode({value from backend})`. Once an access code is set, the only other parameter
     relevant to the transaction is the card. Others will be ignored.
     - **Initiate a fresh transaction on Paystack**: Using the functions: `setCurrency`, `setPlan`,
      `setSubaccount`, `setTransactionCharge`, `setAmount`, `setEmail`, `setReference`, `setBearer`,
-     `putMetadata`, `putCustomField`, you can set up a fresh transaction direct from the SDK. 
+     `putMetadata`, `putCustomField`, you can set up a fresh transaction directly from the SDK.
      Documentation for these parameters are same as for `transaction/initialize`.
 
 
@@ -207,15 +208,14 @@ public class MainActivity extends AppCompatActivity {
 }
 ```
 
-Note that once `chargeCard` is called, depending on settings agreed with Paystack's Customer Success team, the SDK _may_ prompt the user to provide their PIN, an OTP or conclude Bank Authentication. These 
+>  Note that once `chargeCard` is called, the SDK _may_ prompt the user to provide their PIN, an OTP or conclude Bank Authentication. These
 are currently being managed entirely by the SDK. Your app will only be notified via the `beforeValidate` function of the
 callback when OTP or Bank Authentication is about to start.
 
 
-### 5. Verifying the transaction
+### 5) Verifying the transaction
 Send the reference to your backend and verify by calling our REST API. An authorization will be returned which
-will let you know if its code is reusable. You can learn more about our verify call
- [here](https://developers.paystack.co/reference#verifying-transactions).
+will let you know if its code is reusable. You can learn more about our [Verify Transaction](https://paystack.com/docs/api/#transaction-verify) endpoint.
  
 Below is a sample authorization object returned along with the transaction details:
  ```json
@@ -288,13 +288,13 @@ Below is a sample authorization object returned along with the transaction detai
  2. Confirm that the authorization is reusable by checking `data.authorization.reusable` which is true in this case.
  Once both pass, you can save the authorization code against the customer's email.
 
-### 6. Charging a card authorization from your server in future
-To charge an authorization saved from concluding chargeCard, you need its authorization code and the custmer's email. The `charge_authorization` endpoint is documented [here](https://developers.paystack.co/docs/charging-returning-customers).
+### 6) Charging a card authorization from your server in future
+To charge an authorization saved from concluding `chargeCard`, you need its authorization code and the customer's email. Our [Recurring Charge](https://paystack.com/docs/payments/recurring-charges) documentation provides more information about charging an authorization.
 
 ## Testing your implementation
 You can (and should) test your implementation of the Paystack Android library in your Android app. You need the details of an
 actual debit/credit card to do this, so we provide ##_test cards_## for your use instead of using your own debit/credit cards. 
-You may find test cards on [this Paystack documentation page](https://developers.paystack.co/docs/test-cards).
+Kindly reference our [Test Payments](https://paystack.com/docs/payments/test-payments) documentation for test cards.
 
 To try out the OTP flow, we have provided a test "verve" card:
 
