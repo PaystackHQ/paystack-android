@@ -42,6 +42,21 @@ dependencies {
 ```
 >From version `3.0.18`, the Pinpad library comes as part of this library and does not need to be explicitly included in your dependencies.
 
+You should also add Java 8 support in your `build.gradle`:
+```gradle
+android { 
+    // ... Other configuration code 
+    compileOptions {   
+        sourceCompatibility JavaVersion.VERSION_1_8 
+        targetCompatibility JavaVersion.VERSION_1_8 
+    } 
+
+    // For kotlin codebases, include
+    kotlinOptions {
+         jvmTarget = "1.8" 
+    }
+}
+```
 
 ### Eclipse
 To use this library with Eclipse, you need to:
