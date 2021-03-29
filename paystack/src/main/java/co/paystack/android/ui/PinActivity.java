@@ -1,8 +1,9 @@
 package co.paystack.android.ui;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import co.paystack.android.R;
 import co.paystack.android.design.widget.PinPadView;
@@ -51,8 +52,6 @@ public class PinActivity extends AppCompatActivity {
         super.onDestroy();
         handleSubmit("");
     }
-
-
 
 
 }

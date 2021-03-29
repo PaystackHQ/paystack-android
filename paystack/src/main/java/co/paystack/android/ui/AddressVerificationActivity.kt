@@ -1,14 +1,13 @@
 package co.paystack.android.ui
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.ListPopupWindow
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import co.paystack.android.R
 import co.paystack.android.mobilemoney.data.api.PaystackApiFactory
 import co.paystack.android.model.AvsState
@@ -99,7 +98,7 @@ class AddressVerificationActivity : AppCompatActivity(), CoroutineScope {
 
     private fun validateForm() {
         val isValid = etStreet.text.isNotBlank() && etCity.text.toString().isNotBlank() &&
-            etZipCode.text.toString().isNotBlank() && selectedState != null
+                etZipCode.text.toString().isNotBlank() && selectedState != null
 
         btnConfirm.isEnabled = isValid
     }
