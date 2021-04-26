@@ -1,8 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: "com.jfrog.bintray"
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -36,57 +33,4 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.7"
 }
 
-project.afterEvaluate {
-    publishing {
-        publications {
-            library(MavenPublication) {
-                setGroupId 'co.paystack.android'
-                setArtifactId 'paystack'
-                version android.defaultConfig.versionName
-                artifact bundleReleaseAar
-
-                pom.withXml {
-                    def dependenciesNode = asNode().appendNode('dependencies')
-                    configurations.implementation.allDependencies.each {
-                        if (it.name != 'unspecified') {
-                            def dependencyNode = dependenciesNode.appendNode('dependency')
-                            dependencyNode.appendNode('groupId', it.group)
-                            dependencyNode.appendNode('artifactId', it.name)
-                            dependencyNode.appendNode('version', it.version)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-ext {
-    // Where you will see your artifact in Bintray's web interface
-    // The "bintrayName" should match the name of the Bintray repro.
-    bintrayRepo = 'maven'
-    bintrayName = 'paystack-android'
-
-    // Maven metadata
-    publishedGroupId = 'co.paystack.android'
-    libraryName = 'paystack-android'
-    // Save yourself a head ache, and set this equal to the name of the Android Studio library
-    // module. The artifact name needs to match the name of the library.
-    artifact = 'paystack'
-
-    libraryDescription = 'An android sdk for working with paystack'
-    libraryVersion = rootProject.ext.versionName
-
-    developerId = 'paystack'
-    developerName = 'Paystack'
-    developerEmail = 'developers@paystack.co'
-
-    siteUrl = 'https://github.com/PaystackHQ/paystack-android'
-    gitUrl = 'https://github.com/PaystackHQ/paystack-android.git'
-
-    licenseName = 'The Apache Software License, Version 2.0'
-    licenseUrl = 'https://raw.githubusercontent.com/PaystackHQ/paystack-android/master/LICENSE.txt'
-    allLicenses = ["Apache-2.0"]
-}
-apply from: 'https://raw.githubusercontent.com/ibrahimlawal/JCenter/master/installv1.gradle'
-apply from: "$rootProject.projectDir/paystack/bintray-config.gradle"
+apply from: "https://raw.githubusercontent.com/PaystackHQ/publish-mavencentral/main/maven-publish.gradle"
