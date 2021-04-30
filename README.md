@@ -1,5 +1,6 @@
 [ ![Download](https://api.bintray.com/packages/paystack/maven/paystack-android/images/download.svg) ](https://bintray.com/paystack/maven/paystack-android/_latestVersion)
 [![Min API](https://img.shields.io/badge/API-16%2B-blue.svg?style=plastic)](https://android-arsenal.com/api?level=16)
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-orange.svg)](https://sonarcloud.io/dashboard?id=PaystackHQ_paystack-android)
 
 
 
