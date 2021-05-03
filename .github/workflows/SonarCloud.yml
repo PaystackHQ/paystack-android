@@ -1,8 +1,7 @@
 name: Sonar Cloud
 on:
-  push:
-    branches:
-      - master
+  schedule:
+    - cron: '0 0 * * *'
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
