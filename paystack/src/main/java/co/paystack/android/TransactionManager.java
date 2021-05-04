@@ -79,7 +79,7 @@ class TransactionManager {
         this.apiService = apiService;
     }
 
-    private void initiate() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException, ProcessingException {
+    private void initiate() throws ProcessingException {
         if (TransactionManager.PROCESSING) {
             throw new ProcessingException();
         }
