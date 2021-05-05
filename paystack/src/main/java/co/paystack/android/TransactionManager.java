@@ -11,7 +11,6 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
-import co.paystack.android.api.ApiClient;
 import co.paystack.android.api.model.TransactionApiResponse;
 import co.paystack.android.api.request.ChargeRequestBody;
 import co.paystack.android.api.request.ValidateRequestBody;
@@ -41,19 +40,27 @@ class TransactionManager {
 
     private static final String LOG_TAG = TransactionManager.class.getSimpleName();
     private static boolean PROCESSING = false;
-    private final Charge charge;
-    private final Activity activity;
-    private final Transaction transaction;
-    private final Paystack.TransactionCallback transactionCallback;
+
+
+    private Charge charge;
+    private Activity activity;
+    private Transaction transaction;
+    private Paystack.TransactionCallback transactionCallback;
+
+
     private final CardSingleton cns = CardSingleton.getInstance();
     private final PinSingleton psi = PinSingleton.getInstance();
     private final OtpSingleton osi = OtpSingleton.getInstance();
     private final AuthSingleton asi = AuthSingleton.getInstance();
     private final AddressHolder addressHolder = AddressHolder.getInstance();
+
+
     private ChargeRequestBody chargeRequestBody;
     private ValidateRequestBody validateRequestBody;
     private ApiService apiService;
+
     private int invalidDataSentRetries = 0;
+
     private final Callback<TransactionApiResponse> serverCallback = new Callback<TransactionApiResponse>() {
         @Override
         public void onResponse(Call<TransactionApiResponse> call, Response<TransactionApiResponse> response) {
@@ -67,7 +74,20 @@ class TransactionManager {
         }
     };
 
-    TransactionManager(Activity activity, Charge charge, Paystack.TransactionCallback transactionCallback) {
+    TransactionManager(ApiService apiService) {
+        this.apiService = apiService;
+    }
+
+    private void initiate() throws ProcessingException {
+        if (TransactionManager.PROCESSING) {
+            throw new ProcessingException();
+        }
+        setProcessingOn();
+        chargeRequestBody = new ChargeRequestBody(charge);
+        validateRequestBody = new ValidateRequestBody();
+    }
+
+    void chargeCard(Activity activity, Charge charge, Paystack.TransactionCallback transactionCallback) {
         if (BuildConfig.DEBUG && (activity == null)) {
             throw new AssertionError("activity must not be null");
         }
@@ -85,19 +105,11 @@ class TransactionManager {
         this.charge = charge;
         this.transactionCallback = transactionCallback;
         this.transaction = new Transaction();
+
+        charge();
     }
 
-    private void initiate() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException, ProcessingException {
-        if (TransactionManager.PROCESSING) {
-            throw new ProcessingException();
-        }
-        setProcessingOn();
-        apiService = new ApiClient().getApiService();
-        chargeRequestBody = new ChargeRequestBody(charge);
-        validateRequestBody = new ValidateRequestBody();
-    }
-
-    void chargeCard() {
+    private void charge() {
         try {
             if (charge.getCard() == null || !charge.getCard().isValid()) {
                 final CardSingleton si = CardSingleton.getInstance();
@@ -296,7 +308,7 @@ class TransactionManager {
                 notifyProcessingError(new CardException("Invalid card parameters"));
             } else {
                 charge.setCard(cns);
-                TransactionManager.this.chargeCard();
+                TransactionManager.this.charge();
             }
         }
     }

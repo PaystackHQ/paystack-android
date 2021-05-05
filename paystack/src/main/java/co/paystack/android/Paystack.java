@@ -64,9 +64,11 @@ public class Paystack extends PaystackModel {
             //validate public key
             validatePublicKey(publicKey);
 
-            TransactionManager transactionManager = new TransactionManager(activity, charge, transactionCallback);
+            TransactionManager transactionManager = PaystackSdkComponentKt.sdkComponent()
+                    .getTransactionManagerFactory()
+                    .create();
 
-            transactionManager.chargeCard();
+            transactionManager.chargeCard(activity, charge, transactionCallback);
 
         } catch (Exception ae) {
             assert transactionCallback != null;

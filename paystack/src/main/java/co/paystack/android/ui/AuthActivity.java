@@ -9,7 +9,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import co.paystack.android.R;
-import co.paystack.android.api.ApiClient;
+import co.paystack.android.api.di.ApiModule;
 
 public class AuthActivity extends Activity {
 
@@ -86,7 +86,7 @@ public class AuthActivity extends Activity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
-                if (url.contains(ApiClient.API_URL + "charge/three_d_response/")) {
+                if (url.contains(ApiModule.API_URL + "charge/three_d_response/")) {
                     view.loadUrl("javascript:window.INTERFACE.processContent(document.getElementById('return').innerText);");
                 }
             }
