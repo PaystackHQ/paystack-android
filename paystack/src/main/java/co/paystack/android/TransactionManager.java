@@ -7,12 +7,19 @@ import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.util.Log;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
+import co.paystack.android.api.ApiCallback;
+import co.paystack.android.api.PaystackRepository;
+import co.paystack.android.api.model.ChargeResponse;
 import co.paystack.android.api.model.TransactionApiResponse;
+import co.paystack.android.api.model.TransactionInitResponse;
+import co.paystack.android.api.request.ChargeParams;
 import co.paystack.android.api.request.ChargeRequestBody;
 import co.paystack.android.api.request.ValidateRequestBody;
 import co.paystack.android.api.service.ApiService;
@@ -33,6 +40,8 @@ import co.paystack.android.ui.OtpActivity;
 import co.paystack.android.ui.OtpSingleton;
 import co.paystack.android.ui.PinActivity;
 import co.paystack.android.ui.PinSingleton;
+import co.paystack.android.utils.Crypto;
+import co.paystack.android.utils.StringUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,6 +53,18 @@ class TransactionManager {
 
 
     private Charge charge;
+    ApiCallback<ChargeResponse> cardProcessCallback = new ApiCallback<ChargeResponse>() {
+        @Override
+        public void onSuccess(ChargeResponse data) {
+            Log.d(LOG_TAG, "CARD PROCESS CALLBACK INITIATED");
+        }
+
+        @Override
+        public void onError(@NotNull Throwable exception) {
+            Log.e(LOG_TAG, exception.getMessage());
+            notifyProcessingError(exception);
+        }
+    };
     private Activity activity;
     private Transaction transaction;
     private Paystack.TransactionCallback transactionCallback;
@@ -58,7 +79,9 @@ class TransactionManager {
 
     private ChargeRequestBody chargeRequestBody;
     private ValidateRequestBody validateRequestBody;
+
     private ApiService apiService;
+    private String publicKey;
 
     private int invalidDataSentRetries = 0;
 
@@ -74,9 +97,11 @@ class TransactionManager {
             notifyProcessingError(t);
         }
     };
+    private PaystackRepository paystackRepository;
 
-    TransactionManager(ApiService apiService) {
+    TransactionManager(ApiService apiService, PaystackRepository paystackRepository) {
         this.apiService = apiService;
+        this.paystackRepository = paystackRepository;
     }
 
     private void initiate() throws ProcessingException {
@@ -89,7 +114,7 @@ class TransactionManager {
         validateRequestBody = new ValidateRequestBody(deviceId);
     }
 
-    void chargeCard(Activity activity, Charge charge, Paystack.TransactionCallback transactionCallback) {
+    void chargeCard(Activity activity, String publicKey, Charge charge, Paystack.TransactionCallback transactionCallback) {
         if (BuildConfig.DEBUG && (activity == null)) {
             throw new AssertionError("activity must not be null");
         }
@@ -104,6 +129,7 @@ class TransactionManager {
         }
 
         this.activity = activity;
+        this.publicKey = publicKey;
         this.charge = charge;
         this.transactionCallback = transactionCallback;
         this.transaction = new Transaction();
@@ -121,7 +147,7 @@ class TransactionManager {
                 new CardAsyncTask().execute();
             } else {
                 initiate();
-                sendChargeToServer();
+                initChargeOnServer(publicKey);
             }
         } catch (Exception ce) {
             Log.e(LOG_TAG, ce.getMessage(), ce);
@@ -133,8 +159,18 @@ class TransactionManager {
     }
 
     private void sendChargeToServer() {
+//        try {
+//            initiateChargeOnServer(publicKey);
+//        } catch (Exception ce) {
+//            Log.e(LOG_TAG, ce.getMessage(), ce);
+//            notifyProcessingError(ce);
+//        }
+    }
+
+
+    private void initChargeOnServer(String publicKey) {
         try {
-            initiateChargeOnServer();
+            initiateChargeOnServer(publicKey);
         } catch (Exception ce) {
             Log.e(LOG_TAG, ce.getMessage(), ce);
             notifyProcessingError(ce);
@@ -185,10 +221,25 @@ class TransactionManager {
         call.enqueue(serverCallback);
     }
 
-    private void initiateChargeOnServer() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
+    private void initiateChargeOnServer(String publicKey) {
+        paystackRepository.initializeTransaction(publicKey, charge, new ApiCallback<TransactionInitResponse>() {
+            @Override
+            public void onSuccess(TransactionInitResponse data) {
+                ChargeParams params = new ChargeParams(
+                        Crypto.encrypt(StringUtils.concatenateCardFields(charge.getCard())),
+                        data.getTransactionId(),
+                        charge.getCard().getLast4digits(),
+                        null
+                );
+                paystackRepository.processCardCharge(params, cardProcessCallback);
+            }
 
-        Call<TransactionApiResponse> call = apiService.charge(chargeRequestBody.getParamsHashMap());
-        call.enqueue(serverCallback);
+            @Override
+            public void onError(@NotNull Throwable exception) {
+                Log.e(LOG_TAG, exception.getMessage());
+                notifyProcessingError(exception);
+            }
+        });
     }
 
     private void handleApiResponse(TransactionApiResponse transactionApiResponse) {

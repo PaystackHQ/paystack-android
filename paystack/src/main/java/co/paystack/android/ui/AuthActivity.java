@@ -86,7 +86,7 @@ public class AuthActivity extends Activity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
-                if (url.contains(ApiModule.API_URL + "charge/three_d_response/")) {
+                if (url.contains(ApiModule.LEGACY_API_URL + "charge/three_d_response/")) {
                     view.loadUrl("javascript:window.INTERFACE.processContent(document.getElementById('return').innerText);");
                 }
             }

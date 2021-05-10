@@ -5,6 +5,7 @@ import retrofit2.Converter
 import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
+import kotlin.annotation.AnnotationTarget.FUNCTION
 
 class WrappedResponseConverter<T>(
     private val delegate: Converter<ResponseBody, WrappedResponse<T>>
@@ -21,6 +22,12 @@ class WrappedResponseConverter<T>(
             annotations: Array<Annotation>,
             retrofit: Retrofit
         ): Converter<ResponseBody, *>? {
+
+            // Should not use this converter if function is annotated with [NoWrap]
+            if (annotations.any { it is NoWrap }) {
+                return null
+            }
+
             val wrappedType: Type = object : ParameterizedType {
                 override fun getRawType(): Type {
                     return WrappedResponse::class.java
@@ -47,3 +54,8 @@ class WrappedResponseConverter<T>(
         val status: Boolean
     )
 }
+
+
+@Retention(AnnotationRetention.RUNTIME)
+@Target(FUNCTION)
+annotation class NoWrap

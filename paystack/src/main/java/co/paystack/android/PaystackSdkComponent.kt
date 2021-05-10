@@ -12,7 +12,7 @@ internal object PaystackSdkModule : PaystackSdkComponent {
 
     override val transactionManagerFactory: Factory<TransactionManager> = object : Factory<TransactionManager> {
         override fun create(): TransactionManager {
-            return TransactionManager(apiComponent().apiService)
+            return TransactionManager(apiComponent().legacyApiService, apiComponent().paystackRepository)
         }
     }
 }
