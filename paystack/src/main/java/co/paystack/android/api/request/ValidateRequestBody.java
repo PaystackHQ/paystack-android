@@ -16,8 +16,8 @@ public class ValidateRequestBody extends BaseRequestBody implements Serializable
     @SerializedName(FIELD_TOKEN)
     private String token;
 
-    public ValidateRequestBody() {
-        this.setDeviceId();
+    public ValidateRequestBody(String deviceId) {
+        super(deviceId);
     }
 
     private String getTrans() {
