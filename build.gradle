@@ -41,6 +41,7 @@ allprojects {
 
     configurations.all {
         resolutionStrategy {
+            force 'org.objenesis:objenesis:2.6'
             eachDependency { details ->
                 if (details.requested.group == 'org.jacoco') {
                     details.useVersion jacocoVersion
