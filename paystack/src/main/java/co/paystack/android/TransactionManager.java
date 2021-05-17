@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
+import android.provider.Settings;
 import android.util.Log;
 
 import java.security.KeyManagementException;
@@ -83,8 +84,9 @@ class TransactionManager {
             throw new ProcessingException();
         }
         setProcessingOn();
-        chargeRequestBody = new ChargeRequestBody(charge);
-        validateRequestBody = new ValidateRequestBody();
+        String deviceId = "androidsdk_" + Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.ANDROID_ID);
+        chargeRequestBody = new ChargeRequestBody(charge, deviceId);
+        validateRequestBody = new ValidateRequestBody(deviceId);
     }
 
     void chargeCard(Activity activity, Charge charge, Paystack.TransactionCallback transactionCallback) {
