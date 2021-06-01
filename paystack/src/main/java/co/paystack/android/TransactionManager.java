@@ -9,23 +9,14 @@ import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-
 import co.paystack.android.api.ApiCallback;
+import co.paystack.android.api.ChargeApiCallback;
 import co.paystack.android.api.PaystackRepository;
 import co.paystack.android.api.model.ChargeResponse;
-import co.paystack.android.api.model.TransactionApiResponse;
 import co.paystack.android.api.model.TransactionInitResponse;
 import co.paystack.android.api.request.ChargeParams;
-import co.paystack.android.api.request.ChargeRequestBody;
-import co.paystack.android.api.request.ValidateRequestBody;
-import co.paystack.android.api.service.ApiService;
 import co.paystack.android.exceptions.CardException;
 import co.paystack.android.exceptions.ChargeException;
-import co.paystack.android.exceptions.ExpiredAccessCodeException;
 import co.paystack.android.exceptions.ProcessingException;
 import co.paystack.android.model.Card;
 import co.paystack.android.model.Charge;
@@ -42,33 +33,16 @@ import co.paystack.android.ui.PinActivity;
 import co.paystack.android.ui.PinSingleton;
 import co.paystack.android.utils.Crypto;
 import co.paystack.android.utils.StringUtils;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
+import static co.paystack.android.Transaction.NO_TRANSACTION;
 
 class TransactionManager {
 
     private static final String LOG_TAG = TransactionManager.class.getSimpleName();
     private static boolean PROCESSING = false;
 
-
-    private Charge charge;
-    ApiCallback<ChargeResponse> cardProcessCallback = new ApiCallback<ChargeResponse>() {
-        @Override
-        public void onSuccess(ChargeResponse data) {
-            Log.d(LOG_TAG, "CARD PROCESS CALLBACK INITIATED");
-        }
-
-        @Override
-        public void onError(@NotNull Throwable exception) {
-            Log.e(LOG_TAG, exception.getMessage());
-            notifyProcessingError(exception);
-        }
-    };
     private Activity activity;
-    private Transaction transaction;
     private Paystack.TransactionCallback transactionCallback;
-
 
     private final CardSingleton cns = CardSingleton.getInstance();
     private final PinSingleton psi = PinSingleton.getInstance();
@@ -76,42 +50,23 @@ class TransactionManager {
     private final AuthSingleton asi = AuthSingleton.getInstance();
     private final AddressHolder addressHolder = AddressHolder.getInstance();
 
+    private final PaystackRepository paystackRepository;
 
-    private ChargeRequestBody chargeRequestBody;
-    private ValidateRequestBody validateRequestBody;
-
-    private ApiService apiService;
-    private String publicKey;
-
-    private int invalidDataSentRetries = 0;
-
-    private final Callback<TransactionApiResponse> serverCallback = new Callback<TransactionApiResponse>() {
+    ChargeApiCallback cardProcessCallback = new ChargeApiCallback() {
         @Override
-        public void onResponse(Call<TransactionApiResponse> call, Response<TransactionApiResponse> response) {
-            handleApiResponse(response.body());
+        public void onSuccess(@NotNull ChargeParams params, @NotNull ChargeResponse data) {
+            processChargeResponse(params, data);
         }
 
         @Override
-        public void onFailure(Call<TransactionApiResponse> call, Throwable t) {
-            Log.e(LOG_TAG, t.getMessage());
-            notifyProcessingError(t);
+        public void onError(@NotNull Throwable e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+            notifyProcessingError(e);
         }
     };
-    private PaystackRepository paystackRepository;
 
-    TransactionManager(ApiService apiService, PaystackRepository paystackRepository) {
-        this.apiService = apiService;
+    TransactionManager(PaystackRepository paystackRepository) {
         this.paystackRepository = paystackRepository;
-    }
-
-    private void initiate() throws ProcessingException {
-        if (TransactionManager.PROCESSING) {
-            throw new ProcessingException();
-        }
-        setProcessingOn();
-        String deviceId = "androidsdk_" + Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.ANDROID_ID);
-        chargeRequestBody = new ChargeRequestBody(charge, deviceId);
-        validateRequestBody = new ValidateRequestBody(deviceId);
     }
 
     void chargeCard(Activity activity, String publicKey, Charge charge, Paystack.TransactionCallback transactionCallback) {
@@ -129,106 +84,49 @@ class TransactionManager {
         }
 
         this.activity = activity;
-        this.publicKey = publicKey;
-        this.charge = charge;
         this.transactionCallback = transactionCallback;
-        this.transaction = new Transaction();
 
-        charge();
+        validateCardThenInitTransaction(publicKey, charge);
     }
 
-    private void charge() {
+    private void validateCardThenInitTransaction(String publicKey, Charge charge) {
         try {
             if (charge.getCard() == null || !charge.getCard().isValid()) {
                 final CardSingleton si = CardSingleton.getInstance();
                 synchronized (si) {
                     si.setCard(charge.getCard());
                 }
-                new CardAsyncTask().execute();
+                new CardAsyncTask(publicKey, charge).execute();
             } else {
-                initiate();
-                initChargeOnServer(publicKey);
+                if (TransactionManager.PROCESSING) {
+                    throw new ProcessingException();
+                }
+
+                setProcessingOn();
+
+                String deviceId = "androidsdk_" + Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.ANDROID_ID);
+                initiateTransaction(publicKey, charge, deviceId);
             }
         } catch (Exception ce) {
             Log.e(LOG_TAG, ce.getMessage(), ce);
             if (!(ce instanceof ProcessingException)) {
                 setProcessingOff();
             }
-            transactionCallback.onError(ce, transaction);
+            transactionCallback.onError(ce, NO_TRANSACTION);
         }
     }
 
-    private void sendChargeToServer() {
-//        try {
-//            initiateChargeOnServer(publicKey);
-//        } catch (Exception ce) {
-//            Log.e(LOG_TAG, ce.getMessage(), ce);
-//            notifyProcessingError(ce);
-//        }
-    }
-
-
-    private void initChargeOnServer(String publicKey) {
-        try {
-            initiateChargeOnServer(publicKey);
-        } catch (Exception ce) {
-            Log.e(LOG_TAG, ce.getMessage(), ce);
-            notifyProcessingError(ce);
-        }
-    }
-
-    private void validate() {
-        try {
-            validateChargeOnServer();
-        } catch (Exception ce) {
-            Log.e(LOG_TAG, ce.getMessage(), ce);
-            notifyProcessingError(ce);
-        }
-
-    }
-
-    private void reQuery() {
-        try {
-            reQueryChargeOnServer();
-        } catch (Exception ce) {
-            Log.e(LOG_TAG, ce.getMessage(), ce);
-            notifyProcessingError(ce);
-        }
-
-    }
-
-
-    private void chargeWithAvs(Address address) {
-        HashMap<String, String> fields = address.toHashMap();
-        fields.put("trans", transaction.getId());
-        try {
-            Call<TransactionApiResponse> call = apiService.submitCardAddress(fields);
-            call.enqueue(serverCallback);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
-            notifyProcessingError(e);
-        }
-    }
-
-    private void validateChargeOnServer() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
-        HashMap<String, String> params = validateRequestBody.getParamsHashMap();
-        Call<TransactionApiResponse> call = apiService.validateCharge(params);
-        call.enqueue(serverCallback);
-    }
-
-    private void reQueryChargeOnServer() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
-        Call<TransactionApiResponse> call = apiService.requeryTransaction(transaction.getId());
-        call.enqueue(serverCallback);
-    }
-
-    private void initiateChargeOnServer(String publicKey) {
-        paystackRepository.initializeTransaction(publicKey, charge, new ApiCallback<TransactionInitResponse>() {
+    private void initiateTransaction(String publicKey, Charge charge, String deviceId) {
+        paystackRepository.initializeTransaction(publicKey, charge, deviceId, new ApiCallback<TransactionInitResponse>() {
             @Override
             public void onSuccess(TransactionInitResponse data) {
+                Card card = charge.getCard();
+                String transactionId = data.getTransactionId();
                 ChargeParams params = new ChargeParams(
-                        Crypto.encrypt(StringUtils.concatenateCardFields(charge.getCard())),
-                        data.getTransactionId(),
-                        charge.getCard().getLast4digits(),
+                        Crypto.encrypt(StringUtils.concatenateCardFields(card)),
+                        transactionId,
+                        card.getLast4digits(),
+                        deviceId,
                         null
                 );
                 paystackRepository.processCardCharge(params, cardProcessCallback);
@@ -236,95 +134,119 @@ class TransactionManager {
 
             @Override
             public void onError(@NotNull Throwable exception) {
-                Log.e(LOG_TAG, exception.getMessage());
+                Log.e(LOG_TAG, exception.getMessage(), exception);
                 notifyProcessingError(exception);
             }
         });
     }
 
-    private void handleApiResponse(TransactionApiResponse transactionApiResponse) {
-        if (transactionApiResponse == null) {
-            transactionApiResponse = TransactionApiResponse.unknownServerResponse();
-        }
-
-        // The AVS charge endpoint sends an "errors" object when address verification fails
-        if (transactionApiResponse.hasErrors) {
-            notifyProcessingError(new ChargeException(transactionApiResponse.message));
-            return;
-        }
-        transaction.loadFromResponse(transactionApiResponse);
-
-        if (transactionApiResponse.status.equalsIgnoreCase("1") || transactionApiResponse.status.equalsIgnoreCase("success")) {
-            setProcessingOff();
-            transactionCallback.onSuccess(transaction);
+    private void processChargeResponse(ChargeParams chargeParams, ChargeResponse chargeResponse) {
+        if (chargeResponse == null) {
+            notifyProcessingError(new ChargeException("Unknown server response"));
             return;
         }
 
-        if (transactionApiResponse.status.equalsIgnoreCase("2") && transactionApiResponse.hasValidAuth() && transactionApiResponse.auth.equalsIgnoreCase("avs")) {
-            new AddressVerificationAsyncTask().execute(transactionApiResponse.avsCountryCode);
+        Transaction transaction = new Transaction();
+        transaction.setId(chargeResponse.getTransactionId());
+        transaction.setReference(chargeResponse.getReference());
+
+        String status = chargeResponse.getStatus();
+        if (status != null) {
+            if (status.equalsIgnoreCase("1") || status.equalsIgnoreCase("success")) {
+                setProcessingOff();
+                transactionCallback.onSuccess(transaction);
+                return;
+            }
+
+            if (status.equalsIgnoreCase("pending")) {
+                reQueryChargeOnServer(chargeParams);
+                return;
+            }
+
+            if (status.equalsIgnoreCase("requery")) {
+                reQueryChargeOnServer(chargeParams);
+                return;
+            }
+        }
+
+        if (chargeResponse.getAuth() != null && !chargeResponse.getAuth().equalsIgnoreCase("none")) {
+            authenticateTransaction(chargeParams, chargeResponse, transaction);
             return;
         }
 
-        if (transactionApiResponse.status.equalsIgnoreCase("2") || (transactionApiResponse.hasValidAuth() && (transactionApiResponse.auth.equalsIgnoreCase("pin")))) {
-            new PinAsyncTask().execute();
-            return;
+        setProcessingOff();
+        notifyProcessingError(new ChargeException(chargeResponse.getMessage()));
+    }
+
+    private void authenticateTransaction(ChargeParams chargeParams, ChargeResponse chargeResponse, Transaction transaction) {
+        String authType = chargeResponse.getAuth();
+        assert authType != null;
+
+        String authMessage = "Authentication required";
+        if (chargeResponse.getOtpMessage() != null) {
+            authMessage = chargeResponse.getOtpMessage();
+        } else if (chargeResponse.getMessage() != null) {
+            authMessage = chargeResponse.getMessage();
         }
 
-        if (transactionApiResponse.status.equalsIgnoreCase("3") && transactionApiResponse.hasValidReferenceAndTrans()) {
+        if (authType.equalsIgnoreCase(AuthType.ADDRESS_VERIFICATION)) {
+            new AddressVerificationAsyncTask(chargeParams).execute(chargeResponse.getCountryCode());
+        } else if (authType.equalsIgnoreCase(AuthType.PIN)) {
+            new PinAsyncTask(chargeParams).execute();
+        } else if (authType.equalsIgnoreCase(AuthType.OTP) || authType.equalsIgnoreCase(AuthType.PHONE)) {
             transactionCallback.beforeValidate(transaction);
-            validateRequestBody.setTrans(transactionApiResponse.trans);
-            osi.setOtpMessage(transactionApiResponse.message);
-            new OtpAsyncTask().execute();
-            return;
+            osi.setOtpMessage(authMessage);
+            new OtpAsyncTask(chargeParams).execute();
+        } else if (authType.equalsIgnoreCase(AuthType.THREE_DS)) {
+            transactionCallback.beforeValidate(transaction);
+            asi.setUrl(authMessage);
+            new AuthAsyncTask(chargeParams).execute();
+        } else {
+            setProcessingOff();
+            notifyProcessingError(new RuntimeException("Unknown authentication method required. Please contact Paystack"), transaction);
         }
+    }
 
-        if (transaction.hasStartedOnServer()) {
-            if (transactionApiResponse.status.equalsIgnoreCase("requery")) {
-                transactionCallback.beforeValidate(transaction);
-                new CountDownTimer(5000, 5000) {
-                    public void onFinish() {
-                        reQuery();
-                    }
-
-                    public void onTick(long millisUntilFinished) {
-                    }
-                }.start();
-                return;
-            }
-            if (transactionApiResponse.hasValidAuth() && (transactionApiResponse.auth.equalsIgnoreCase("3DS")) && transactionApiResponse.hasValidUrl()) {
-                transactionCallback.beforeValidate(transaction);
-                asi.setUrl(transactionApiResponse.otpmessage);
-                new AuthAsyncTask().execute();
-                return;
-            }
-            if (transactionApiResponse.hasValidAuth() && (transactionApiResponse.auth.equalsIgnoreCase("otp") || transactionApiResponse.auth.equalsIgnoreCase("phone")) && transactionApiResponse.hasValidOtpMessage()) {
-                transactionCallback.beforeValidate(transaction);
-                validateRequestBody.setTrans(transaction.getId());
-                osi.setOtpMessage(transactionApiResponse.otpmessage);
-                new OtpAsyncTask().execute();
-                return;
-            }
+    private void validateOtp(String token, ChargeParams chargeParams) {
+        try {
+            paystackRepository.validateTransaction(chargeParams, token, cardProcessCallback);
+        } catch (Exception ce) {
+            Log.e(LOG_TAG, ce.getMessage(), ce);
+            notifyProcessingError(ce);
         }
+    }
 
-        if (transactionApiResponse.status.equalsIgnoreCase("0") || transactionApiResponse.status.equalsIgnoreCase("error")) {
-            //throw an error
-            if (transactionApiResponse.message.equalsIgnoreCase("Invalid Data Sent") && invalidDataSentRetries < 3) {
-                invalidDataSentRetries++;
-                TransactionManager.this.sendChargeToServer();
-                return;
-            }
-            if (transactionApiResponse.message.equalsIgnoreCase("Access code has expired")) {
-                notifyProcessingError(new ExpiredAccessCodeException(transactionApiResponse.message));
-                return;
-            }
-            notifyProcessingError(new ChargeException(transactionApiResponse.message));
-            return;
+    private void chargeWithAvs(Address address, ChargeParams chargeParams) {
+        try {
+            paystackRepository.validateAddress(chargeParams, address, cardProcessCallback);
+        } catch (Exception e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+            notifyProcessingError(e);
         }
+    }
 
-        notifyProcessingError(new RuntimeException("Unknown server response"));
+    private void reQueryChargeOnServer(ChargeParams chargeParams) {
+        try {
+            new CountDownTimer(5000, 5000) {
+                public void onFinish() {
+                    paystackRepository.requeryTransaction(chargeParams, cardProcessCallback);
+                }
+
+                public void onTick(long millisUntilFinished) {
+                }
+            }.start();
+        } catch (Exception ce) {
+            Log.e(LOG_TAG, ce.getMessage(), ce);
+            notifyProcessingError(ce);
+        }
     }
 
     private void notifyProcessingError(Throwable t) {
+        setProcessingOff();
+        transactionCallback.onError(t, NO_TRANSACTION);
+    }
+
+    private void notifyProcessingError(Throwable t, Transaction transaction) {
         setProcessingOff();
         transactionCallback.onError(t, transaction);
     }
@@ -338,6 +260,14 @@ class TransactionManager {
     }
 
     private class CardAsyncTask extends AsyncTask<Void, Void, Card> {
+
+        private final String publicKey;
+        private final Charge charge;
+
+        CardAsyncTask(String publicKey, Charge charge) {
+            this.publicKey = publicKey;
+            this.charge = charge;
+        }
 
         @Override
         protected Card doInBackground(Void... params) {
@@ -361,12 +291,17 @@ class TransactionManager {
                 notifyProcessingError(new CardException("Invalid card parameters"));
             } else {
                 charge.setCard(cns);
-                TransactionManager.this.charge();
+                validateCardThenInitTransaction(publicKey, charge);
             }
         }
     }
 
     private class PinAsyncTask extends AsyncTask<Void, Void, String> {
+        private final ChargeParams chargeParams;
+
+        PinAsyncTask(ChargeParams chargeParams) {
+            this.chargeParams = chargeParams;
+        }
 
         @Override
         protected String doInBackground(Void... params) {
@@ -389,8 +324,7 @@ class TransactionManager {
         protected void onPostExecute(String pin) {
             super.onPostExecute(pin);
             if (pin != null && (4 == pin.length())) {
-                chargeRequestBody.addPin(pin);
-                TransactionManager.this.sendChargeToServer();
+                paystackRepository.processCardCharge(chargeParams.addPin(Crypto.encrypt(pin)), cardProcessCallback);
             } else {
                 notifyProcessingError(new Exception("PIN must be exactly 4 digits"));
             }
@@ -398,6 +332,11 @@ class TransactionManager {
     }
 
     private class OtpAsyncTask extends AsyncTask<Void, Void, String> {
+        private final ChargeParams chargeParams;
+
+        public OtpAsyncTask(ChargeParams chargeParams) {
+            this.chargeParams = chargeParams;
+        }
 
         @Override
         protected String doInBackground(Void... params) {
@@ -419,8 +358,7 @@ class TransactionManager {
         protected void onPostExecute(String otp) {
             super.onPostExecute(otp);
             if (otp != null) {
-                validateRequestBody.setToken(otp);
-                TransactionManager.this.validate();
+                validateOtp(otp, chargeParams);
             } else {
                 notifyProcessingError(new Exception("You did not provide an OTP"));
             }
@@ -429,6 +367,11 @@ class TransactionManager {
 
 
     private class AuthAsyncTask extends AsyncTask<Void, Void, String> {
+        private final ChargeParams chargeParams;
+
+        AuthAsyncTask(ChargeParams chargeParams) {
+            this.chargeParams = chargeParams;
+        }
 
         @Override
         protected String doInBackground(Void... params) {
@@ -449,13 +392,17 @@ class TransactionManager {
         @Override
         protected void onPostExecute(String responseJson) {
             super.onPostExecute(responseJson);
-            TransactionApiResponse transactionApiResponse = TransactionApiResponse.fromJsonString(responseJson);
-            handleApiResponse(transactionApiResponse);
+            ChargeResponse chargeResponse = ChargeResponse.Companion.fromJsonString(responseJson);
+            processChargeResponse(chargeParams, chargeResponse);
         }
     }
 
     private class AddressVerificationAsyncTask extends AsyncTask<String, Void, Address> {
+        private final ChargeParams chargeParams;
 
+        public AddressVerificationAsyncTask(ChargeParams chargeParams) {
+            this.chargeParams = chargeParams;
+        }
 
         @Override
         protected Address doInBackground(String... params) {
@@ -478,9 +425,7 @@ class TransactionManager {
             super.onPostExecute(address);
 
             if (address != null) {
-                Log.e("AVS_ADDRESS", address.toString());
-                chargeWithAvs(address);
-
+                chargeWithAvs(address, chargeParams);
             } else {
                 notifyProcessingError(new Exception("No address provided"));
             }

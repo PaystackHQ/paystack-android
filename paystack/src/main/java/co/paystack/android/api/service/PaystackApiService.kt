@@ -19,4 +19,18 @@ internal interface PaystackApiService {
     @NoWrap
     fun chargeCard(@FieldMap params: Map<String, @JvmSuppressWildcards Any>): Call<ChargeResponse>
 
+    @NoWrap
+    @FormUrlEncoded
+    @POST("/checkout/card/validate")
+    fun validateOtp(@FieldMap params: Map<String, @JvmSuppressWildcards Any>): Call<ChargeResponse>
+
+    @NoWrap
+    @FormUrlEncoded
+    @POST("/checkout/charge/avs")
+    fun validateAddress(@FieldMap fields: Map<String, String>): Call<ChargeResponse>
+
+    @NoWrap
+    @GET("/checkout/requery/{transactionId}")
+    fun requeryTransaction(@Path("transactionId") transactionId: String): Call<ChargeResponse>
+
 }

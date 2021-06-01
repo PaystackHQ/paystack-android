@@ -20,9 +20,7 @@ import co.paystack.android.exceptions.AuthenticationException;
  * @author {androidsupport@paystack.co} on 8/10/15.
  */
 public class Crypto {
-
-    private static final String PAYSTACK_RSA_PUBLIC_KEY = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANIsL+RHqfkBiKGn/D1y1QnNrMkKzxWP" +
-            "2wkeSokw2OJrCI+d6YGJPrHHx+nmb/Qn885/R01Gw6d7M824qofmCvkCAwEAAQ==";
+    private static final String PAYSTACK_RSA_PUBLIC_KEY = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALhZs/7hP0g0+hrqTq0hFyGVxgco0NMxZD8nPS6ihxap0yNFjzdyUuZED6P4/aK9Ezl5ajEI9pcx5/1BrEE+F3kCAwEAAQ==";
     private static String ALGORITHM = "RSA";
     private static String CIPHER = "RSA/ECB/PKCS1Padding";
 

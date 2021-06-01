@@ -2,43 +2,43 @@ package co.paystack.android.api.model
 
 
 import androidx.annotation.Keep
+import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 
 @Keep
 data class ChargeResponse(
 
-    val status: String,
+    val status: String?,
 
     @SerializedName("trans")
     val transactionId: String,
 
     val reference: String,
 
-    val message: String,
+    val message: String?,
 
-    val response: String,
+    @SerializedName("otpmessage")
+    val otpMessage: String? = null,
 
-//
-//    val auth: String,
-//
-//
-//
-//
-//
-//
-//    val bank: String,
-//
-//
-//
-//    @SerializedName("otpmessage")
-//    val otpMessage: String,
-//
-//    @SerializedName("redirecturl")
-//    val redirectUrl: String,
-//
-//
-//
-//    @SerializedName("countrycode")
-//    val countryCode: String,
+    val auth: String? = null,
 
-)
+    @SerializedName("countrycode")
+    val countryCode: String? = null,
+
+    ) {
+
+    companion object {
+        fun fromJsonString(jsonString: String?): ChargeResponse {
+            return try {
+                Gson().fromJson(jsonString, ChargeResponse::class.java)
+            } catch (e: Exception) {
+                ChargeResponse(
+                    status = "0",
+                    transactionId = "",
+                    reference = "",
+                    message = e.message ?: "An error occurred while reading Auth data"
+                )
+            }
+        }
+    }
+}
