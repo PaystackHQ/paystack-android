@@ -7,7 +7,7 @@ buildscript {
             'coroutines'    : '1.4.2',
             'robolectric'   : '4.4',
             'mockito'       : '3.8.0',
-            'mockito-kotlin': '2.2.0',
+            'mockito_kotlin': '2.2.0',
             'junit_ext'     : '1.1.2',
     ]
 

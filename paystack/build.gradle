@@ -40,7 +40,7 @@ dependencies {
 
     testImplementation "org.robolectric:robolectric:$versions.robolectric"
     testImplementation "org.mockito:mockito-core:$versions.mockito"
-    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$versions.mockito-kotlin"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$versions.mockito_kotlin"
     testImplementation "androidx.test.ext:junit-ktx:$versions.junit_ext"
 
 }
