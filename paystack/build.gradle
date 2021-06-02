@@ -38,10 +38,10 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutines"
 
-    testImplementation 'org.robolectric:robolectric:4.4'
-    testImplementation "org.mockito:mockito-core:3.8.0"
-    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
-    testImplementation "androidx.test.ext:junit-ktx:1.1.2"
+    testImplementation "org.robolectric:robolectric:$versions.robolectric"
+    testImplementation "org.mockito:mockito-core:$versions.mockito"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$versions.mockito-kotlin"
+    testImplementation "androidx.test.ext:junit-ktx:$versions.junit_ext"
 
 }
 
