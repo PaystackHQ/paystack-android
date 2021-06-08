@@ -32,6 +32,7 @@ sonarqube {
         property "sonar.projectKey", "PaystackHQ_paystack-android"
         property "sonar.organization", "paystackhq"
         property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.coverage.jacoco.xmlReportPaths", "$project.buildDir/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
     }
 }
 
