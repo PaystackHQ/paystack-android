@@ -26,7 +26,7 @@ internal interface PaystackApiService {
 
     @NoWrap
     @FormUrlEncoded
-    @POST("/checkout/charge/avs")
+    @POST("/checkout/card/avs")
     fun validateAddress(@FieldMap fields: Map<String, String>): Call<ChargeResponse>
 
     @NoWrap

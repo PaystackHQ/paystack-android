@@ -22,7 +22,7 @@ data class ChargeResponse(
 
     val auth: String? = null,
 
-    @SerializedName("countrycode")
+    @SerializedName("countryCode")
     val countryCode: String? = null,
 
     ) {
