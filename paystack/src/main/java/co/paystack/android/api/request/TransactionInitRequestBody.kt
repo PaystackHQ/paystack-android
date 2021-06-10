@@ -7,7 +7,7 @@ data class TransactionInitRequestBody(
     val email: String,
     val amount: Int,
     val currency: String?,
-    val metadata: String,
+    val metadata: String?,
     val device: String,
 ) {
     fun toRequestMap() = mapOf(
