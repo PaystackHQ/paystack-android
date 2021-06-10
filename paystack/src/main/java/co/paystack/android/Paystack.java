@@ -68,7 +68,7 @@ public class Paystack extends PaystackModel {
                     .getTransactionManagerFactory()
                     .create();
 
-            transactionManager.chargeCard(activity, charge, transactionCallback);
+            transactionManager.chargeCard(activity, PaystackSdk.getPublicKey(), charge, transactionCallback);
 
         } catch (Exception ae) {
             assert transactionCallback != null;

@@ -2,7 +2,11 @@ package co.paystack.android.api.di
 
 import android.os.Build
 import co.paystack.android.BuildConfig
+import co.paystack.android.api.PaystackRepository
+import co.paystack.android.api.PaystackRepositoryImpl
 import co.paystack.android.api.service.ApiService
+import co.paystack.android.api.service.PaystackApiService
+import co.paystack.android.api.service.converter.WrappedResponseConverter
 import co.paystack.android.api.utils.TLSSocketFactory
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -17,11 +21,14 @@ internal interface ApiComponent {
     val gson: Gson
     val tlsV1point2factory: TLSSocketFactory
     val okHttpClient: OkHttpClient
-    val apiService: ApiService
+    val legacyApiService: ApiService
+    val paystackApiService: PaystackApiService
+    val paystackRepository: PaystackRepository
 }
 
 internal object ApiModule : ApiComponent {
-    const val API_URL = "https://standard.paystack.co/"
+    const val LEGACY_API_URL = "https://standard.paystack.co/"
+    const val PAYSTACK_API_URL = "https://studio-api.paystack.co/"
 
     override val gson = GsonBuilder()
         .setDateFormat("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'")
@@ -47,11 +54,22 @@ internal object ApiModule : ApiComponent {
         .writeTimeout(5, TimeUnit.MINUTES)
         .build()
 
-    override val apiService = Retrofit.Builder()
-        .baseUrl(API_URL)
+
+    override val legacyApiService: ApiService = Retrofit.Builder()
+        .baseUrl(LEGACY_API_URL)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
         .create(ApiService::class.java)
+
+    override val paystackApiService: PaystackApiService = Retrofit.Builder()
+        .baseUrl(PAYSTACK_API_URL)
+        .client(okHttpClient)
+        .addConverterFactory(WrappedResponseConverter.Factory())
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .build()
+        .create(PaystackApiService::class.java)
+
+    override val paystackRepository: PaystackRepository = PaystackRepositoryImpl(paystackApiService)
 }
 
