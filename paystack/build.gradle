@@ -74,6 +74,7 @@ dependencies {
     testImplementation "org.mockito:mockito-core:$versions.mockito"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$versions.mockito_kotlin"
     testImplementation "androidx.test.ext:junit-ktx:$versions.junit_ext"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$versions.kotlin"
 
 }
 
