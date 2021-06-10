@@ -3,8 +3,12 @@
 buildscript {
     ext.jacocoVersion = '0.8.5'
     ext.versions = [
-            'kotlin'    : '1.4.30',
-            'coroutines': '1.4.2'
+            'kotlin'        : '1.4.30',
+            'coroutines'    : '1.4.2',
+            'robolectric'   : '4.4',
+            'mockito'       : '3.8.0',
+            'mockito_kotlin': '2.2.0',
+            'junit_ext'     : '1.1.2',
     ]
 
     repositories {
@@ -41,6 +45,7 @@ allprojects {
 
     configurations.all {
         resolutionStrategy {
+            force 'org.objenesis:objenesis:2.6'
             eachDependency { details ->
                 if (details.requested.group == 'org.jacoco') {
                     details.useVersion jacocoVersion
