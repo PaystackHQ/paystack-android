@@ -33,8 +33,8 @@ sonarqube {
         property "sonar.organization", "paystackhq"
         property "sonar.host.url", "https://sonarcloud.io"
         property 'sonar.core.codeCoveragePlugin', 'jacoco'
-        property "sonar.jacoco.reportPath" , "${project.buildDir}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
-        property "sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
+        property "sonar.jacoco.reportPath" , "example/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
+        property "sonar.coverage.jacoco.xmlReportPaths", "example/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
         property("sonar.sources", "src/main")
         property("sonar.tests", "src/test")
     }
