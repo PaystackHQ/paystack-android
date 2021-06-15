@@ -11,11 +11,20 @@ data class TransactionInitRequestBody(
     val device: String,
 ) {
     fun toRequestMap() = mapOf(
-        "key" to publicKey,
-        "email" to email,
-        "amount" to amount,
-        "currency" to currency,
-        "metadata" to metadata,
-        "device" to device,
+        FIELD_KEY to publicKey,
+        FIELD_EMAIL to email,
+        FIELD_AMOUNT to amount,
+        FIELD_CURRENCY to currency,
+        FIELD_METADATA to metadata,
+        FIELD_DEVICE to device,
     ).pruneNullValues()
+
+    companion object {
+        const val FIELD_KEY = "key"
+        const val FIELD_EMAIL = "email"
+        const val FIELD_AMOUNT = "amount"
+        const val FIELD_CURRENCY = "currency"
+        const val FIELD_METADATA = "metadata"
+        const val FIELD_DEVICE = "device"
+    }
 }
