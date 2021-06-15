@@ -1,6 +1,5 @@
 package co.paystack.android.api
 
-import android.util.Log
 import okhttp3.MediaType
 import okhttp3.Request
 import okhttp3.ResponseBody
@@ -15,12 +14,13 @@ class FakeCall<T>(private val response: Response<T>) : Call<T> {
     override fun execute(): Response<T> = response
 
     override fun enqueue(callback: Callback<T>) {
-        Log.d(TAG, "enqueue() called with: callback = $callback")
+        // No-op
     }
 
     override fun isExecuted(): Boolean = false
 
     override fun cancel() {
+        // No-op
     }
 
     override fun isCanceled(): Boolean = false
