@@ -18,8 +18,9 @@ class PaystackRepositoryImplTest {
             .thenReturn(FakeCall.success(TEST_CHARGE_RESPONSE))
 
         val repository = PaystackRepositoryImpl(apiService)
+        val chargeApiCallback = mock<ChargeApiCallback>()
 
-        repository.processCardCharge(TEST_CHARGE_PARAMS, mock())
+        repository.processCardCharge(TEST_CHARGE_PARAMS, chargeApiCallback)
         verify(apiService, times(1)).chargeCard(TEST_CHARGE_PARAMS.toRequestMap())
     }
 
