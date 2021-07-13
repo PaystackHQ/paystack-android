@@ -50,6 +50,19 @@ public class CardUtils {
     return !hasYearPassed(year) && !hasMonthPassed(year, month);
   }
 
+  public static String retrieveLast4Digits(String number){
+    String last4digits;
+    if (number.length() == 4) {
+      last4digits = number;
+    } else if (number.length() > 4) {
+      last4digits = number.substring(number.length() - 4);
+    } else {
+      // whatever is appropriate in this case
+      last4digits = number;
+    }
+    return last4digits;
+  }
+
   // Convert two-digit year to full year if necessary
   private static int normalizeYear(int year) {
     if (year < 100 && year >= 0) {
