@@ -1,4 +1,4 @@
-[ ![Download](https://api.bintray.com/packages/paystack/maven/paystack-android/images/download.svg) ](https://bintray.com/paystack/maven/paystack-android/_latestVersion)
+[![Maven Central](https://img.shields.io/maven-central/v/co.paystack.android/paystack.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22co.paystack.android%22%20AND%20a:%22paystack%22)
 [![Min API](https://img.shields.io/badge/API-16%2B-blue.svg?style=plastic)](https://android-arsenal.com/api?level=16)
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-orange.svg)](https://sonarcloud.io/dashboard?id=PaystackHQ_paystack-android)
 
@@ -34,11 +34,12 @@ API 16 will not be available.
 ## Installation
 
 ### Android Studio (using Gradle)
-You do not need to clone this repository or download the files. Just add the following lines to your app's `build.gradle`:
+You do not need to clone this repository or download the files. The latest build is available on Maven Central
+Add the following lines to your app's `build.gradle`:
 
 ```gradle
 dependencies {
-    implementation 'co.paystack.android:paystack:3.1.2'
+    implementation 'co.paystack.android:paystack:3.1.3'
 }
 ```
 >From version `3.0.18`, the Pinpad library comes as part of this library and does not need to be explicitly included in your dependencies.
