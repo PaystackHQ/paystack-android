@@ -19,6 +19,8 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+
+        maven { url "https://oss.sonatype.org/content/groups/staging/" }
     }
 }
 
