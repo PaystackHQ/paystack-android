@@ -20,10 +20,4 @@ platform :android do
   lane :test do
     gradle(task: "test")
   end
-
-  desc "Deploy a new version to the Google Play"
-  lane :deploy do
-    gradle(task: "clean assembleRelease")
-    upload_to_play_store
-  end
 end
