@@ -66,6 +66,7 @@ class TransactionManager {
         @Override
         public void onResponse(Call<TransactionApiResponse> call, Response<TransactionApiResponse> response) {
             handleApiResponse(response.body());
+            transactionCallback.showLoading(false);
         }
 
         @Override
@@ -166,6 +167,7 @@ class TransactionManager {
         HashMap<String, String> fields = address.toHashMap();
         fields.put("trans", transaction.getId());
         try {
+            this.transactionCallback.showLoading(true);
             Call<TransactionApiResponse> call = apiService.submitCardAddress(fields);
             call.enqueue(serverCallback);
         } catch (Exception e) {
@@ -175,20 +177,23 @@ class TransactionManager {
     }
 
     private void validateChargeOnServer() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
+        this.transactionCallback.showLoading(true);
         HashMap<String, String> params = validateRequestBody.getParamsHashMap();
         Call<TransactionApiResponse> call = apiService.validateCharge(params);
         call.enqueue(serverCallback);
     }
 
     private void reQueryChargeOnServer() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
+        this.transactionCallback.showLoading(true);
         Call<TransactionApiResponse> call = apiService.requeryTransaction(transaction.getId());
         call.enqueue(serverCallback);
     }
 
     private void initiateChargeOnServer() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
-
+        this.transactionCallback.showLoading(true);
         Call<TransactionApiResponse> call = apiService.charge(chargeRequestBody.getParamsHashMap());
         call.enqueue(serverCallback);
+
     }
 
     private void handleApiResponse(TransactionApiResponse transactionApiResponse) {
@@ -275,6 +280,7 @@ class TransactionManager {
 
     private void notifyProcessingError(Throwable t) {
         setProcessingOff();
+        transactionCallback.showLoading(false);
         transactionCallback.onError(t, transaction);
     }
 

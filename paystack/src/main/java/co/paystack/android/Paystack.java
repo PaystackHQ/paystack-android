@@ -82,7 +82,7 @@ public class Paystack extends PaystackModel {
     public interface TransactionCallback extends BaseCallback {
         void onSuccess(Transaction transaction);
         void beforeValidate(Transaction transaction);
-
+        void showLoading(Boolean isProcessing);
         void onError(Throwable error, Transaction transaction);
     }
 
