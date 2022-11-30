@@ -212,6 +212,13 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
+            public void showLoading(Boolean isProcessing) {
+                if (isProcessing) {
+                    Toast.makeText(MainActivity.this, "Processing...", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
             public void onError(Throwable error, Transaction transaction) {
                 // If an access code has expired, simply ask your server for a new one
                 // and restart the charge instead of displaying error
