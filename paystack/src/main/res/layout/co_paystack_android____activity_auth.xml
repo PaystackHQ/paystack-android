@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
@@ -11,7 +10,7 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +21,7 @@
         <Space
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -31,38 +30,56 @@
             android:background="#292929"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginLeft="@dimen/paystack__view__margin"
-                android:layout_marginRight="@dimen/paystack__view__margin"
-                android:layout_marginTop="@dimen/paystack__view__margin"
                 android:layout_weight="1"
-                android:background="#292929"
-                android:gravity="center"
-                android:text="Please conclude challenge from your bank to authorize payment"/>
+                android:orientation="horizontal"
+                android:paddingStart="4dp"
+                android:paddingLeft="4dp"
+                android:paddingEnd="12dp"
+                android:paddingRight="12dp">
+
+                <ImageView
+                    android:id="@+id/iv_close"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:padding="12dp"
+                    android:gravity="center_horizontal"
+                    android:src="@drawable/ic_close_24" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/paystack__view__margin"
+                    android:layout_marginTop="@dimen/paystack__view__margin"
+                    android:layout_marginRight="@dimen/paystack__view__margin"
+                    android:background="#292929"
+                    android:gravity="center"
+                    android:text="Please conclude challenge from your bank to authorize payment" />
+            </LinearLayout>
 
             <WebView
                 android:id="@+id/webView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginBottom="@dimen/paystack__view__margin"
                 android:layout_marginLeft="@dimen/paystack__view__margin"
                 android:layout_marginRight="@dimen/paystack__view__margin"
+                android:layout_marginBottom="@dimen/paystack__view__margin"
                 android:layout_weight="10"
-                android:background="#292929"/>
+                android:background="#292929" />
         </LinearLayout>
 
         <Space
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
     </LinearLayout>
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
 
 </LinearLayout>

@@ -3,10 +3,12 @@ package co.paystack.android.ui;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 
 import co.paystack.android.R;
 import co.paystack.android.api.di.ApiModule;
@@ -41,6 +43,8 @@ public class AuthActivity extends Activity {
 
     protected void setup() {
         setContentView(R.layout.co_paystack_android____activity_auth);
+
+        findViewById(R.id.iv_close).setOnClickListener(v -> finish());
 
         webView = findViewById(R.id.webView);
         webView.setKeepScreenOn(true);
