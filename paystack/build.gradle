@@ -41,6 +41,9 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionName rootProject.ext.versionName
         consumerProguardFiles 'proguard-rules.pro'
+
+        buildConfigField 'int', 'VERSION_CODE', "${rootProject.ext.versionCode}"
+        buildConfigField 'String', 'VERSION_NAME', "\"${rootProject.ext.versionName}\""
     }
     buildTypes {
         debug {
