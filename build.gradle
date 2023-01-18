@@ -66,5 +66,5 @@ ext {
     versionCode = 19
 
     buildToolsVersion = "29.0.2"
-    versionName = "3.1.4-FM"
+    versionName = "3.2.0-alpha02"
 }
