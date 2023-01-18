@@ -49,49 +49,13 @@ public class AuthActivity extends Activity {
         webView = findViewById(R.id.webView);
         webView.setKeepScreenOn(true);
 
-        abstract class AuthResponseJI {
-            @SuppressWarnings("unused")
-            public abstract void processContent(String aContent);
-        }
-
-        class AuthResponseLegacyJI extends AuthResponseJI {
-            public void processContent(String aContent) {
-                responseJson = aContent;
-                handleResponse();
-            }
-        }
-
-        class AuthResponse17JI extends AuthResponseJI {
-
-            @JavascriptInterface
-            public void processContent(String aContent) {
-                responseJson = aContent;
-                handleResponse();
-            }
-        }
-
-        class JIFactory {
-
-            private AuthResponseJI getJI() {
-
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    return new AuthResponse17JI();
-                } else {
-                    return new AuthResponseLegacyJI();
-                }
-
-            }
-        }
-
-
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-        webView.addJavascriptInterface(new JIFactory().getJI(), "INTERFACE");
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
-                if (url.contains(ApiModule.API_URL + "charge/three_d_response/")) {
-                    view.loadUrl("javascript:window.INTERFACE.processContent(document.getElementById('return').innerText);");
+                if (url.contains(ApiModule.API_URL + "close")) {
+                    handleResponse();
                 }
             }
 
@@ -108,9 +72,7 @@ public class AuthActivity extends Activity {
         super.onDestroy();
         if (webView != null) {
             webView.stopLoading();
-            webView.removeJavascriptInterface("INTERFACE");
         }
         handleResponse();
     }
-
 }
