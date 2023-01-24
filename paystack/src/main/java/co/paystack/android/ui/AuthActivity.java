@@ -1,20 +1,20 @@
 package co.paystack.android.ui;
 
 import android.app.Activity;
-import android.os.Build;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.view.WindowManager;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageView;
+
+import androidx.webkit.WebMessageCompat;
+import androidx.webkit.WebViewCompat;
 
 import co.paystack.android.R;
 import co.paystack.android.api.di.ApiModule;
 
 public class AuthActivity extends Activity {
-
+    private static final String TAG = "AuthActivity";
     final AuthSingleton si = AuthSingleton.getInstance();
     private WebView webView;
     private String responseJson;
@@ -54,6 +54,7 @@ public class AuthActivity extends Activity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
+                WebMessageHelper.init(view);
                 if (url.contains(ApiModule.API_URL + "close")) {
                     handleResponse();
                 }
