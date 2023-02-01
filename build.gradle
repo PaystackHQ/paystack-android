@@ -5,6 +5,7 @@ buildscript {
     ext.versions = [
             'kotlin'        : '1.7.22',
             'coroutines'    : '1.4.2',
+            'pusher'        : '2.2.1',
             'robolectric'   : '4.4',
             'mockito'       : '3.8.0',
             'mockito_kotlin': '2.2.0',
