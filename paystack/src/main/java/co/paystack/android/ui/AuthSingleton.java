@@ -5,6 +5,8 @@ public class AuthSingleton {
     private String responseJson = "{\"status\":\"requery\",\"message\":\"Reaffirm Transaction Status on Server\"}";
     private String url = "";
 
+    private String transactionId = "";
+
     private AuthSingleton() {
     }
 
@@ -28,5 +30,13 @@ public class AuthSingleton {
     AuthSingleton setResponseJson(String responseJson) {
         this.responseJson = responseJson;
         return this;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
     }
 }

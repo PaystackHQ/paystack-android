@@ -207,16 +207,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void beforeValidate(Transaction transaction) {
                 MainActivity.this.transaction = transaction;
-                Toast.makeText(MainActivity.this, "Validating: " + transaction.getReference(), Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, transaction.getReference(), Toast.LENGTH_LONG).show();
                 updateTextViews();
             }
 
             @Override
             public void showLoading(Boolean isProcessing) {
                 if (isProcessing) {
-                    Toast.makeText(MainActivity.this, "Processing started", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "Processing stopped", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Processing...", Toast.LENGTH_LONG).show();
                 }
             }
 
