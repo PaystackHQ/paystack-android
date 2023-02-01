@@ -1,14 +1,10 @@
 package co.paystack.android.ui;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
-import androidx.webkit.WebMessageCompat;
-import androidx.webkit.WebViewCompat;
 
 import co.paystack.android.R;
 import co.paystack.android.api.di.ApiModule;
