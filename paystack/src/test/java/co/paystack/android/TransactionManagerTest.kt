@@ -1,7 +1,7 @@
 package co.paystack.android
 
 import androidx.test.core.app.ActivityScenario
-import co.paystack.android.api.service.ApiService
+import co.paystack.android.api.PaystackRepository
 import co.paystack.android.model.Card
 import co.paystack.android.model.Charge
 import com.nhaarman.mockitokotlin2.isA
@@ -17,7 +17,7 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class TransactionManagerTest {
     @Mock
-    lateinit var apiService: ApiService
+    lateinit var paystackRepository: PaystackRepository
 
     @Before
     fun setup() {
@@ -29,11 +29,17 @@ class TransactionManagerTest {
         ActivityScenario.launch(TestActivity::class.java).use { scenario ->
             scenario.onActivity { activity ->
                 // Initialize TransactionManager
-                val transactionManager = TransactionManager(apiService)
+                val transactionManager = TransactionManager(paystackRepository)
                 val charge = Charge().setCard(TEST_CARD)
 
-                transactionManager.chargeCard(activity, charge, mock(Paystack.TransactionCallback::class.java))
-                verify(apiService).charge(isA())
+                val publicKey = "public_key"
+                transactionManager.chargeCard(
+                    activity,
+                    publicKey,
+                    charge,
+                    mock(Paystack.TransactionCallback::class.java)
+                )
+                verify(paystackRepository).initializeTransaction(isA(), isA(), isA(), isA())
             }
         }
     }
