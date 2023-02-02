@@ -6,7 +6,7 @@ public class Transaction {
     private String id;
     private String reference;
 
-    public static Transaction NO_TRANSACTION = new Transaction();
+    public static Transaction EMPTY_TRANSACTION = new Transaction();
 
     void loadFromResponse(TransactionApiResponse t) {
         if (t.hasValidReferenceAndTrans()) {

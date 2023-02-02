@@ -34,9 +34,7 @@ import co.paystack.android.ui.PinSingleton;
 import co.paystack.android.utils.Crypto;
 import co.paystack.android.utils.StringUtils;
 
-import static co.paystack.android.Transaction.NO_TRANSACTION;
-
-import java.util.HashMap;
+import static co.paystack.android.Transaction.EMPTY_TRANSACTION;
 
 class TransactionManager {
 
@@ -115,7 +113,7 @@ class TransactionManager {
             if (!(ce instanceof ProcessingException)) {
                 setProcessingOff();
             }
-            transactionCallback.onError(ce, NO_TRANSACTION);
+            transactionCallback.onError(ce, EMPTY_TRANSACTION);
         }
     }
 
@@ -248,7 +246,7 @@ class TransactionManager {
         setProcessingOff();
         transactionCallback.showLoading(false);
 
-        transactionCallback.onError(t, NO_TRANSACTION);
+        transactionCallback.onError(t, EMPTY_TRANSACTION);
     }
 
     private void notifyProcessingError(Throwable t, Transaction transaction) {
