@@ -6,6 +6,8 @@ public class Transaction {
     private String id;
     private String reference;
 
+    public static Transaction EMPTY_TRANSACTION = new Transaction();
+
     void loadFromResponse(TransactionApiResponse t) {
         if (t.hasValidReferenceAndTrans()) {
             this.reference = t.reference;
@@ -19,6 +21,14 @@ public class Transaction {
 
     public String getReference() {
         return reference;
+    }
+
+    void setReference(String reference) {
+        this.reference = reference;
+    }
+
+    void setId(String id) {
+        this.id = id;
     }
 
     boolean hasStartedOnServer() {

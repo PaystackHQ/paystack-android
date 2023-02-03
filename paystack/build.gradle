@@ -44,6 +44,7 @@ android {
 
         buildConfigField 'int', 'VERSION_CODE', "${rootProject.ext.versionCode}"
         buildConfigField 'String', 'VERSION_NAME', "\"${rootProject.ext.versionName}\""
+        buildConfigField 'String', 'PUSHER_KEY', "\"${getEnvOrDefault("PUSHER_KEY", "")}\""
     }
     buildTypes {
         debug {
@@ -74,12 +75,13 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutines"
 
+    implementation "com.pusher:pusher-java-client:$versions.pusher"
+
     testImplementation "org.robolectric:robolectric:$versions.robolectric"
     testImplementation "org.mockito:mockito-core:$versions.mockito"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$versions.mockito_kotlin"
     testImplementation "androidx.test.ext:junit-ktx:$versions.junit_ext"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$versions.kotlin"
-
 }
 
 apply from: "https://raw.githubusercontent.com/PaystackHQ/publish-mavencentral/main/maven-publish.gradle"
