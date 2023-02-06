@@ -64,10 +64,10 @@ ext {
     compileSdkVersion = 29
     minSdkVersion = 16
     targetSdkVersion = 29
-    versionCode = 19
+    versionCode = 21
 
     buildToolsVersion = "29.0.2"
-    versionName = "3.2.0-alpha02"
+    versionName = "3.3.0-alpha02"
 }
 
 Object getEnvOrDefault(String propertyName, Object defaultValue) {

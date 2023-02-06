@@ -71,6 +71,14 @@ internal class PaystackRepositoryImpl(private val apiService: PaystackApiService
         )
     }
 
+    override fun getTransactionWithAccessCode(accessCode: String, callback: ApiCallback<TransactionInitResponse>) {
+        makeApiRequest(
+            onSuccess = { data -> callback.onSuccess(data) },
+            onError = { throwable -> callback.onError(throwable) },
+            apiCall = { apiService.getTransaction(accessCode) }
+        )
+    }
+
     private fun <T> makeApiRequest(apiCall: () -> Call<T>, onSuccess: (T) -> Unit, onError: (Throwable) -> Unit) {
         val retrofitCallback = object : Callback<T> {
             override fun onResponse(call: Call<T>, response: Response<T>) {

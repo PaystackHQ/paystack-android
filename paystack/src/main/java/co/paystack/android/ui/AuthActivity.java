@@ -73,7 +73,12 @@ public class AuthActivity extends Activity {
     protected void setupWebview() {
         setContentView(R.layout.co_paystack_android____activity_auth);
 
-        findViewById(R.id.iv_close).setOnClickListener(v -> finish());
+        findViewById(R.id.iv_close).setOnClickListener(v -> {
+            synchronized (si) {
+                si.notify();
+            }
+            finish();
+        });
 
         webView = findViewById(R.id.webView);
         webView.setKeepScreenOn(true);
@@ -133,7 +138,7 @@ public class AuthActivity extends Activity {
     }
 
     public void onDestroy() {
-        pusher.unsubscribe(channelName);
+        pusher.disconnect();
         super.onDestroy();
         if (webView != null) {
             webView.stopLoading();

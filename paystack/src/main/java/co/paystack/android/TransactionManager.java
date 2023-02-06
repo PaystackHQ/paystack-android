@@ -118,7 +118,7 @@ class TransactionManager {
     }
 
     private void initiateTransaction(String publicKey, Charge charge, String deviceId) {
-        paystackRepository.initializeTransaction(publicKey, charge, deviceId, new ApiCallback<TransactionInitResponse>() {
+        ApiCallback<TransactionInitResponse> callback = new ApiCallback<TransactionInitResponse>() {
             @Override
             public void onSuccess(TransactionInitResponse data) {
                 Card card = charge.getCard();
@@ -132,12 +132,19 @@ class TransactionManager {
                 );
                 paystackRepository.processCardCharge(params, cardProcessCallback);
             }
+
             @Override
             public void onError(@NotNull Throwable exception) {
                 Log.e(LOG_TAG, exception.getMessage(), exception);
                 notifyProcessingError(exception);
             }
-        });
+        };
+
+        if (charge.getAccessCode() == null || charge.getAccessCode().isEmpty()) {
+            paystackRepository.initializeTransaction(publicKey, charge, deviceId, callback);
+        } else {
+            paystackRepository.getTransactionWithAccessCode(charge.getAccessCode(), callback);
+        }
     }
 
     private void processChargeResponse(ChargeParams chargeParams, ChargeResponse chargeResponse) {

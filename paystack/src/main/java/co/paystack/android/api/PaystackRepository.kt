@@ -16,4 +16,9 @@ interface PaystackRepository {
     fun validateAddress(chargeParams: ChargeParams, address: Address, callback: ChargeApiCallback)
 
     fun requeryTransaction(chargeParams: ChargeParams, callback: ChargeApiCallback)
+
+    fun getTransactionWithAccessCode(
+        accessCode: String,
+        callback: ApiCallback<TransactionInitResponse>
+    )
 }
