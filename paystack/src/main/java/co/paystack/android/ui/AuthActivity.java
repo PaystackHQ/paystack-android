@@ -65,7 +65,7 @@ public class AuthActivity extends Activity {
         }
         synchronized (si) {
             si.setResponseJson(responseJson);
-            si.notify();
+            si.notifyAll();
         }
         finish();
     }
