@@ -1,11 +1,15 @@
 package co.paystack.android;
 
+import static co.paystack.android.Transaction.EMPTY_TRANSACTION;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.util.Log;
+
+import androidx.annotation.VisibleForTesting;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -33,8 +37,6 @@ import co.paystack.android.ui.PinActivity;
 import co.paystack.android.ui.PinSingleton;
 import co.paystack.android.utils.Crypto;
 import co.paystack.android.utils.StringUtils;
-
-import static co.paystack.android.Transaction.EMPTY_TRANSACTION;
 
 class TransactionManager {
 
@@ -117,7 +119,8 @@ class TransactionManager {
         }
     }
 
-    private void initiateTransaction(String publicKey, Charge charge, String deviceId) {
+    @VisibleForTesting
+    void initiateTransaction(String publicKey, Charge charge, String deviceId) {
         ApiCallback<TransactionInitResponse> callback = new ApiCallback<TransactionInitResponse>() {
             @Override
             public void onSuccess(TransactionInitResponse data) {
