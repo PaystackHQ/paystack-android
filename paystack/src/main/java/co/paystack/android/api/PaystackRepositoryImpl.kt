@@ -21,6 +21,12 @@ internal class PaystackRepositoryImpl(private val apiService: PaystackApiService
             currency = charge.currency,
             metadata = charge.metadata,
             device = deviceId,
+            reference = charge.reference,
+            subAccount = charge.subaccount,
+            transactionCharge = charge.transactionCharge,
+            plan = charge.plan,
+            bearer = charge.bearer,
+            additionalParameters = charge.additionalParameters,
         ).toRequestMap()
 
         makeApiRequest(
@@ -68,6 +74,14 @@ internal class PaystackRepositoryImpl(private val apiService: PaystackApiService
             apiCall = { apiService.validateAddress(requestBody) },
             onSuccess = { data -> callback.onSuccess(chargeParams, data) },
             onError = { throwable -> callback.onError(throwable) },
+        )
+    }
+
+    override fun getTransactionWithAccessCode(accessCode: String, callback: ApiCallback<TransactionInitResponse>) {
+        makeApiRequest(
+            onSuccess = { data -> callback.onSuccess(data) },
+            onError = { throwable -> callback.onError(throwable) },
+            apiCall = { apiService.getTransaction(accessCode) }
         )
     }
 

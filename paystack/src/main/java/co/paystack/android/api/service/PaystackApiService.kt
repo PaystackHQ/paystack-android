@@ -14,6 +14,9 @@ internal interface PaystackApiService {
     @GET("/checkout/request_inline")
     fun initializeTransaction(@QueryMap params: Map<String, @JvmSuppressWildcards Any>): Call<TransactionInitResponse>
 
+    @GET("/transaction/verify_access_code/{accessCode}")
+    fun getTransaction(@Path("accessCode") accessCode: String): Call<TransactionInitResponse>
+
     @FormUrlEncoded
     @POST("/checkout/card/charge")
     @NoWrap
