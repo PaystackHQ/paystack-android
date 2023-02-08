@@ -21,6 +21,12 @@ internal class PaystackRepositoryImpl(private val apiService: PaystackApiService
             currency = charge.currency,
             metadata = charge.metadata,
             device = deviceId,
+            reference = charge.reference,
+            subAccount = charge.subaccount,
+            transactionCharge = charge.transactionCharge,
+            plan = charge.plan,
+            bearer = charge.bearer,
+            additionalParameters = charge.additionalParameters,
         ).toRequestMap()
 
         makeApiRequest(
