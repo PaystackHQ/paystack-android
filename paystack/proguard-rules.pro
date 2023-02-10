@@ -1,1 +1,2 @@
 -keepclassmembers class co.paystack.android.api.model.** { <fields>; }
+-keepclassmembers class co.paystack.android.model.AvsState { <fields>; }
