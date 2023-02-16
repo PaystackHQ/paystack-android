@@ -133,7 +133,7 @@ class TransactionManager {
                         deviceId,
                         null
                 );
-                paystackRepository.processCardCharge(params, cardProcessCallback);
+                processCharge(params);
             }
 
             @Override
@@ -143,6 +143,7 @@ class TransactionManager {
             }
         };
 
+        transactionCallback.showLoading(true);
         if (charge.getAccessCode() == null || charge.getAccessCode().isEmpty()) {
             paystackRepository.initializeTransaction(publicKey, charge, deviceId, callback);
         } else {
@@ -220,6 +221,7 @@ class TransactionManager {
 
     private void validateOtp(String token, ChargeParams chargeParams) {
         try {
+            transactionCallback.showLoading(true);
             paystackRepository.validateTransaction(chargeParams, token, cardProcessCallback);
         } catch (Exception ce) {
             Log.e(LOG_TAG, ce.getMessage(), ce);
@@ -229,6 +231,7 @@ class TransactionManager {
 
     private void chargeWithAvs(Address address, ChargeParams chargeParams) {
         try {
+            transactionCallback.showLoading(true);
             paystackRepository.validateAddress(chargeParams, address, cardProcessCallback);
         } catch (Exception e) {
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -240,7 +243,7 @@ class TransactionManager {
         try {
             new CountDownTimer(5000, 5000) {
                 public void onFinish() {
-                    paystackRepository.requeryTransaction(chargeParams, cardProcessCallback);
+                    requeryTransaction(chargeParams);
                 }
 
                 public void onTick(long millisUntilFinished) {
@@ -252,10 +255,19 @@ class TransactionManager {
         }
     }
 
+    private void requeryTransaction(ChargeParams chargeParams) {
+        transactionCallback.showLoading(true);
+        paystackRepository.requeryTransaction(chargeParams, cardProcessCallback);
+    }
+
+    private void processCharge(ChargeParams params) {
+        transactionCallback.showLoading(true);
+        paystackRepository.processCardCharge(params, cardProcessCallback);
+    }
+
     private void notifyProcessingError(Throwable t) {
         setProcessingOff();
         transactionCallback.showLoading(false);
-
         transactionCallback.onError(t, EMPTY_TRANSACTION);
     }
 
@@ -338,7 +350,8 @@ class TransactionManager {
         protected void onPostExecute(String pin) {
             super.onPostExecute(pin);
             if (pin != null && (4 == pin.length())) {
-                paystackRepository.processCardCharge(chargeParams.addPin(Crypto.encrypt(pin)), cardProcessCallback);
+                ChargeParams params = chargeParams.addPin(Crypto.encrypt(pin));
+                processCharge(params);
             } else {
                 notifyProcessingError(new Exception("PIN must be exactly 4 digits"));
             }

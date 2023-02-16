@@ -3,6 +3,7 @@ package co.paystack.example;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView mTextReference;
     private Charge charge;
     private Transaction transaction;
-
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void showLoading(Boolean isProcessing) {
+                Log.i(TAG, "Paystack SDK loading: " + isProcessing);
                 if (isProcessing) {
                     Toast.makeText(MainActivity.this, "Processing...", Toast.LENGTH_LONG).show();
                 }
