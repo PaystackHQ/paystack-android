@@ -285,6 +285,12 @@ class TransactionManager {
         TransactionManager.PROCESSING = true;
     }
 
+
+    @VisibleForTesting
+    void setTransactionCallback(Paystack.TransactionCallback transactionCallback) {
+        this.transactionCallback = transactionCallback;
+    }
+
     private class CardAsyncTask extends AsyncTask<Void, Void, Card> {
 
         private final String publicKey;
