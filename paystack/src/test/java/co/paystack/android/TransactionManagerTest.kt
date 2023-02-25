@@ -2,6 +2,7 @@ package co.paystack.android
 
 import android.util.Log
 import androidx.test.core.app.ActivityScenario
+import co.paystack.android.Paystack.TransactionCallback
 import co.paystack.android.api.ApiCallback
 import co.paystack.android.api.ChargeApiCallback
 import co.paystack.android.api.PaystackRepository
@@ -26,6 +27,20 @@ import org.robolectric.RobolectricTestRunner
 class TransactionManagerTest {
     @Mock
     lateinit var paystackRepository: PaystackRepository
+
+    private val emptyTransactionCallback = object : TransactionCallback {
+        override fun onSuccess(transaction: Transaction?) {
+        }
+
+        override fun beforeValidate(transaction: Transaction?) {
+        }
+
+        override fun showLoading(isProcessing: Boolean?) {
+        }
+
+        override fun onError(error: Throwable?, transaction: Transaction?) {
+        }
+    }
 
     @Before
     fun setup() {
@@ -64,6 +79,7 @@ class TransactionManagerTest {
             .thenAnswer { Log.i(TAG, "initializeTransaction called") }
 
         val transactionManager = TransactionManager(paystackRepository)
+        transactionManager.setTransactionCallback(emptyTransactionCallback)
         transactionManager.initiateTransaction(publicKey, charge, deviceId)
 
         verify(paystackRepository).initializeTransaction(
@@ -88,6 +104,7 @@ class TransactionManagerTest {
             .thenAnswer { Log.i(TAG, "getTransactionWithAccessCode called") }
 
         val transactionManager = TransactionManager(paystackRepository)
+        transactionManager.setTransactionCallback(emptyTransactionCallback)
         transactionManager.initiateTransaction(publicKey, charge, deviceId)
 
         verify(paystackRepository).getTransactionWithAccessCode(
@@ -113,6 +130,7 @@ class TransactionManagerTest {
             }
 
         val transactionManager = TransactionManager(paystackRepository)
+        transactionManager.setTransactionCallback(emptyTransactionCallback)
         transactionManager.initiateTransaction(publicKey, charge, deviceId)
 
         verify(paystackRepository).processCardCharge(
