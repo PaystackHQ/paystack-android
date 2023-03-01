@@ -217,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
            
            @Override
            public void showLoading(Boolean isProcessing) {
-               // This is called only before any network requests the SDK makes.
+               // This is called whenever the SDK makes network requests.
                // Use this to display loading indicators in your application UI
            }
 
