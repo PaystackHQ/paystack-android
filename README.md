@@ -214,6 +214,12 @@ public class MainActivity extends AppCompatActivity {
                // Save reference so you may send to server. If
                // error occurs with OTP, you should still verify on server.
            }
+           
+           @Override
+           public void showLoading(Boolean isProcessing) {
+               // This is called whenever the SDK makes network requests.
+               // Use this to display loading indicators in your application UI
+           }
 
            @Override
            public void onError(Throwable error, Transaction transaction) {
