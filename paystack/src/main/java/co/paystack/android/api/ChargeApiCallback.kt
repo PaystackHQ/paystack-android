@@ -6,5 +6,5 @@ import co.paystack.android.api.request.ChargeParams
 interface ChargeApiCallback {
     fun onSuccess(params: ChargeParams, response: ChargeResponse)
 
-    fun onError(exception: Throwable)
+    fun onError(exception: Throwable, reference: String?)
 }

@@ -5,8 +5,9 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class TransactionInitResponse(
-    val status: String,
-
     @Json(name = "id")
-    val transactionId: String
+    val transactionId: String,
+
+    @Json(name = "reference")
+    val reference: String?
 )
