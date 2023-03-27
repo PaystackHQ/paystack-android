@@ -1,11 +1,11 @@
 package co.paystack.android.api.service.converter
 
+import com.squareup.moshi.JsonClass
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
-import kotlin.annotation.AnnotationTarget.FUNCTION
 
 class WrappedResponseConverter<T>(
     private val delegate: Converter<ResponseBody, WrappedResponse<T>>
@@ -47,10 +47,11 @@ class WrappedResponseConverter<T>(
 
         }
     }
-
-    open class WrappedResponse<T>(
-        val `data`: T,
-        val message: String,
-        val status: Boolean
-    )
 }
+
+@JsonClass(generateAdapter = true)
+open class WrappedResponse<T>(
+    val `data`: T,
+    val message: String,
+    val status: Boolean
+)

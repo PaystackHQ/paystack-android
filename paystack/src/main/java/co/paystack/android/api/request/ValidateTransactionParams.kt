@@ -1,7 +1,9 @@
 package co.paystack.android.api.request
 
 import co.paystack.android.api.utils.pruneNullValues
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class ValidateTransactionParams(
     val transactionId: String,
     val token: String? = null,

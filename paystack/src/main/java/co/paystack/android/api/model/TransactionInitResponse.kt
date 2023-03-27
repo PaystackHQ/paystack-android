@@ -1,10 +1,12 @@
 package co.paystack.android.api.model
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class TransactionInitResponse(
     val status: String,
 
-    @SerializedName("id")
+    @Json(name = "id")
     val transactionId: String
 )

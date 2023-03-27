@@ -43,9 +43,9 @@ sonarqube {
 
 allprojects {
     repositories {
-        jcenter()
-        google()
         mavenCentral()
+        google()
+        jcenter()
     }
 
     configurations.all {
@@ -67,7 +67,7 @@ ext {
     versionCode = 23
 
     buildToolsVersion = "29.0.2"
-    versionName = "3.3.1"
+    versionName = "3.3.2"
 }
 
 Object getEnvOrDefault(String propertyName, Object defaultValue) {
