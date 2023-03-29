@@ -39,7 +39,7 @@ internal class PaystackRepositoryImpl(private val apiService: PaystackApiService
     override fun processCardCharge(chargeParams: ChargeParams, callback: ChargeApiCallback) {
         makeApiRequest(
             onSuccess = { data -> callback.onSuccess(chargeParams, data) },
-            onError = { throwable -> callback.onError(throwable) },
+            onError = { throwable -> callback.onError(throwable, chargeParams.reference) },
             apiCall = { apiService.chargeCard(chargeParams.toRequestMap()) }
         )
     }
@@ -54,7 +54,7 @@ internal class PaystackRepositoryImpl(private val apiService: PaystackApiService
         makeApiRequest(
             apiCall = { apiService.validateOtp(requestBody) },
             onSuccess = { data -> callback.onSuccess(chargeParams, data) },
-            onError = { throwable -> callback.onError(throwable) },
+            onError = { throwable -> callback.onError(throwable, chargeParams.reference) },
         )
     }
 
@@ -62,7 +62,7 @@ internal class PaystackRepositoryImpl(private val apiService: PaystackApiService
         makeApiRequest(
             apiCall = { apiService.requeryTransaction(chargeParams.transactionId) },
             onSuccess = { data -> callback.onSuccess(chargeParams, data) },
-            onError = { throwable -> callback.onError(throwable) },
+            onError = { throwable -> callback.onError(throwable, chargeParams.reference) },
         )
     }
 
@@ -73,7 +73,7 @@ internal class PaystackRepositoryImpl(private val apiService: PaystackApiService
         makeApiRequest(
             apiCall = { apiService.validateAddress(requestBody) },
             onSuccess = { data -> callback.onSuccess(chargeParams, data) },
-            onError = { throwable -> callback.onError(throwable) },
+            onError = { throwable -> callback.onError(throwable, chargeParams.reference) },
         )
     }
 

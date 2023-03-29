@@ -1,16 +1,19 @@
 package co.paystack.android.api.request
 
+import co.paystack.android.Transaction
 import co.paystack.android.api.utils.pruneNullValues
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class ChargeParams(
     val clientData: String,
     val transactionId: String,
     val last4: String,
     val deviceId: String,
-    val handle: String?
+    val reference: String?,
+    val handle: String? = null
 ) {
     fun toRequestMap() = mapOf(
-
         FIELD_CLIENT_DATA to clientData,
         FIELD_HANDLE to handle,
         FIELD_TRANS to transactionId,
@@ -20,6 +23,13 @@ data class ChargeParams(
     ).pruneNullValues()
 
     fun addPin(pin: String) = copy(handle = pin)
+
+    fun getTransaction(): Transaction {
+        val transaction = Transaction()
+        transaction.setId(transactionId)
+        transaction.reference = reference
+        return transaction
+    }
 
     companion object {
         const val FIELD_CLIENT_DATA = "clientdata"

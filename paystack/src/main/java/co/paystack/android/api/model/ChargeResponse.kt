@@ -2,35 +2,38 @@ package co.paystack.android.api.model
 
 
 import androidx.annotation.Keep
-import com.google.gson.Gson
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+import com.squareup.moshi.Moshi
 
 @Keep
+@JsonClass(generateAdapter = true)
 data class ChargeResponse(
 
     val status: String?,
 
-    @SerializedName("trans")
-    val transactionId: String,
+    @Json(name = "trans")
+    val transactionId: String?,
 
-    val reference: String,
+    val reference: String?,
 
     val message: String?,
 
-    @SerializedName("otpmessage")
+    @Json(name = "otpmessage")
     val otpMessage: String? = null,
 
     val auth: String? = null,
 
-    @SerializedName("countryCode")
+    @Json(name = "countryCode")
     val countryCode: String? = null,
-
-    ) {
+) {
 
     companion object {
         fun fromJsonString(jsonString: String?): ChargeResponse {
             return try {
-                Gson().fromJson(jsonString, ChargeResponse::class.java)
+                Moshi.Builder().build()
+                    .adapter(ChargeResponse::class.java)
+                    .fromJson(jsonString) ?: error("Failed to parse charge response")
             } catch (e: Exception) {
                 ChargeResponse(
                     status = "0",

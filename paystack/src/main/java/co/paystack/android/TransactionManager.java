@@ -9,6 +9,7 @@ import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 import org.jetbrains.annotations.NotNull;
@@ -62,9 +63,11 @@ class TransactionManager {
         }
 
         @Override
-        public void onError(@NotNull Throwable e) {
+        public void onError(@NotNull Throwable e, @Nullable String reference) {
             Log.e(LOG_TAG, e.getMessage(), e);
-            notifyProcessingError(e);
+            Transaction transaction = new Transaction();
+            transaction.setReference(reference);
+            notifyProcessingError(e, transaction);
         }
     };
 
@@ -131,6 +134,7 @@ class TransactionManager {
                         transactionId,
                         card.getLast4digits(),
                         deviceId,
+                        data.getReference(),
                         null
                 );
                 processCharge(params);
@@ -153,18 +157,17 @@ class TransactionManager {
 
     private void processChargeResponse(ChargeParams chargeParams, ChargeResponse chargeResponse) {
         if (chargeResponse == null) {
-            notifyProcessingError(new ChargeException("Unknown server response"));
+            notifyProcessingError(new ChargeException("Unknown server response"), chargeParams.getTransaction());
             return;
         }
-
-        Transaction transaction = new Transaction();
-        transaction.setId(chargeResponse.getTransactionId());
-        transaction.setReference(chargeResponse.getReference());
 
         String status = chargeResponse.getStatus();
         if (status != null) {
             if (status.equalsIgnoreCase("1") || status.equalsIgnoreCase("success")) {
                 setProcessingOff();
+                Transaction transaction = new Transaction();
+                transaction.setId(chargeResponse.getTransactionId());
+                transaction.setReference(chargeResponse.getReference());
                 transactionCallback.onSuccess(transaction);
                 return;
             }
@@ -181,12 +184,12 @@ class TransactionManager {
         }
 
         if (chargeResponse.getAuth() != null && !chargeResponse.getAuth().equalsIgnoreCase("none")) {
-            authenticateTransaction(chargeParams, chargeResponse, transaction);
+            authenticateTransaction(chargeParams, chargeResponse, chargeParams.getTransaction());
             return;
         }
 
         setProcessingOff();
-        notifyProcessingError(new ChargeException(chargeResponse.getMessage()));
+        notifyProcessingError(new ChargeException(chargeResponse.getMessage()), chargeParams.getTransaction());
     }
 
     private void authenticateTransaction(ChargeParams chargeParams, ChargeResponse chargeResponse, Transaction transaction) {
@@ -225,7 +228,7 @@ class TransactionManager {
             paystackRepository.validateTransaction(chargeParams, token, cardProcessCallback);
         } catch (Exception ce) {
             Log.e(LOG_TAG, ce.getMessage(), ce);
-            notifyProcessingError(ce);
+            notifyProcessingError(ce, chargeParams.getTransaction());
         }
     }
 
@@ -235,7 +238,7 @@ class TransactionManager {
             paystackRepository.validateAddress(chargeParams, address, cardProcessCallback);
         } catch (Exception e) {
             Log.e(LOG_TAG, e.getMessage(), e);
-            notifyProcessingError(e);
+            notifyProcessingError(e, chargeParams.getTransaction());
         }
     }
 
@@ -251,7 +254,7 @@ class TransactionManager {
             }.start();
         } catch (Exception ce) {
             Log.e(LOG_TAG, ce.getMessage(), ce);
-            notifyProcessingError(ce);
+            notifyProcessingError(ce, chargeParams.getTransaction());
         }
     }
 
@@ -460,7 +463,8 @@ class TransactionManager {
             if (address != null) {
                 chargeWithAvs(address, chargeParams);
             } else {
-                notifyProcessingError(new Exception("No address provided"));
+
+                notifyProcessingError(new Exception("No address provided"), chargeParams.getTransaction());
             }
         }
     }

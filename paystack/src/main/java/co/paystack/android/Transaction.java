@@ -23,11 +23,11 @@ public class Transaction {
         return reference;
     }
 
-    void setReference(String reference) {
+    public void setReference(String reference) {
         this.reference = reference;
     }
 
-    void setId(String id) {
+    public void setId(String id) {
         this.id = id;
     }
 

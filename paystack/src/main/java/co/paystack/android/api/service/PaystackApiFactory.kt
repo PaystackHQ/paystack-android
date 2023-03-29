@@ -5,10 +5,10 @@ import co.paystack.android.BuildConfig
 import co.paystack.android.api.service.PaystackApiService
 import co.paystack.android.api.service.converter.WrappedResponseConverter
 import co.paystack.android.api.utils.TLSSocketFactory
-import com.google.gson.GsonBuilder
+import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import java.security.KeyManagementException
 import java.security.KeyStoreException
 import java.security.NoSuchAlgorithmException
@@ -20,11 +20,12 @@ import java.util.concurrent.TimeUnit
 internal object PaystackApiFactory {
     private const val BASE_URL = "https://api.paystack.co/"
 
-    @Throws(NoSuchAlgorithmException::class, KeyManagementException::class, KeyStoreException::class)
+    @Throws(
+        NoSuchAlgorithmException::class,
+        KeyManagementException::class,
+        KeyStoreException::class
+    )
     fun createRetrofitService(): PaystackApiService {
-        val gson = GsonBuilder()
-            .setDateFormat("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'")
-            .create()
 
         val tlsV1point2factory = TLSSocketFactory()
         val okHttpClient = OkHttpClient.Builder()
@@ -32,7 +33,10 @@ internal object PaystackApiFactory {
                 val original = chain.request()
                 // Add headers so we get Android version and Paystack Library version
                 val builder = original.newBuilder()
-                    .header("User-Agent", "Android_" + Build.VERSION.SDK_INT + "_Paystack_" + BuildConfig.VERSION_NAME)
+                    .header(
+                        "User-Agent",
+                        "Android_" + Build.VERSION.SDK_INT + "_Paystack_" + BuildConfig.VERSION_NAME
+                    )
                     .header("X-Paystack-Build", BuildConfig.VERSION_CODE.toString())
                     .header("Accept", "application/json")
                     .method(original.method(), original.body())
@@ -49,7 +53,7 @@ internal object PaystackApiFactory {
             .baseUrl(BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(WrappedResponseConverter.Factory())
-            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(MoshiConverterFactory.create(Moshi.Builder().build()))
             .build()
 
         return retrofit.create(PaystackApiService::class.java)

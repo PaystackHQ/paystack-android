@@ -2,7 +2,9 @@ package co.paystack.android.api.request
 
 import co.paystack.android.api.utils.pruneNullValues
 import co.paystack.android.model.Charge.Bearer
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class TransactionInitRequestBody(
     val publicKey: String,
     val email: String,
