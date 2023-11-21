@@ -1,5 +1,7 @@
 package co.paystack.android;
 
+import static co.paystack.android.ConstantsKt.DEPRECATION_MESSAGE;
+
 import android.app.Activity;
 
 import co.paystack.android.exceptions.AuthenticationException;
@@ -7,6 +9,7 @@ import co.paystack.android.exceptions.PaystackSdkNotInitializedException;
 import co.paystack.android.model.Charge;
 import co.paystack.android.model.PaystackModel;
 import co.paystack.android.utils.Utils;
+import kotlin.Deprecated;
 
 /**
  * This is the Paystack model class.\n
@@ -16,6 +19,7 @@ import co.paystack.android.utils.Utils;
  *
  * @author {androidsupport@paystack.co} on 9/16/15.
  */
+@Deprecated(message = DEPRECATION_MESSAGE)
 public class Paystack extends PaystackModel {
 
     private String publicKey;
@@ -53,6 +57,7 @@ public class Paystack extends PaystackModel {
 
     }
 
+    @Deprecated(message = DEPRECATION_MESSAGE)
     void chargeCard(Activity activity, Charge charge, TransactionCallback transactionCallback) {
         chargeCard(activity, charge, publicKey, transactionCallback);
     }
@@ -79,10 +84,18 @@ public class Paystack extends PaystackModel {
     private interface BaseCallback {
     }
 
+    @Deprecated(message = DEPRECATION_MESSAGE)
     public interface TransactionCallback extends BaseCallback {
+        @Deprecated(message = DEPRECATION_MESSAGE)
         void onSuccess(Transaction transaction);
+
+        @Deprecated(message = DEPRECATION_MESSAGE)
         void beforeValidate(Transaction transaction);
+
+        @Deprecated(message = DEPRECATION_MESSAGE)
         void showLoading(Boolean isProcessing);
+
+        @Deprecated(message = DEPRECATION_MESSAGE)
         void onError(Throwable error, Transaction transaction);
     }
 

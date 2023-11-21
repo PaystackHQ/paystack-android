@@ -1,13 +1,17 @@
 package co.paystack.android.utils;
 
+import static co.paystack.android.ConstantsKt.DEPRECATION_MESSAGE;
+
 import co.paystack.android.exceptions.CardException;
 import co.paystack.android.model.Card;
+import kotlin.Deprecated;
 
 /**
  * String utility methods
  *
  * @author {androidsupport@paystack.co} on 9/13/15.
  */
+@Deprecated(message = DEPRECATION_MESSAGE)
 public class StringUtils {
 
     public static final String CARD_CONCATENATOR = "*";

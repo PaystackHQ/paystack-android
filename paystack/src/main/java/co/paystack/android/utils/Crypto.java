@@ -1,5 +1,7 @@
 package co.paystack.android.utils;
 
+import static co.paystack.android.ConstantsKt.DEPRECATION_MESSAGE;
+
 import android.util.Base64;
 
 import java.security.KeyFactory;
@@ -12,6 +14,7 @@ import java.security.spec.X509EncodedKeySpec;
 import javax.crypto.Cipher;
 
 import co.paystack.android.exceptions.AuthenticationException;
+import kotlin.Deprecated;
 
 
 /**
@@ -19,6 +22,7 @@ import co.paystack.android.exceptions.AuthenticationException;
  *
  * @author {androidsupport@paystack.co} on 8/10/15.
  */
+@Deprecated(message = DEPRECATION_MESSAGE)
 public class Crypto {
     private static final String PAYSTACK_RSA_PUBLIC_KEY = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALhZs/7hP0g0+hrqTq0hFyGVxgco0NMxZD8nPS6ihxap0yNFjzdyUuZED6P4/aK9Ezl5ajEI9pcx5/1BrEE+F3kCAwEAAQ==";
     private static String ALGORITHM = "RSA";

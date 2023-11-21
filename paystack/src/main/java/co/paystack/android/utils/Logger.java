@@ -1,15 +1,20 @@
 package co.paystack.android.utils;
 
+import static co.paystack.android.ConstantsKt.DEPRECATION_MESSAGE;
+
 import android.util.Log;
+
+import kotlin.Deprecated;
 
 /**
  * Logger util class
  *
  * @author {androidsupport@paystack.co} on 9/18/15.
  */
+@Deprecated(message = DEPRECATION_MESSAGE)
 public class Logger {
 
-  public static boolean DEBUG_ON = false;
+    public static boolean DEBUG_ON = false;
   public static String DEFAULT_TAG = "Paystack";
 
   public static void d(String tag, String message) {
