@@ -1,5 +1,6 @@
 package co.paystack.android;
 
+import static co.paystack.android.ConstantsKt.DEPRECATION_MESSAGE;
 import static co.paystack.android.Transaction.EMPTY_TRANSACTION;
 
 import android.app.Activity;
@@ -38,7 +39,9 @@ import co.paystack.android.ui.PinActivity;
 import co.paystack.android.ui.PinSingleton;
 import co.paystack.android.utils.Crypto;
 import co.paystack.android.utils.StringUtils;
+import kotlin.Deprecated;
 
+@Deprecated(message = DEPRECATION_MESSAGE)
 class TransactionManager {
 
     private static final String LOG_TAG = TransactionManager.class.getSimpleName();

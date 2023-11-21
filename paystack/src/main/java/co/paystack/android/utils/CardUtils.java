@@ -1,16 +1,21 @@
 package co.paystack.android.utils;
 
+import static co.paystack.android.ConstantsKt.DEPRECATION_MESSAGE;
+
 import java.util.Calendar;
 import java.util.Locale;
+
+import kotlin.Deprecated;
 
 /**
  * Utils used with the Card model.
  *
  * @author {androidsupport@paystack.co} on 9/13/15.
  */
+@Deprecated(message = DEPRECATION_MESSAGE)
 public class CardUtils {
 
-  public static boolean isWholePositiveNumber(String value) {
+    public static boolean isWholePositiveNumber(String value) {
     if (value == null) {
       return false;
     }

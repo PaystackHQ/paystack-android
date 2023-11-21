@@ -1,7 +1,11 @@
 package co.paystack.android;
 
-import co.paystack.android.api.model.TransactionApiResponse;
+import static co.paystack.android.ConstantsKt.DEPRECATION_MESSAGE;
 
+import co.paystack.android.api.model.TransactionApiResponse;
+import kotlin.Deprecated;
+
+@Deprecated(message = DEPRECATION_MESSAGE)
 public class Transaction {
     private String id;
     private String reference;
