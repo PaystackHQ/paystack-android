@@ -140,8 +140,8 @@ class AddressVerificationActivity : AppCompatActivity(), CoroutineScope {
 
 
     private fun initPopupMenu(anchorView: View, items: List<String>, onItemClickListener: (Int) -> Unit): ListPopupWindow {
-        val listPopupWindow = ListPopupWindow(this, null, R.attr.listPopupWindowStyle)
-        val adapter = ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, items)
+        val listPopupWindow = ListPopupWindow(this, null, androidx.appcompat.R.attr.listPopupWindowStyle)
+        val adapter = ArrayAdapter<CharSequence>(this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, items)
         listPopupWindow.setAdapter(adapter)
         listPopupWindow.anchorView = anchorView
         listPopupWindow.setOnItemClickListener { _, _, position, _ ->

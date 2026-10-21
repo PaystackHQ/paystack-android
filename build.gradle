@@ -1,13 +1,15 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.jacocoVersion = '0.8.7'
+    ext.jacocoVersion = '0.8.14'
     ext.versions = [
-            'kotlin'        : '1.7.22',
+            'kotlin'        : '2.4.21',
+            'ksp'           : '2.3.12',
             'coroutines'    : '1.4.2',
+            'moshi'         : '1.15.2',
             'pusher'        : '2.2.1',
-            'robolectric'   : '4.9.2',
-            'mockito'       : '3.8.0',
+            'robolectric'   : '4.16',
+            'mockito'       : '5.20.0',
             'mockito_kotlin': '2.2.0',
             'junit_ext'     : '1.1.2',
     ]
@@ -17,15 +19,15 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.0'
-        classpath 'org.robolectric:robolectric-gradle-plugin:1.1.0'
+        classpath 'com.android.tools.build:gradle:9.3.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+        classpath "com.google.devtools.ksp:symbol-processing-gradle-plugin:$versions.ksp"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
 plugins {
-    id "org.sonarqube" version "3.5.0.2730"
+    id "org.sonarqube" version "7.5.0.8588"
 }
 
 sonarqube {
@@ -49,7 +51,6 @@ allprojects {
 
     configurations.all {
         resolutionStrategy {
-            force 'org.objenesis:objenesis:2.6'
             eachDependency { details ->
                 if (details.requested.group == 'org.jacoco') {
                     details.useVersion jacocoVersion
@@ -60,12 +61,11 @@ allprojects {
 }
 
 ext {
-    compileSdkVersion = 29
+    compileSdkVersion = 36
     minSdkVersion = 16
     targetSdkVersion = 29
     versionCode = 23
 
-    buildToolsVersion = "29.0.2"
     versionName = "3.3.2"
 }
 
@@ -83,7 +83,7 @@ Object getEnvOrDefault(String propertyName, Object defaultValue) {
         }
     }
 
-    propertyValue = project.properties[propertyName]
+    propertyValue = project.findProperty(propertyName)
 
     if (propertyValue == null) {
         logger.error("Build property named {} not defined. Falling back to default value.", propertyName)

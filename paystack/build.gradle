@@ -1,10 +1,11 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 apply plugin: 'jacoco'
-apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.devtools.ksp'
+
+def versions = rootProject.ext.versions
 
 jacoco {
-    toolVersion = "$jacocoVersion"
+    toolVersion = rootProject.ext.jacocoVersion
 }
 
 tasks.withType(Test) {
@@ -15,49 +16,52 @@ tasks.withType(Test) {
 task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
 
     reports {
-        xml.enabled = true
-        html.enabled = true
+        xml.required = true
+        html.required = true
     }
 
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
-    def debugTree = fileTree(dir: "$project.buildDir/intermediates/javac/debug/classes", excludes: fileFilter)
-    def ktDebugTree = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
+    def debugTree = fileTree(dir: layout.buildDirectory.dir("intermediates/javac/debug/compileDebugJavaWithJavac/classes"), excludes: fileFilter)
+    def ktDebugTree = fileTree(dir: layout.buildDirectory.dir("intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes"), excludes: fileFilter)
     def mainSrc = "$project.projectDir/src/main/java"
 
     sourceDirectories.setFrom(files([mainSrc]))
     classDirectories.setFrom(files([debugTree, ktDebugTree]))
-    executionData.setFrom(fileTree(dir: project.buildDir, includes: [
-            '**/*.exec', '**/*.ec'
-    ]))
+    executionData.setFrom(provider { tasks.named('testDebugUnitTest').get().jacoco.destinationFile })
 }
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
-    lintOptions {
-        abortOnError false
+    namespace = 'co.paystack.android'
+    compileSdk = rootProject.ext.compileSdkVersion
+    lint {
+        abortOnError = false
+    }
+    buildFeatures {
+        buildConfig = true
     }
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionName rootProject.ext.versionName
+        minSdk = rootProject.ext.minSdkVersion
         consumerProguardFiles 'proguard-rules.pro'
+        aarMetadata {
+            minCompileSdk = 29
+        }
 
         buildConfigField 'int', 'VERSION_CODE', "${rootProject.ext.versionCode}"
         buildConfigField 'String', 'VERSION_NAME', "\"${rootProject.ext.versionName}\""
-        buildConfigField 'String', 'PUSHER_KEY', "\"${getEnvOrDefault("PUSHER_KEY", "")}\""
+        buildConfigField 'String', 'PUSHER_KEY', "\"${rootProject.getEnvOrDefault("PUSHER_KEY", "")}\""
     }
     buildTypes {
         debug {
-            testCoverageEnabled true
+            enableUnitTestCoverage = true
         }
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     testOptions {
+        targetSdk = rootProject.ext.targetSdkVersion
         unitTests {
             includeAndroidResources = true
         }
@@ -71,12 +75,11 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.14.9'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'co.paystack.android.design.widget:pinpad:1.0.8'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$versions.kotlin"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutines"
 
-    implementation "com.squareup.moshi:moshi-kotlin:1.14.0"
-    kapt "com.squareup.moshi:moshi-kotlin-codegen:1.14.0"
+    implementation "com.squareup.moshi:moshi-kotlin:$versions.moshi"
+    ksp "com.squareup.moshi:moshi-kotlin-codegen:$versions.moshi"
 
     implementation "com.pusher:pusher-java-client:$versions.pusher"
 
