@@ -142,6 +142,6 @@ class TransactionManagerTest {
 
     companion object {
         private const val TAG = "TransactionManagerTest"
-        val TEST_CARD = Card("5105105105105100", 2, 2024, "123")
+        val TEST_CARD = Card("5105105105105100", 2, 2030, "123")
     }
 }
