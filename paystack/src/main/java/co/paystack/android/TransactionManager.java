@@ -135,6 +135,7 @@ class TransactionManager {
                         card.getLast4digits(),
                         deviceId,
                         data.getReference(),
+                        data.getAccessCode(),
                         null
                 );
                 processCharge(params);

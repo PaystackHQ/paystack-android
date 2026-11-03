@@ -60,7 +60,7 @@ internal class PaystackRepositoryImpl(private val apiService: PaystackApiService
 
     override fun requeryTransaction(chargeParams: ChargeParams, callback: ChargeApiCallback) {
         makeApiRequest(
-            apiCall = { apiService.requeryTransaction(chargeParams.transactionId) },
+            apiCall = { apiService.requeryTransaction(chargeParams.accessCode) },
             onSuccess = { data -> callback.onSuccess(chargeParams, data) },
             onError = { throwable -> callback.onError(throwable, chargeParams.reference) },
         )

@@ -34,7 +34,7 @@ class PaystackRepositoryImplTest {
     @Test
     fun `initializeTransaction calls PaystackApiService with correct params`() {
         whenever(apiService.initializeTransaction(anyMap()))
-            .thenReturn(FakeCall.success(TransactionInitResponse("success", "trans_id")))
+            .thenReturn(FakeCall.success(TransactionInitResponse("success", "trans_id", "access_code")))
         val repository = PaystackRepositoryImpl(apiService)
         val apiCallback = mock<ApiCallback<TransactionInitResponse>>()
         val testMetadata = "internal_tag" to "tag_internal_example"
@@ -82,7 +82,8 @@ class PaystackRepositoryImplTest {
             transactionId = testTransactionId,
             last4 = "5599",
             deviceId = testDeviceId,
-            null
+            null,
+            accessCode = "test_access_code"
         )
 
         val TEST_CHARGE_RESPONSE = ChargeResponse(

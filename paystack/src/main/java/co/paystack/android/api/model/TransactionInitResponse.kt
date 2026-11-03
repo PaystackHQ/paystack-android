@@ -9,5 +9,8 @@ data class TransactionInitResponse(
     val transactionId: String,
 
     @Json(name = "reference")
-    val reference: String?
+    val reference: String?,
+
+    @Json(name = "access_code")
+    val accessCode: String
 )

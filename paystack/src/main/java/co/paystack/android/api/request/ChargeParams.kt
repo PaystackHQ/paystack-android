@@ -11,6 +11,7 @@ data class ChargeParams(
     val last4: String,
     val deviceId: String,
     val reference: String?,
+    val accessCode: String,
     val handle: String? = null
 ) {
     fun toRequestMap() = mapOf(
