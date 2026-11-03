@@ -33,7 +33,7 @@ internal interface PaystackApiService {
     fun validateAddress(@FieldMap fields: Map<String, String>): Call<ChargeResponse>
 
     @NoWrap
-    @GET("/checkout/requery/{transactionId}")
-    fun requeryTransaction(@Path("transactionId") transactionId: String): Call<ChargeResponse>
+    @GET("/checkout/requery/{accessCode}")
+    fun requeryTransaction(@Path("accessCode") accessCode: String): Call<ChargeResponse>
 
 }

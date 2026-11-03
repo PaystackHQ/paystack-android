@@ -126,7 +126,7 @@ class TransactionManagerTest {
         whenever(paystackRepository.initializeTransaction(anyString(), any(), anyString(), any()))
             .thenAnswer {
                 val callback = it.arguments[3] as ApiCallback<TransactionInitResponse>
-                callback.onSuccess(TransactionInitResponse("success", "trans_id"))
+                callback.onSuccess(TransactionInitResponse("success", "trans_id", "access_code"))
             }
 
         val transactionManager = TransactionManager(paystackRepository)
