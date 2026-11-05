@@ -87,4 +87,4 @@ dependencies {
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$versions.kotlin"
 }
 
-apply from: "https://raw.githubusercontent.com/PaystackHQ/publish-mavencentral/main/maven-publish.gradle"
+apply from: "publish.gradle"

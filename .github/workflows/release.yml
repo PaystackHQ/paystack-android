@@ -1,0 +1,106 @@
+name: Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write # create the release tag and the GitHub release
+
+jobs:
+  release:
+    name: Validate and publish
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    # Requires a reviewer to approve the run before it publishes. Configure the
+    # `release` environment with required reviewers in repo settings.
+    environment: release
+    steps:
+      - name: Check out full history (all tags)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Read and validate version
+        id: version
+        run: |
+          set -euo pipefail
+          VERSION_NAME=$(sed -n 's/^VERSION_NAME=//p' gradle.properties)
+          if ! grep -q "versionName = \"${VERSION_NAME}\"" build.gradle; then
+            echo "::error::VERSION_NAME (${VERSION_NAME}) in gradle.properties doesn't match versionName in build.gradle."
+            exit 1
+          fi
+          echo "VERSION_NAME=${VERSION_NAME}" >> "$GITHUB_OUTPUT"
+          echo "TAG=v${VERSION_NAME}" >> "$GITHUB_OUTPUT"
+          if [[ "${VERSION_NAME}" == *-* ]]; then
+            echo "PRERELEASE=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "PRERELEASE=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check release secrets
+        env:
+          PUSHER_KEY: ${{ secrets.PUSHER_KEY }}
+          MAVEN_CENTRAL_TOKEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_TOKEN_USERNAME }}
+          MAVEN_CENTRAL_TOKEN_PASSWORD: ${{ secrets.MAVEN_CENTRAL_TOKEN_PASSWORD }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        run: |
+          missing=""
+          for name in PUSHER_KEY MAVEN_CENTRAL_TOKEN_USERNAME MAVEN_CENTRAL_TOKEN_PASSWORD SIGNING_KEY SIGNING_KEY_ID SIGNING_PASSWORD; do
+            if [ -z "${!name}" ]; then missing="${missing} ${name}"; fi
+          done
+          if [ -n "${missing}" ]; then
+            echo "::error::Missing secrets:${missing}"
+            exit 1
+          fi
+
+      # Gradle 7.5 doesn't run on JDK 19 or newer
+      - name: Set up JDK 17
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Unit tests
+        run: ./gradlew :paystack:testDebugUnitTest
+
+      # Tag before publishing. Re-running from the same commit skips this step. A tag
+      # that points to a different commit is blocked too.
+      - name: Create and push release tag
+        env:
+          TAG: ${{ steps.version.outputs.TAG }}
+        run: |
+          set -euo pipefail
+          if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
+            if [ "$(git rev-parse "${TAG}^{commit}")" = "$(git rev-parse HEAD)" ]; then
+              echo "Tag ${TAG} already points at HEAD — resuming."
+              exit 0
+            fi
+            echo "::error::Tag ${TAG} exists but points elsewhere. Refusing."
+            exit 1
+          fi
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+          git tag -a "${TAG}" -m "Release ${TAG}"
+          git push origin "refs/tags/${TAG}"
+
+      # Upload and hand-off must run on the same machine: the staging repository is tied to its IP.
+      # The deployment then waits on the Central Portal until someone releases it.
+      - name: Publish to Maven Central
+        run: ./gradlew :paystack:publishReleasePublicationToMavenCentralRepository && ./gradlew :paystack:releaseToCentralPortal
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_TOKEN_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_TOKEN_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
+          ORG_GRADLE_PROJECT_PUSHER_KEY: ${{ secrets.PUSHER_KEY }}
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+        with:
+          tag_name: ${{ steps.version.outputs.TAG }}
+          prerelease: ${{ steps.version.outputs.PRERELEASE == 'true' }}
+          generate_release_notes: true
+          files: paystack/build/outputs/aar/paystack-release.aar

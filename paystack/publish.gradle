@@ -1,0 +1,142 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+// Publishes to Maven Central through the Central Portal's OSSRH Staging API compatibility service:
+// https://central.sonatype.org/publish/publish-portal-ossrh-staging-api/
+//
+// Reads these Gradle properties (in CI, set them as ORG_GRADLE_PROJECT_<name> environment variables):
+//   mavenCentralUsername, mavenCentralPassword - Central Portal user token
+//   signingInMemoryKey, signingInMemoryKeyId, signingInMemoryKeyPassword - ASCII-armoured GPG key
+//   centralNamespace - namespace registered on the Central Portal, defaults to co.paystack
+
+def centralStagingApiUrl = 'https://ossrh-staging-api.central.sonatype.com'
+def mavenCentralUsername = findProperty('mavenCentralUsername')
+def mavenCentralPassword = findProperty('mavenCentralPassword')
+
+group = GROUP
+version = VERSION_NAME
+
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.srcDirs
+}
+
+// Maven Central requires a javadoc jar. There's no javadoc generation set up, so publish an empty one.
+task androidJavadocJar(type: Jar) {
+    archiveClassifier.set('javadoc')
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                groupId = GROUP
+                artifactId = POM_ARTIFACT_ID
+                version = VERSION_NAME
+
+                artifact("$buildDir/outputs/aar/$POM_ARTIFACT_ID-release.aar") {
+                    builtBy assembleRelease
+                }
+                artifact androidSourcesJar
+                artifact androidJavadocJar
+
+                pom {
+                    name = POM_ARTIFACT_ID
+                    description = POM_DESCRIPTION
+                    url = POM_URL
+                    licenses {
+                        license {
+                            name = POM_LICENCE_NAME
+                            url = POM_LICENCE_URL
+                            distribution = POM_LICENCE_DIST
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = POM_DEVELOPER_ID
+                            name = POM_DEVELOPER_NAME
+                            email = POM_DEVELOPER_EMAIL
+                        }
+                    }
+                    scm {
+                        url = POM_SCM_URL
+                        connection = POM_SCM_CONNECTION
+                        developerConnection = POM_SCM_DEV_CONNECTION
+                    }
+
+                    withXml {
+                        def dependenciesNode = asNode().appendNode('dependencies')
+
+                        project.configurations.implementation.allDependencies.each { dep ->
+                            if (dep.group != null && dep.version != null && dep.name != null && dep.name != "unspecified") {
+                                def dependencyNode = dependenciesNode.appendNode('dependency')
+                                dependencyNode.appendNode('groupId', dep.group)
+                                dependencyNode.appendNode('artifactId', dep.name)
+                                dependencyNode.appendNode('version', dep.version)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                name = 'mavenCentral'
+                url = "$centralStagingApiUrl/service/local/staging/deploy/maven2/"
+                credentials {
+                    username = mavenCentralUsername
+                    password = mavenCentralPassword
+                }
+            }
+        }
+    }
+
+    signing {
+        def signingKey = findProperty('signingInMemoryKey')
+        if (signingKey) {
+            useInMemoryPgpKeys(findProperty('signingInMemoryKeyId'), signingKey, findProperty('signingInMemoryKeyPassword'))
+        }
+        // Maven Central rejects unsigned artifacts, so only local publishes may skip signing
+        required { gradle.taskGraph.allTasks.any { it.name.endsWith('ToMavenCentralRepository') } }
+        sign publishing.publications.release
+    }
+}
+
+// Run right after publishReleasePublicationToMavenCentralRepository. Moves every open staging repository in the
+// namespace to the Central Portal, where it waits for someone to release it. Staging repositories are keyed by
+// the uploader's IP address, which can change between calls, so this looks them up across all IPs.
+task releaseToCentralPortal {
+    group = 'publishing'
+    description = 'Hands the uploaded staging repositories to the Central Portal for manual release.'
+
+    doLast {
+        if (!mavenCentralUsername || !mavenCentralPassword) {
+            throw new GradleException('mavenCentralUsername and mavenCentralPassword must be set')
+        }
+
+        def namespace = findProperty('centralNamespace') ?: 'co.paystack'
+        def token = "$mavenCentralUsername:$mavenCentralPassword".bytes.encodeBase64().toString()
+        def request = { String method, String path ->
+            def connection = new URL("$centralStagingApiUrl$path").openConnection()
+            connection.requestMethod = method
+            connection.setRequestProperty('Authorization', "Bearer $token")
+            def responseCode = connection.responseCode
+            if (responseCode < 200 || responseCode >= 300) {
+                throw new GradleException("Central Portal request failed with HTTP $responseCode ${connection.errorStream?.text ?: ''}".trim())
+            }
+            connection.inputStream.text
+        }
+
+        def search = new groovy.json.JsonSlurper().parseText(request('GET', "/manual/search/repositories?ip=any&profile_id=$namespace"))
+        def openRepositories = search.repositories.findAll { it.state == 'open' }
+        if (openRepositories.isEmpty()) {
+            throw new GradleException("No open staging repository found for namespace $namespace. Did the upload run?")
+        }
+
+        openRepositories.each { repository ->
+            request('POST', "/manual/upload/repository/${URLEncoder.encode(repository.key, 'UTF-8')}?publishing_type=user_managed")
+        }
+        logger.lifecycle("Uploaded $GROUP:$POM_ARTIFACT_ID:$VERSION_NAME to the Central Portal. Release it at https://central.sonatype.com/publishing/deployments")
+    }
+}
