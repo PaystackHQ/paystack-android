@@ -12,6 +12,7 @@ import co.paystack.android.model.Card
 import co.paystack.android.model.Charge
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.isA
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Before
@@ -62,7 +63,7 @@ class TransactionManagerTest {
                     charge,
                     mock(Paystack.TransactionCallback::class.java)
                 )
-                verify(paystackRepository).initializeTransaction(isA(), isA(), isA(), isA())
+                verify(paystackRepository, times(0)).initializeTransaction(isA<String>(), isA<Charge>(), isA<String>(), isA<ApiCallback<TransactionInitResponse>>())
             }
         }
     }

@@ -1,5 +1,7 @@
 package co.paystack.android;
 
+import static co.paystack.android.ConstantsKt.DEPRECATION_MESSAGE;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -8,6 +10,7 @@ import android.content.pm.PackageManager;
 import co.paystack.android.exceptions.PaystackSdkNotInitializedException;
 import co.paystack.android.model.Charge;
 import co.paystack.android.utils.Utils;
+import kotlin.Deprecated;
 
 /**
  * This is the overall paystack sdk manager class.
@@ -71,12 +74,18 @@ public final class PaystackSdk {
      * Initialize an sdk without a callback
      *
      * @param context - Application Context
+     * @deprecated This SDK has been deprecated, Please refer to our new SDK: https://paystack.com/docs/developer-tools/android-sdk/
      */
+    @Deprecated(message = DEPRECATION_MESSAGE)
     public static synchronized void initialize(Context context) {
         initialize(context, null);
     }
 
-
+    /**
+     * @return Boolean - if the SDK has been initialised
+     * @deprecated This SDK has been deprecated, Please refer to our new SDK: https://paystack.com/docs/developer-tools/android-sdk/
+     */
+    @Deprecated(message = DEPRECATION_MESSAGE)
     public static boolean isSdkInitialized() {
         return sdkInitialized;
     }
@@ -86,7 +95,9 @@ public final class PaystackSdk {
      *
      * @return public key
      * @throws PaystackSdkNotInitializedException if the sdk hasn't been initialized
+     * @deprecated This SDK has been deprecated, Please refer to our new SDK: https://paystack.com/docs/developer-tools/android-sdk/
      */
+    @Deprecated(message = DEPRECATION_MESSAGE)
     public static String getPublicKey() throws PaystackSdkNotInitializedException {
         //validate that the sdk has been initialized
         Utils.Validate.validateSdkInitialized();
@@ -98,7 +109,9 @@ public final class PaystackSdk {
      * Sets the public key
      *
      * @param publicKey - App Developer's public key
+     * @deprecated This SDK has been deprecated, Please refer to our new SDK: https://paystack.com/docs/developer-tools/android-sdk/
      */
+    @Deprecated(message = DEPRECATION_MESSAGE)
     public static void setPublicKey(String publicKey) {
         PaystackSdk.publicKey = publicKey;
     }
@@ -137,6 +150,10 @@ public final class PaystackSdk {
         Utils.Validate.hasPublicKey();
     }
 
+    /**
+     * @deprecated This SDK has been deprecated, Please refer to our new SDK: https://paystack.com/docs/developer-tools/android-sdk/
+     */
+    @Deprecated(message = DEPRECATION_MESSAGE)
     public static void chargeCard(Activity activity, Charge charge, Paystack.TransactionCallback transactionCallback) {
         if (BuildConfig.DEBUG && (activity == null)) {
             throw new AssertionError("activity must not be null");
@@ -151,6 +168,10 @@ public final class PaystackSdk {
         paystack.chargeCard(activity, charge, transactionCallback);
     }
 
+    /**
+     * @deprecated This SDK has been deprecated, Please refer to our new SDK: https://paystack.com/docs/developer-tools/android-sdk/
+     */
+    @Deprecated(message = DEPRECATION_MESSAGE)
     public interface SdkInitializeCallback {
         void onInitialized();
     }
