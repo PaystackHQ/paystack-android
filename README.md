@@ -166,7 +166,7 @@ give an Activity that will stay open till the end of the transaction. The curren
 open Activity is just fine.
 
 
-- **Charge** - This object allows you provide information about the transaction to be made. Before calling 
+- **Charge** - This object allows you to provide information about the transaction to be made. Before calling 
 `chargeCard`, you should do a `charge.setCard(card)`. The charge can then be used in either of 2 ways
     - **Resume an initialized transaction**: If employing this flow, you would send all required parameters 
     for the transaction from your backend to the Paystack API via the `transaction/initialize` call - 
