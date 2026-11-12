@@ -1,8 +1,5 @@
 [![Maven Central](https://img.shields.io/maven-central/v/co.paystack.android/paystack.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22co.paystack.android%22%20AND%20a:%22paystack%22)
 [![Min API](https://img.shields.io/badge/API-16%2B-blue.svg?style=plastic)](https://android-arsenal.com/api?level=16)
-[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-orange.svg)](https://sonarcloud.io/dashboard?id=PaystackHQ_paystack-android)
-
-
 
 
 ## Paystack Android
