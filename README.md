@@ -36,7 +36,7 @@ Add the following lines to your app's `build.gradle`:
 
 ```gradle
 dependencies {
-    implementation 'co.paystack.android:paystack:3.1.3'
+    implementation 'co.paystack.android:paystack:3.5.0'
 }
 ```
 >From version `3.0.18`, the Pinpad library comes as part of this library and does not need to be explicitly included in your dependencies.
